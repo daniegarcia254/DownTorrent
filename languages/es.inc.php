@@ -830,6 +830,9 @@ $net2ftp_messages["Double-click to go to a subdirectory:"] = "Haz doble click pa
 $net2ftp_messages["Choose"] = "Elegir";
 $net2ftp_messages["Up"] = "Arriba";
 
+// Buttons for torrent search
+$net2ftp_messages["NEW_DOWNLOAD"] = "NUEVA DESCARGA";
+
 } // end browse
 
 

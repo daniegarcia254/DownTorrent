@@ -1084,12 +1084,17 @@ h6{ font-size: 20px; }
 }
 
 #LoginForm1 #LoginButton1,
-#LoginForm2 #LoginButton2{
+#LoginForm2 #LoginButton2,
+#BrowseForm #DownloadButton{
 	background: #ffd800; 
 	color: #363636;
 	margin: 20px 2px;
 	padding: 10px 15px;
 	width: 100px;
+}
+
+#BrowseForm #DownloadButton{
+	width: 150px;	
 }
 
 #LogoutButton{
@@ -1108,14 +1113,15 @@ h6{ font-size: 20px; }
 
 #LoginForm1 #LoginButton1:hover,
 #LoginForm2 #LoginButton2:hover,
-#BrowseForm #smallbutton:hover{
+#BrowseForm #smallbutton:hover,
+#BrowseForm #DownloadButton:hover{
 	background: #ccad00;
 	cursor: pointer;
 }
 
 #LoginForm1 #LoginButton1:active,
 #LoginForm2 #LoginButton2:active,
-#BrowseForm #smallbutton:active{
+#BrowseForm #smallbutton:active {
 	background: #000;
 	color: #FFF;
 }

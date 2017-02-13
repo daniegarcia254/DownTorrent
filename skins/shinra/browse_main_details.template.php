@@ -44,6 +44,9 @@ function setColor_js(i, checkbox_hidden) {
 			<input type="text" name="directory" value="<?php echo $directory_html; ?>" style="width: 400px; display: none;" accesskey="g" />
 			<span style="font-size: 15px;"><?php echo __("Directory Tree"); ?>: <?php echo $directory_tree; ?></span>
 		</td>
+		<td>
+			<input type="submit" id="DownloadButton" name="Login" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("Login"); ?>" />
+		</td>
 		<td valign="middle" style="text-align: <?php echo __("right"); ?>;">
 			<div style="padding: 5px 10px;"><?php echo __("Language:"); ?></div>
 		</td>
