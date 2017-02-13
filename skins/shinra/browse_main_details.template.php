@@ -45,7 +45,7 @@ function setColor_js(i, checkbox_hidden) {
 			<span style="font-size: 15px;"><?php echo __("Directory Tree"); ?>: <?php echo $directory_tree; ?></span>
 		</td>
 		<td>
-			<input type="submit" id="DownloadButton" name="Login" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("Login"); ?>" />
+			<input type="button" id="DownloadButton" name="Download" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("NEW_DOWNLOAD"); ?>" onclick='window.open(location.origin+"/ftp-client/download/index.html?user=<?php echo $net2ftp_globals["username"]; ?>")'/>
 		</td>
 		<td valign="middle" style="text-align: <?php echo __("right"); ?>;">
 			<div style="padding: 5px 10px;"><?php echo __("Language:"); ?></div>
