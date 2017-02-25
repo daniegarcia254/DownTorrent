@@ -1,0 +1,18 @@
+{
+  "apps": [{
+    "name": "search",
+    "script": "./app.js",
+    "watch": true,
+    "ignoreWatch": ["newrelic_agent.log"],
+    "instances": 1,
+		"log_date_format" : "DD-MM-YYYY HH:mm Z",
+    "exec_mode": "cluster",
+    "env": {
+      "NODE_ENV": "local",
+      "APP_PORT": 10005
+    },
+    "env_staging": {
+      "NODE_ENV": "staging"
+    }
+  }]
+}
