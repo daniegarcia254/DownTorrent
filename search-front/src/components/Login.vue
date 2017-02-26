@@ -26,7 +26,7 @@
 				</div>
 				<div class="row">
 					<div class="text-center auto">
-						<button class="primary circular big login-btn" @click="login()">
+						<button class="primary circular big login-btn" :disabled="(username.length === 0) ? true : false" @click="login()">
 							Go
 						</button>
 					</div>

@@ -128,9 +128,6 @@ export default {
 				columnPicker: false,
 				leftStickyColumns: 0,
 				rightStickyColumns: 0,
-				bodyStyle: {
-					maxHeight: Platform.is.mobile ? '50vh' : '500px'
-				},
 				rowHeight: '50px',
 				responsive: true,
 				pagination: {
@@ -269,4 +266,6 @@ export default {
 		display: none
 	.q-data-table-toolbar .q-picker-textfield
 		display: none
+	.layout-padding
+		padding-bottom 50px !important
 </style>
