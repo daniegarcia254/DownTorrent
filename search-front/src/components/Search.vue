@@ -13,7 +13,6 @@
 					<q-data-table :data="result_query" :config="config" :columns="columns_thepiratebay" @refresh="refresh">
 						<template slot="col-name" scope="cell">
 							{{cell.data}}<q-tooltip>{{cell.data}}</q-tooltip>
-							}
 					  </template>
 						<template slot="selection" scope="props">
 							<button class="primary clear" @click="download(props)">
@@ -34,12 +33,6 @@ import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
 import moment from 'moment'
 
 export default {
-	localStorage: {
-		username: {
-			type: String,
-			default: ''
-		}
-	},
 	methods: {
 		showLoading (message){
 			Loading.show({
@@ -136,8 +129,7 @@ export default {
 				},
 				selection: 'single',
 				messages: {
-					noData: '<i>warning</i> No data available to show.',
-					noDataAfterFiltering: '<i>warning</i> No results. Please refine your search terms.'
+					noData: '<i>warning</i> No data available to show.'
 				}
 			},
 			columns_thepiratebay: [

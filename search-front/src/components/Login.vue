@@ -2,12 +2,18 @@
 	<q-layout>
 		<!-- Header start -->
 		<div slot="header" class="toolbar">
-			<button v-if="showBack" class="hide-on-drawer-visible" v-go-back=" '/' ">
+			<button v-if="showBackHome" v-go-back=" '/' ">
+				<i class="icon-32">arrow_back</i>
+			</button>
+			<button v-if="showBackSearch" v-go-back=" 'search' ">
 				<i class="icon-32">arrow_back</i>
 			</button>
 			<q-toolbar-title :padding="1">
 				{{ $route.name }}
 			</q-toolbar-title>
+			<button v-if="showGoInfo" @click="goInfo()">
+				<i class="icon-32">file_download</i>
+			</button>
 		</div>
 		<!-- Header end -->
 
@@ -106,6 +112,9 @@ export default {
 				if (done) done()
 				self.errorHandling(err)
 			})
+		},
+		goInfo () {
+			router.push({ path: 'info'})
 		}
 	},
 	created: function(){
@@ -118,6 +127,15 @@ export default {
 	computed: {
 		showBack () {
 			return this.$route.path !== '/';
+		},
+		showBackHome() {
+			return this.$route.path === '/search';
+		},
+		showGoInfo () {
+			return this.$route.path === '/search';
+		},
+		showBackSearch() {
+			return this.$route.path === '/info';
 		}
 	}
 }

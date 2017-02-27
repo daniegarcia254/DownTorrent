@@ -13,6 +13,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from './store/store'
 import VueLocalStorage from 'vue-localstorage'
+import VueSocketio from 'vue-socket.io'
+
+Vue.use(VueSocketio, location.protocol + '//' + location.hostname+':10005');
+
+
  
 Vue.use(VueLocalStorage)
 

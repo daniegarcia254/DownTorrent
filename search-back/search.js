@@ -1,30 +1,11 @@
 'use strict'
 
-var express = require('express')
-var router = express.Router()
-var PirateBay = require('thepiratebay')
+const express = require('express')
+const router = express.Router()
+const PirateBay = require('thepiratebay')
+const errorHandler = require('./errorHandler')()
 
 const spawn = require('child_process').spawnSync
-
-var errorHandler = function(result) {
-	if (result.error) {
-		return {"message":result.error.message, "status": result.error.errno}
-	}
-	else if (result.stderr.toString() !== '') {
-		return {"message":result.stderr.toString(),"status": 500}
-	}
-	else if (result.status !== 0) {
-		return {"message":result.stdout.toString(),"status": result.status}
-	}
-	else if (result.stdout.toString().indexOf('Unknown command') !== -1) {
-		return {"message":result.stdout.toString(),"status": 500}
-	}
-	else if (result.stdout.toString().indexOf('Error') !== -1) {
-		return {"message":result.stdout.toString(),"status": 500}
-	} else {
-		return null;
-	}
-}
 
 var sanitize = function(string) {
 	return string.replace(/[&><;|\//].*$/g, '');
@@ -40,57 +21,60 @@ router.get('/', function (req, res) {
 	console.log("Search torrent", q);
 	PirateBay.search(q)
 	.then(results => {
-		console.log("Success searching PirateBay", results);
-		res.send(results);
+		console.log("Success searching PirateBay", results.length)
+		res.send(results)
 	})
 	.catch(err => {
 		console.log("Error searching PirateBay: ", err)
-		res.send(err);
+		res.send(err)
 	})
 })
 
 router.get('/user/login/:username', function(req, res) {
 	var username = sanitize(req.params.username);
 	
-	console.log("Check user", username);
+	console.log("Check user", username)
 
-	var id_user = spawn('id',[username]);
+	var id_user = spawn('id',[username])
 
-	var err = errorHandler(id_user);
+	var err = errorHandler.handleSpawn(id_user)
 
 	if (username === 'root') {
 		err = {"message": "Login not allowed with user 'root'","status": 401}
 	}
 
 	if (err !== null) {
-		console.log("Error checking user", err);
-		res.send({"error": err});
+		console.log("Error checking user", err)
+		res.send({"error": err})
 	} else {
-		res.send({"output":id_user.stdout.toString()});
+		console.log("Success checking user", id_user.stdout.toString())
+		res.send({"output":id_user.stdout.toString()})
 	}
 });
 
 router.post('/download', function(req, res) {
 	var username = sanitize(req.body.username);
-	var torrent = sanitizeURI(req.body.torrent);
+	var torrent = req.body.torrent;
+	var magnetLink = sanitizeURI(torrent.magnetLink);
 	
-	console.log("Download", username, torrent);
+	console.log("Download", username, torrent)
 
 	var err = null;
 
 	if (username === 'root') {
 		err = {"message": "No action is allowed with user 'root'","status": 401}
-		res.send({"error": err});
+		res.send({"error": err})
 	} else {
-		var deluge_console = spawn('deluge-console',['add','-p','/home/'+username+'/downloads/',"'"+torrent.magnetLink+"'"]);
+		var deluge_console = spawn('deluge-console',['add','-p','/home/'+username+'/downloads/',"'"+magnetLink+"'"])
 
-		err = errorHandler(deluge_console);
+		err = errorHandler.handleSpawn(deluge_console)
 
 		if (err !== null) {
-			console.log("Error adding torrent", err);
-			res.send({"error": err});
+			console.log("Error adding torrent", err)
+			res.send({"error": err})
 		} else {
-			res.send({"output":deluge_console.stdout.toString()});
+			console.log("Success getting torrents info", deluge_console.stdout.toString())
+			res.send({"output":deluge_console.stdout.toString()})
 		}
 	}
 });

@@ -28,7 +28,11 @@ export default new VueRouter({
 			path: 'search',
 			name: 'Search',
 			component: load('Search')
-		}]
+		},{
+      path: 'info',
+      name: 'Info',
+      component: load('Info')
+    }]
 		},{
 		path: '*',
 		component: load('Error404')

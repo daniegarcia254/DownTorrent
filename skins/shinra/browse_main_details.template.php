@@ -45,8 +45,8 @@ function setColor_js(i, checkbox_hidden) {
 			<span style="font-size: 15px;"><?php echo __("Directory Tree"); ?>: <?php echo $directory_tree; ?></span>
 		</td>
 		<td>
-			<!--<input type="button" id="DownloadButton" name="Download" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("NEW_DOWNLOAD"); ?>" onclick='localStorage.set("username",<?php echo $net2ftp_globals["username"]; ?>); window.open(location.origin+"/ftp-client/search-front/index.html?user=<?php echo $net2ftp_globals["username"]; ?>")'/>-->
-			<input type="button" id="DownloadButton" name="Download" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("NEW_DOWNLOAD"); ?>" onclick='localstorage.set("username","<?php echo $net2ftp_globals["username"]; ?>");window.open(location.origin+":10003")'/>
+			<!--<input type="button" id="DownloadButton" name="Download" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("NEW_DOWNLOAD"); ?>" onclick='localStorage.setItem("username",<?php echo $net2ftp_globals["username"]; ?>); window.open(location.origin+"/ftp-client/search-front/index.html?user=<?php echo $net2ftp_globals["username"]; ?>")'/>-->
+			<input type="button" id="DownloadButton" name="Download" value="<?php echo __("NEW_DOWNLOAD"); ?>" alt="<?php echo __("NEW_DOWNLOAD"); ?>" onclick='localStorage.setItem("username","<?php echo $net2ftp_globals["username"]; ?>");window.open(location.origin+":10003")'/>
 		</td>
 		<td valign="middle" style="text-align: <?php echo __("right"); ?>;">
 			<div style="padding: 5px 10px;"><?php echo __("Language:"); ?></div>
