@@ -2,7 +2,6 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const WebSocket = require('ws')
 const app = express()
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -16,8 +15,6 @@ app.use(function(req, res, next) {
 
 var search = require('./search')
 app.use('/api', search)
-
-
 
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)

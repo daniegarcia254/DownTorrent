@@ -16,6 +16,9 @@ module.exports = function() {
 		else if (result.stdout.toString().indexOf('Unknown command') !== -1) {
 			return {"message":result.stdout.toString(),"status": 500}
 		}
+		else if (result.stdout.toString().indexOf("doesn't exist") !== -1) {
+			return {"message":result.stdout.toString(),"status": 404}
+		}
 		else if (result.stdout.toString().indexOf('Error') !== -1) {
 			return {"message":result.stdout.toString(),"status": 500}
 		} else {

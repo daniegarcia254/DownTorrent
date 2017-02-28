@@ -9,24 +9,24 @@
 							{{cell.data}}<q-tooltip>{{cell.data}}</q-tooltip>
 						</template>
 						<template slot="col-progress" scope="cell">
-							<q-progress 
+							<q-progress
 								v-if="cell.row.status === 'Downloading'"
-								:percentage="cell.data" 
+								:percentage="cell.data"
 								class="stripe animate positive" style="height: 15px">
 							</q-progress>
-							<q-progress 
+							<q-progress
 								v-if="cell.row.status === 'Error'"
-								:percentage="cell.data" 
+								:percentage="cell.data"
 								class="stripe negative" style="height: 15px">
 							</q-progress>
-							<q-progress 
+							<q-progress
 								v-if="cell.row.status === 'Completed'"
-								:percentage="cell.data" 
+								:percentage="cell.data"
 								class="stripe positive" style="height: 15px">
 							</q-progress>
-							<q-progress 
+							<q-progress
 								v-if="cell.row.status !== 'Downloading' && cell.row.status !== 'Error' && cell.row.status !== 'Completed'"
-								:percentage="cell.data" 
+								:percentage="cell.data"
 								class="stripe warning" style="height: 15px">
 							</q-progress>
 						</template>
@@ -51,8 +51,8 @@
 
 <script>
 
-import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
-import moment from 'moment'
+import { Utils, Toast, Loading, Dialog } from 'quasar'
+import router from '../router'
 
 export default {
 	sockets:{
@@ -60,29 +60,79 @@ export default {
 			console.log('socket connected')
 		},
 		info: function(torrents){
-			console.log('sockets: info',torrents)
-			this.info_result = torrents;
+			if (torrents.error) {
+				console.log('sockets: info error',torrents)
+				this.showSocketError(torrents.error, 'loading torrents info', true)
+				this.$socket.emit('closeInfoSocket', null)
+			} else {
+				console.log('sockets: info',torrents)
+				this.info_result = torrents;
+			}
 		},
 		pause: function(data){
 			console.log('sockets: pause',data)
-			this.$socket.emit('getInfo')
+			if (data.error) {
+				console.log('sockets: pause error',data)
+				this.showSocketError(data.error, 'pausing torrent', false)
+				this.$socket.emit('getInfo')
+			} else {
+				this.$socket.emit('getInfo')
+				Toast.create({
+					html: 'Torrent successfully paused',
+					timeout: 5000
+				})
+			}
 		},
 		resume: function(data){
 			console.log('sockets: resume',data)
-			this.$socket.emit('getInfo')
+			if (data.error) {
+				console.log('sockets: resume error',data)
+				this.showSocketError(data.error, 'resuming torrent', false)
+				this.$socket.emit('getInfo')
+			} else {
+				this.$socket.emit('getInfo')
+				Toast.create({
+					html: 'Torrent successfully resumed',
+					timeout: 5000
+				})
+			}
 		},
 		delete: function(data){
 			console.log('sockets: delete',data)
-			this.$socket.emit('getInfo')
+			if (data.error) {
+				console.log('sockets: delete error',data)
+				this.showSocketError(data.error, 'deleting torrent', false)
+				this.$socket.emit('getInfo')
+			} else {
+				this.$socket.emit('getInfo')
+				Toast.create({
+					html: 'Torrent successfully deleted',
+					timeout: 5000
+				})
+			}
 		},
 		closeInfoSocket: function(data){
 			console.log('sockets: info closed',data)
-		},
-		onmessage: function (data) {
-			console.log('onmessage',data)
 		}
 	},
 	methods: {
+		showSocketError(error, msg_base, ret) {
+			this.showDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret)
+		},
+		showDialog(title, message, ret) {
+			Dialog.create({
+				title: title,
+				message: message,
+				buttons: [
+					{
+						label: 'Ok',
+						handler () {
+							if (ret === true) router.push({ path: 'search'})
+						}
+					}
+				]
+			})
+		},
 		getInfo: function(val){
 			this.$socket.emit('getInfo', val)
 		},
@@ -129,7 +179,6 @@ export default {
 	},
 	data: function () {
 		return {
-			search_query: '',
 			info_result: [],
 			config: {
 				title: 'Download info',
@@ -141,8 +190,7 @@ export default {
 				responsive: true,
 				selection: 'single',
 				messages: {
-					noData: '<i>warning</i> No data available to show.',
-					noDataAfterFiltering: '<i>warning</i> No results. Please refine your search terms.'
+					noData: '<i>warning</i> No data available to show.'
 				}
 			},
 			columns: [
@@ -165,12 +213,12 @@ export default {
 								b_value = parseFloat(b_temp[0])
 
 						switch (a_temp[1]) {
-							case 'MiB': a_value = a_value * 1024; break; 
-							case 'GiB': a_value = a_value * 1024 * 1024; break; 
+							case 'MiB': a_value = a_value * 1024; break;
+							case 'GiB': a_value = a_value * 1024 * 1024; break;
 						}
 						switch (b_temp[1]) {
-							case 'MiB': b_value = b_value * 1024; break; 
-							case 'GiB': b_value = b_value * 1024 * 1024; break; 
+							case 'MiB': b_value = b_value * 1024; break;
+							case 'GiB': b_value = b_value * 1024 * 1024; break;
 						}
 
 						return a_value - b_value;

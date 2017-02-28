@@ -17,8 +17,6 @@ import VueSocketio from 'vue-socket.io'
 
 Vue.use(VueSocketio, location.protocol + '//' + location.hostname+':10005');
 
-
- 
 Vue.use(VueLocalStorage)
 
 Vue.use(VueAxios, axios)

@@ -29,7 +29,7 @@
 
 <script>
 
-import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
+import { Utils, Toast, Loading, Dialog } from 'quasar'
 import moment from 'moment'
 
 export default {
@@ -62,10 +62,12 @@ export default {
 		},
 		query (event, done){
 			var self = this;
+			var query = self.search_query;
 			self.showLoading('Searching...')
-			self.url_query = location.protocol + '//' + location.hostname + ':10005/api?q=' + self.search_query;
+			self.url_query = location.protocol + '//' + location.hostname + ':10005/api?q=' + query;
 			self.axios.get(encodeURI(self.url_query)).then((response) => {
 				self.result_query = response.data
+				self.$store.commit('setLastQuery', { query })
 				Loading.hide()
 				if (done) done()
 			}, (err) => {
@@ -91,7 +93,10 @@ export default {
 					self.errorHandling(response.data.error)
 				} else {
 					console.log("Success downloading", response);
-					self.showDialog('','The torrent has been successfully added.</br></br>');
+					Toast.create({
+						html: 'The torrent has been successfully added.',
+						timeout: 5000
+					})
 				}
 			})
 			.catch(function (err) {
@@ -108,6 +113,9 @@ export default {
 		if (!this.$store.state.username && this.$localStorage.get('username')!=='') {
 			var name = this.$localStorage.get('username')
 			this.$store.commit('setUsername', { name })
+		}
+		if (this.$store.state.lastQuery && this.$store.state.lastQuery!=='') {
+			this.search_query = this.$store.state.lastQuery
 		}
 	},
 	data: function () {
@@ -149,12 +157,12 @@ export default {
 								b_value = parseFloat(b_temp[0])
 
 						switch (a_temp[1]) {
-							case 'MiB': a_value = a_value * 1024; break; 
-							case 'GiB': a_value = a_value * 1024 * 1024; break; 
+							case 'MiB': a_value = a_value * 1024; break;
+							case 'GiB': a_value = a_value * 1024 * 1024; break;
 						}
 						switch (b_temp[1]) {
-							case 'MiB': b_value = b_value * 1024; break; 
-							case 'GiB': b_value = b_value * 1024 * 1024; break; 
+							case 'MiB': b_value = b_value * 1024; break;
+							case 'GiB': b_value = b_value * 1024 * 1024; break;
 						}
 
 						return a_value - b_value;
@@ -192,7 +200,7 @@ export default {
 								a_day = a_temp_date[0].split('-')[1],
 								a_isTime = a_temp_date[1].indexOf(':') !== -1,
 								a_year = a_isTime ? new Date().getFullYear() : a_temp_date[1];
-								
+
 						var a_date = a_temp_date[0] === 'Today' ? moment() : moment([a_year,a_month,a_day].join('-'));
 
 						var b_temp_date = escape(b).replace(/%A0/g,' ').replace(/%3A/g,':').split(' '),
@@ -200,7 +208,7 @@ export default {
 								b_day = b_temp_date[0].split('-')[1],
 								b_isTime = b_temp_date[1].indexOf(':') !== -1,
 								b_year = b_isTime ? new Date().getFullYear() : b_temp_date[1];
-								
+
 						var b_date = b_temp_date[0] === 'Today' ? moment() : moment([b_year,b_month,b_day].join('-'));
 
 						return a_date.diff(b_date);

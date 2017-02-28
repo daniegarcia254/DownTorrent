@@ -6,7 +6,8 @@ Vue.use(Vuex)
 // root state object.
 // each Vuex instance is just a single state tree.
 const state = {
-	username: ''
+	username: '',
+	lastQuery: ''
 }
 
 // mutations are operations that actually mutates the state.
@@ -17,6 +18,9 @@ const state = {
 const mutations = {
 	setUsername (state, { name }) {
 		state.username = name;
+	},
+	setLastQuery (state, { query }) {
+		state.lastQuery = query;
 	}
 }
 
