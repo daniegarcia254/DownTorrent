@@ -66,8 +66,10 @@ export default {
 			self.showLoading('Searching...')
 			self.url_query = location.protocol + '//' + location.hostname + ':10005/api?q=' + query;
 			self.axios.get(encodeURI(self.url_query)).then((response) => {
-				self.result_query = response.data
+				var result = response.data
+				self.result_query = result
 				self.$store.commit('setLastQuery', { query })
+				this.$store.commit('setLastSearchResult', { result })
 				Loading.hide()
 				if (done) done()
 			}, (err) => {
@@ -78,32 +80,51 @@ export default {
 			})
 		},
 		download (props) {
-			console.log("Download", props);
+			var torrent = props.rows[0].data;
 			var self = this;
-			self.showLoading('Adding torrent...')
-			var url = location.protocol + '//' + location.hostname + ':10005/api/download';
-			var username = self.$store.state.username;
-			self.axios.post(url, {
-				torrent: props.rows[0].data,
-				username: username
+			Dialog.create({
+				title: 'Confirm',
+				message: 'Are you sure you want to download the file ' + torrent.name + ' ?',
+				buttons: [
+					{
+						label: 'Cancel',
+						classes: 'tertiary',
+						style: 'width: 100px; margin-right: 30px;'
+					},
+					{
+						label: 'OK',
+						classes: 'positive',
+						style: 'width: 100px; margin-right: 40px;',
+						handler () {
+							console.log("Download", props);
+							self.showLoading('Adding torrent...')
+							var url = location.protocol + '//' + location.hostname + ':10005/api/download';
+							var username = self.$store.state.username;
+							self.axios.post(url, {
+								torrent: torrent,
+								username: username
+							})
+							.then(function (response) {
+								Loading.hide()
+								if (response.data.error) {
+									self.errorHandling(response.data.error)
+								} else {
+									console.log("Success downloading", response);
+									Toast.create({
+										html: 'The torrent has been successfully added.',
+										timeout: 5000
+									})
+								}
+							})
+							.catch(function (err) {
+								console.log("Error downloading", err);
+								Loading.hide()
+								self.errorHandling(err)
+							});
+						}
+					}
+				]
 			})
-			.then(function (response) {
-				Loading.hide()
-				if (response.data.error) {
-					self.errorHandling(response.data.error)
-				} else {
-					console.log("Success downloading", response);
-					Toast.create({
-						html: 'The torrent has been successfully added.',
-						timeout: 5000
-					})
-				}
-			})
-			.catch(function (err) {
-				console.log("Error downloading", err);
-				Loading.hide()
-				self.errorHandling(err)
-			});
 		},
 		refresh (done) {
 			this.query(null, done)
@@ -116,6 +137,9 @@ export default {
 		}
 		if (this.$store.state.lastQuery && this.$store.state.lastQuery!=='') {
 			this.search_query = this.$store.state.lastQuery
+		}
+		if (this.$store.state.lastSearchResult && this.$store.state.lastSearchResult.length > 0) {
+			this.result_query = this.$store.state.lastSearchResult
 		}
 	},
 	data: function () {
@@ -184,32 +208,35 @@ export default {
 					field: 'uploadDate',
 					width: '80px',
 					format (value, row) {
-						var temp_date = escape(value).replace(/%A0/g,' ').replace(/%3A/g,':').split(' '),
+						var temp_date = escape(value).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
 								month = temp_date[0].split('-')[0],
 								day = temp_date[0].split('-')[1],
 								isTime = temp_date[1].indexOf(':') !== -1,
 								year = isTime ? new Date().getFullYear() : temp_date[1];
 
 						var date = temp_date[0] === 'Today' ? moment() : moment([year,month,day].join('-'));
+						if (temp_date[0] === 'Yday') date = moment().subtract(1, 'days');
 
 						return date.format("DD-MM-YYYY");
 					},
 					sort (a,b) {
-						var a_temp_date = escape(a).replace(/%A0/g,' ').replace(/%3A/g,':').split(' '),
+						var a_temp_date = escape(a).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
 								a_month = a_temp_date[0].split('-')[0],
 								a_day = a_temp_date[0].split('-')[1],
 								a_isTime = a_temp_date[1].indexOf(':') !== -1,
 								a_year = a_isTime ? new Date().getFullYear() : a_temp_date[1];
 
 						var a_date = a_temp_date[0] === 'Today' ? moment() : moment([a_year,a_month,a_day].join('-'));
+						if (a_temp_date[0] === 'Yday') a_date = moment().subtract(1, 'days');
 
-						var b_temp_date = escape(b).replace(/%A0/g,' ').replace(/%3A/g,':').split(' '),
+						var b_temp_date = escape(b).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
 								b_month = b_temp_date[0].split('-')[0],
 								b_day = b_temp_date[0].split('-')[1],
 								b_isTime = b_temp_date[1].indexOf(':') !== -1,
 								b_year = b_isTime ? new Date().getFullYear() : b_temp_date[1];
 
 						var b_date = b_temp_date[0] === 'Today' ? moment() : moment([b_year,b_month,b_day].join('-'));
+						if (b_temp_date[0] === 'Yday') b_date = moment().subtract(1, 'days');
 
 						return a_date.diff(b_date);
 					}
@@ -268,4 +295,6 @@ export default {
 		display: none
 	.layout-padding
 		padding-bottom 50px !important
+	.modal.minimized .modal-content
+		width 320px
 </style>

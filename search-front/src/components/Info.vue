@@ -116,23 +116,6 @@ export default {
 		}
 	},
 	methods: {
-		showSocketError(error, msg_base, ret) {
-			this.showDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret)
-		},
-		showDialog(title, message, ret) {
-			Dialog.create({
-				title: title,
-				message: message,
-				buttons: [
-					{
-						label: 'Ok',
-						handler () {
-							if (ret === true) router.push({ path: 'search'})
-						}
-					}
-				]
-			})
-		},
 		getInfo: function(val){
 			this.$socket.emit('getInfo', val)
 		},
@@ -150,19 +133,58 @@ export default {
 		},
 		pauseTorrent (props){
 			console.log("pause", props)
-			var torrentId = props.rows[0].data.id
-			this.$socket.emit('pause', torrentId)
+			var torrent = props.rows[0].data;
+			this.showConfirmDialog('pause', torrent, torrent.id);
 		},
 		resumeTorrent (props){
 			console.log("resume", props)
-			var torrentId = props.rows[0].data.id
-			this.$socket.emit('resume', torrentId)
+			var torrent = props.rows[0].data;
+			this.showConfirmDialog('resume', torrent, torrent.id);
 		},
 		deleteTorrent (props){
 			console.log("delete", props)
-			var torrentId = props.rows[0].data.id
-			var torrentStatus = props.rows[0].data.status
-			this.$socket.emit('delete', {id: torrentId, status: torrentStatus})
+			var torrent = props.rows[0].data;
+			this.showConfirmDialog('delete', torrent, {id: torrent.id, status: torrent.status});
+		},
+		showSocketError(error, action, ret) {
+			this.showSocketErrorDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret)
+		},
+		showSocketErrorDialog(title, message, ret) {
+			Dialog.create({
+				title: title,
+				message: message,
+				buttons: [
+					{
+						label: 'Ok',
+						handler () {
+							if (ret === true) router.push({ path: 'search'})
+						}
+					}
+				]
+			})
+		},
+		showConfirmDialog(action, torrent, data) {
+			var self = this;
+			Dialog.create({
+				title: 'Confirm',
+				message: 'Are you sure you want to ' + action + ' torrent ' + torrent.name + ' ?',
+				style: 'width: 320px',
+				buttons: [
+					{
+						label: 'Cancel',
+						classes: 'tertiary',
+						style: 'width: 100px; margin-right: 30px;'
+					},
+					{
+						label: 'OK',
+						classes: 'positive',
+						style: 'width: 100px; margin-right: 40px;',
+						handler () {
+							self.$socket.emit(action, data)
+						}
+					}
+				]
+			})
 		}
 	},
 	created: function(){

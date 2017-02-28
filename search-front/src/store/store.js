@@ -7,7 +7,8 @@ Vue.use(Vuex)
 // each Vuex instance is just a single state tree.
 const state = {
 	username: '',
-	lastQuery: ''
+	lastQuery: '',
+	lastSearchResult: []
 }
 
 // mutations are operations that actually mutates the state.
@@ -21,6 +22,9 @@ const mutations = {
 	},
 	setLastQuery (state, { query }) {
 		state.lastQuery = query;
+	},
+	setLastSearchResult (state, { result }) {
+		state.lastSearchResult = result;
 	}
 }
 

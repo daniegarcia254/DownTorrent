@@ -32,7 +32,7 @@ router.get('/', function (req, res) {
 
 router.get('/user/login/:username', function(req, res) {
 	var username = sanitize(req.params.username);
-
+	
 	console.log("Check user", username)
 
 	var id_user = spawn('id',[username])
@@ -56,7 +56,7 @@ router.post('/download', function(req, res) {
 	var username = sanitize(req.body.username);
 	var torrent = req.body.torrent;
 	var magnetLink = sanitizeURI(torrent.magnetLink);
-
+	
 	console.log("Download", username, torrent)
 
 	var err = null;
