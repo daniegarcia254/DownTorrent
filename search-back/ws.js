@@ -3,6 +3,22 @@
 const spawn = require('child_process').spawnSync
 const errorHandler = require('./errorHandler.js')()
 
+var clam = require('clamscan')({
+		remove_infected: false, // If true, removes infected files 
+		//quarantine_infected: false, // False: Don't quarantine, Path: Moves files to this place. 
+		//scan_log: null, // Path to a writeable log file to write scan results into 
+		debug_mode: true, // Whether or not to log info/debug/error msgs to the console 
+		//file_list: null, // path to file containing list of files to scan (for scan_files method) 
+		scan_recursively: true, // If true, deep scan folders recursively 
+		clamscan: {
+				path: '/usr/bin/clamscan', // Path to clamscan binary on your server 
+				//db: null, // Path to a custom virus definition database 
+				scan_archives: true, // If true, scan archives (ex. zip, rar, tar, dmg, iso, etc...) 
+				active: true // If true, this module will consider using the clamscan binary 
+		},
+		preference: 'clamdscan' // If clamdscan is found and active, it will be used by default 
+});
+
 module.exports = function (io) {
 	var module = {};
 	var io = io;
@@ -17,6 +33,7 @@ module.exports = function (io) {
 			pause(client);
 			resume(client);
 			del(client);
+			scan(client);
 		});
 	};
 
@@ -48,9 +65,16 @@ module.exports = function (io) {
 		});
 	}
 
+	function scan(client){
+		client.on('scan', function(data){
+			console.log('delete',data);
+			scanTorrent(client,data.username,data.torrent);
+		});
+	}
+
 	function startInfoInterval (client) {
 		client.on('startInfoInterval', function(data) {
-			console.log('startInfoInterval', infoIntervalId === null);
+				console.log('startInfoInterval', infoIntervalId === null);
 			if (infoIntervalId === null) {
 				infoIntervalId = setInterval(function(){
 					getDelugeInfo(client);
@@ -79,7 +103,7 @@ module.exports = function (io) {
 				console.log('Error getting torrents info', err);
 				client.emit('info', {'error': err});
 			} else {
-				console.log('Success getting deluge torrents info');
+				//console.log('Success getting deluge torrents info');
 				var result = transformDelugeInfoOutputToJSON(escape(deluge_console.stdout.toString()));
 				client.emit('info', result);
 			}
@@ -131,10 +155,10 @@ module.exports = function (io) {
 		console.log("Delete torrent", data);
 		try {
 			var deluge_console = null;
-			if (data.status === 'Completed' || data.status === 'Seeding') {
-				deluge_console = spawn('deluge-console',['rm',sanitize(data.id)]);
-			} else {
+			if (data.remove_data && data.remove_data === true) {
 				deluge_console = spawn('deluge-console',['rm','--remove_data',sanitize(data.id)]);
+			} else {
+				deluge_console = spawn('deluge-console',['rm',sanitize(data.id)]);
 			}
 			var err = errorHandler.handleSpawn(deluge_console);
 
@@ -151,17 +175,38 @@ module.exports = function (io) {
 		}
 	}
 
+	function scanTorrent(client, username, torrent){
+		console.log("Scan torrent", sanitize(username), sanitize(torrent.name));
+		try {
+			clam.is_infected('/home/'+sanitize(username)+'/downloads/'+torrent.name, function(err, good_files , bad_files ) {		 		
+		 		if (err) {
+					console.log('Error scaning torrent', err);
+					client.emit('scan', {'error': {"message":err.message,"status": 500}});
+				} else {
+					console.log('Success scaning torrent');
+					client.emit('scan', {good_files: good_files, bad_files: bad_files});
+				}
+		});
+		} catch(err) {
+			console.log('Error resuming torrent', err);
+			client.emit('resume', {'error': {"message":err.message,"status": 500}})
+		}
+	}
+
 	function sanitize(string) {
 		return string.replace(/[&><;|\//].*$/g, '');
+	}
+
+	function getValidPath(string) {
+		return sanitize(string).replace(/([\s\(\)',*\{\}?¿¡!^+])/g,'\\$1');
 	}
 
 	function transformDelugeInfoOutputToJSON (output) {
 		try {
 			if (output.length <= 1) return [];
-
+			
 			var info = unescape(output.replace(/%0A/g,'\n').replace(/\%5B(%23)+(%7E)+%5D/g,'\n').replace(/^%20/g,'')).split('Name:');
 
-			console.log("info",info);
 			var result = [];
 			info.forEach(function(torrent,idx){
 				if (torrent.length > 100) {
@@ -176,7 +221,7 @@ module.exports = function (io) {
 					} else {
 						tObject['status'] = item[2].split(':')[1].trim()
 					}
-					console.log("status", tObject['status'],item[2].split(':'),item[2].split(':').length)
+
 					if (tObject['status'] === 'Downloading') {
 						tObject['speed'] = [item[2].split(': ')[2].split(' ')[0],item[2].split(': ')[2].split(' ')[1]].join(' ');
 						tObject['eta'] = item[2].split(': ')[4];

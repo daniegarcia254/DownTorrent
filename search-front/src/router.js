@@ -29,10 +29,10 @@ export default new VueRouter({
 			name: 'Search',
 			component: load('Search')
 		},{
-      path: 'info',
-      name: 'Info',
-      component: load('Info')
-    }]
+			path: 'info',
+			name: 'Info',
+			component: load('Info')
+		}]
 		},{
 		path: '*',
 		component: load('Error404')

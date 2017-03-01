@@ -13,7 +13,7 @@
 					<q-data-table :data="result_query" :config="config" :columns="columns_thepiratebay" @refresh="refresh">
 						<template slot="col-name" scope="cell">
 							{{cell.data}}<q-tooltip>{{cell.data}}</q-tooltip>
-					  </template>
+						</template>
 						<template slot="selection" scope="props">
 							<button class="primary clear" @click="download(props)">
 								<i>file_download</i>
@@ -295,6 +295,4 @@ export default {
 		display: none
 	.layout-padding
 		padding-bottom 50px !important
-	.modal.minimized .modal-content
-		width 320px
 </style>

@@ -40,6 +40,12 @@
 							<button class="primary clear" @click="resumeTorrent(props)" v-if="props.rows[0] && props.rows[0].data.status === 'Paused'">
 								<i>play_arrow</i>
 							</button>
+							<button class="primary clear" @click="scanTorrent(props)" v-if="props.rows[0] && (props.rows[0].data.status === 'Seeding' || props.rows[0].data.status === 'Completed')">
+								<i>remove_red_eye</i>
+							</button>
+							<button class="primary clear" @click="downloadTorrent(props)" v-if="props.rows[0] && (props.rows[0].data.status === 'Seeding' || props.rows[0].data.status === 'Completed')" disabled>
+								<i>file_download</i>
+							</button>
 						</template>
 					</q-data-table>
 				</div>
@@ -111,6 +117,28 @@ export default {
 				})
 			}
 		},
+		scan: function(data){
+			console.log('sockets: scan',data)
+			Loading.hide()
+			if (data.error) {
+				console.log('sockets: scan error',data)
+				this.showSocketError(data.error, 'scanning torrent', false)
+				this.$socket.emit('getInfo')
+			} else {
+				this.$socket.emit('getInfo')
+				if (data.bad_files) {
+					Toast.create({
+						html: 'Torrent successfully scanned. Virus found and deleted.',
+						timeout: 5000
+					})
+				} else {
+					Toast.create({
+						html: 'Torrent successfully scanned. No virus found',
+						timeout: 5000
+					})
+				}
+			}
+		},
 		closeInfoSocket: function(data){
 			console.log('sockets: info closed',data)
 		}
@@ -144,10 +172,23 @@ export default {
 		deleteTorrent (props){
 			console.log("delete", props)
 			var torrent = props.rows[0].data;
-			this.showConfirmDialog('delete', torrent, {id: torrent.id, status: torrent.status});
+			if (torrent.status === 'Completed' || torrent.status === 'Seeding') {
+				this.showConfirmDeleteDialog(torrent, {id: torrent.id, status: torrent.status});
+			} else {
+				this.showConfirmDialog('delete', torrent, {id: torrent.id, status: torrent.status});
+			}
+		},
+		scanTorrent (props){
+			console.log("scanTorrent", props)
+			var torrent = props.rows[0].data;
+			var username = this.$store.state.username;
+			this.showConfirmDialog('scan', torrent, {username: username, torrent: torrent});
+		},
+		downloadTorrent (props) {
+			console.log("downloadTorrent", props)
 		},
 		showSocketError(error, action, ret) {
-			this.showSocketErrorDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret)
+			this.showSocketErrorDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret);
 		},
 		showSocketErrorDialog(title, message, ret) {
 			Dialog.create({
@@ -168,7 +209,6 @@ export default {
 			Dialog.create({
 				title: 'Confirm',
 				message: 'Are you sure you want to ' + action + ' torrent ' + torrent.name + ' ?',
-				style: 'width: 320px',
 				buttons: [
 					{
 						label: 'Cancel',
@@ -181,9 +221,50 @@ export default {
 						style: 'width: 100px; margin-right: 40px;',
 						handler () {
 							self.$socket.emit(action, data)
+							if (action === 'scan') self.showLoading('Scanning torrent...')
 						}
 					}
 				]
+			})
+		},
+		showConfirmDeleteDialog(torrent, data) {
+			var self = this;
+			Dialog.create({
+				title: 'Confirm',
+				message: 'Are you sure you want to delete torrent ' + torrent.name + ' ?',
+				buttons: [
+					{
+						label: 'Delete only torrent',
+						classes: 'warning',
+						style: 'width: 220px; margin-right: 30px;',
+						handler () {
+							self.$socket.emit('delete', data)
+						}
+					},
+					{
+						label: 'Delete torren and data',
+						classes: 'negative',
+						style: 'width: 220px; margin-right: 40px;',
+						handler () {
+							data['remove_data'] = true;
+							self.$socket.emit('delete', data)
+						}
+					},
+					{
+						label: 'Cancel',
+						classes: 'tertiary',
+						style: 'width: 100px; margin-right: 30px;'
+					}
+				]
+			})
+		},
+		showLoading (message){
+			Loading.show({
+				message: message,
+				messageColor: '#000000',
+				spinner: 'circles',
+				spinnerSize: 32,
+				spinnerColor: '#3636363'
 			})
 		}
 	},
