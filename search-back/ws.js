@@ -16,7 +16,7 @@ var clam = require('clamscan')({
 				scan_archives: true, // If true, scan archives (ex. zip, rar, tar, dmg, iso, etc...) 
 				active: true // If true, this module will consider using the clamscan binary 
 		},
-		preference: 'clamdscan' // If clamdscan is found and active, it will be used by default 
+		preference: 'clamscan' // If clamdscan is found and active, it will be used by default 
 });
 
 module.exports = function (io) {

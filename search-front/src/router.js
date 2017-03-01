@@ -30,7 +30,7 @@ export default new VueRouter({
 			component: load('Search')
 		},{
 			path: 'info',
-			name: 'Info',
+			name: 'Torrents',
 			component: load('Info')
 		}]
 		},{

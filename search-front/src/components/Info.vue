@@ -119,7 +119,7 @@ export default {
 		},
 		scan: function(data){
 			console.log('sockets: scan',data)
-			Loading.hide()
+			if (this.progressDialog !== null) this.progressDialog.close();
 			if (data.error) {
 				console.log('sockets: scan error',data)
 				this.showSocketError(data.error, 'scanning torrent', false)
@@ -221,7 +221,7 @@ export default {
 						style: 'width: 100px; margin-right: 40px;',
 						handler () {
 							self.$socket.emit(action, data)
-							if (action === 'scan') self.showLoading('Scanning torrent...')
+							if (action === 'scan') self.showProgressDialog();
 						}
 					}
 				]
@@ -258,6 +258,18 @@ export default {
 				]
 			})
 		},
+		showProgressDialog () {
+			this.progressDialog = Dialog.create({
+				title: 'Scanning',
+				message: 'Scanning torrent. Please be patient, this could take a few minutes.',
+				buttons: [],
+				progress: {
+					indeterminate: true
+				},
+				noBackdropDismiss: true,
+				noEscDismiss: true
+			})
+		},
 		showLoading (message){
 			Loading.show({
 				message: message,
@@ -283,6 +295,7 @@ export default {
 	data: function () {
 		return {
 			info_result: [],
+			progressDialog: null,
 			config: {
 				title: 'Download info',
 				refresh: true,
