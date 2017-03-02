@@ -178,7 +178,7 @@ module.exports = function (io) {
 	function scanTorrent(client, username, torrent){
 		console.log("Scan torrent", sanitize(username), sanitize(torrent.name));
 		try {
-			clam.is_infected('/home/'+sanitize(username)+'/downloads/'+torrent.name, function(err, good_files , bad_files ) {
+			clam.scan_dir('/home/'+sanitize(username)+'/downloads/'+torrent.name, function(err, good_files , bad_files ) {
 		 		if (err) {
 					console.log('Error scaning torrent', err);
 					client.emit('scan', {'error': {"message":err.message,"status": 500}});
@@ -186,7 +186,7 @@ module.exports = function (io) {
 					console.log('Success scaning torrent');
 					client.emit('scan', {good_files: good_files, bad_files: bad_files});
 				}
-		});
+			});
 		} catch(err) {
 			console.log('Error resuming torrent', err);
 			client.emit('resume', {'error': {"message":err.message,"status": 500}})

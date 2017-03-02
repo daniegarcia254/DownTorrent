@@ -126,7 +126,7 @@ export default {
 				this.$socket.emit('getInfo')
 			} else {
 				this.$socket.emit('getInfo')
-				if (data.bad_files) {
+				if (data.bad_files && data.bad_files.length > 0) {
 					Toast.create({
 						html: 'Torrent successfully scanned. Virus found and deleted.',
 						timeout: 5000
@@ -242,7 +242,7 @@ export default {
 						}
 					},
 					{
-						label: 'Delete torren and data',
+						label: 'Delete torrent and data',
 						classes: 'negative',
 						style: 'width: 220px; margin-right: 40px;',
 						handler () {
