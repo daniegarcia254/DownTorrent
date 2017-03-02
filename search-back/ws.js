@@ -4,19 +4,19 @@ const spawn = require('child_process').spawnSync
 const errorHandler = require('./errorHandler.js')()
 
 var clam = require('clamscan')({
-		remove_infected: false, // If true, removes infected files 
-		//quarantine_infected: false, // False: Don't quarantine, Path: Moves files to this place. 
-		//scan_log: null, // Path to a writeable log file to write scan results into 
-		debug_mode: true, // Whether or not to log info/debug/error msgs to the console 
-		//file_list: null, // path to file containing list of files to scan (for scan_files method) 
-		scan_recursively: true, // If true, deep scan folders recursively 
+		remove_infected: true, // If true, removes infected files
+		//quarantine_infected: false, // False: Don't quarantine, Path: Moves files to this place.
+		//scan_log: null, // Path to a writeable log file to write scan results into
+		debug_mode: true, // Whether or not to log info/debug/error msgs to the console
+		//file_list: null, // path to file containing list of files to scan (for scan_files method)
+		scan_recursively: true, // If true, deep scan folders recursively
 		clamscan: {
-				path: '/usr/bin/clamscan', // Path to clamscan binary on your server 
-				//db: null, // Path to a custom virus definition database 
-				scan_archives: true, // If true, scan archives (ex. zip, rar, tar, dmg, iso, etc...) 
-				active: true // If true, this module will consider using the clamscan binary 
+				path: '/usr/bin/clamscan', // Path to clamscan binary on your server
+				//db: null, // Path to a custom virus definition database
+				scan_archives: true, // If true, scan archives (ex. zip, rar, tar, dmg, iso, etc...)
+				active: true // If true, this module will consider using the clamscan binary
 		},
-		preference: 'clamscan' // If clamdscan is found and active, it will be used by default 
+		preference: 'clamscan' // If clamdscan is found and active, it will be used by default
 });
 
 module.exports = function (io) {
@@ -178,7 +178,7 @@ module.exports = function (io) {
 	function scanTorrent(client, username, torrent){
 		console.log("Scan torrent", sanitize(username), sanitize(torrent.name));
 		try {
-			clam.is_infected('/home/'+sanitize(username)+'/downloads/'+torrent.name, function(err, good_files , bad_files ) {		 		
+			clam.is_infected('/home/'+sanitize(username)+'/downloads/'+torrent.name, function(err, good_files , bad_files ) {
 		 		if (err) {
 					console.log('Error scaning torrent', err);
 					client.emit('scan', {'error': {"message":err.message,"status": 500}});
@@ -204,7 +204,7 @@ module.exports = function (io) {
 	function transformDelugeInfoOutputToJSON (output) {
 		try {
 			if (output.length <= 1) return [];
-			
+
 			var info = unescape(output.replace(/%0A/g,'\n').replace(/\%5B(%23)+(%7E)+%5D/g,'\n').replace(/^%20/g,'')).split('Name:');
 
 			var result = [];
