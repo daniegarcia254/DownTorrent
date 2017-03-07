@@ -8,10 +8,8 @@ Vue.use(VueRouter)
 // Install and init i18n
 Vue.use(VueI18n)
 
-var lang = window.location.pathname.replace(/\//g,'');
-if (!lang || lang.length === 0) lang = 'en';
-
-Vue.config.lang = lang
+var lang = 'en';
+Vue.config.lang = 'en'
 Vue.config.fallbackLang = 'en'
 
 Object.keys(locales).forEach(function (lang) {

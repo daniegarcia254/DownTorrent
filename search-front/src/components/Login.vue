@@ -37,6 +37,12 @@
 						</button>
 					</div>
 				</div>
+				<div class="row" id="row-language-select">
+					<div class="text-center auto">
+						<p class="caption">{{ $t("login.selectLanguage") }}</p>
+						<q-select type="radio" v-model="language" :options="languages" @input="changeLanguage"></q-select>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- Man block end-->
@@ -50,12 +56,24 @@
 <script>
 
 import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
+import Vue from 'vue'
 import router from '../router'
 
 export default {
 	data: function () {
 		return {
-			username: ''
+			username: '',
+			language: 'en',
+			languages:[
+				{
+					label: this.$t("languages.english"),
+					value: 'en'
+				},
+				{
+					label: this.$t("languages.spanish"),
+					value: 'es'
+				}
+			]
 		}
 	},
 	localStorage: {
@@ -84,11 +102,12 @@ export default {
 			if (error.response) {
 				var status = error.response.status,
 						data = error.response.data;
-				this.showDialog('Error', 'There has been an error (status: '+status+')</br></br>'+data)
+						error_title = this.$t("login.errors.title");
+				this.showDialog(error_title, this.$t("login.errors.messages.base", [status,data]))
 			} if (error.message && error.status) {
-				this.showDialog('Error', 'There has been an error (status: '+error.status+')</br></br>'+error.message)
+				this.showDialog(error_title, this.$t("login.errors.messages.base", [error.status,error.message]))
 			} else {
-				this.showDialog('Error', error.message);
+				this.showDialog(error_title, error.message);
 			}
 		},
 		login (){
@@ -113,6 +132,13 @@ export default {
 				self.errorHandling(err)
 			})
 		},
+		changeLanguage (value) {
+			console.log("Change language to", arguments, Vue.config.lang);
+			Vue.config.lang = value;
+			this.$store.commit('setLanguage', { value })
+			this.$localStorage.set('language', value)
+			this.language = value
+		},
 		goInfo () {
 			router.push({ path: 'info'})
 		}
@@ -122,6 +148,23 @@ export default {
 			var name = this.$localStorage.get('username')
 			this.$store.commit('setUsername', { name })
 			this.username = name;
+		}
+		if (!this.$store.state.language  && !this.$localStorage.get('language')) {
+			var lang = 'en';
+			Vue.config.lang = lang
+			this.$store.commit('setLanguage', { lang })
+			this.$localStorage.set('language', lang)
+			this.language = lang
+		} else if (this.$store.state.language !== null) {
+			var lang = this.$store.state.language
+			Vue.config.lang = lang
+			this.$localStorage.set('language', lang)
+			this.language = lang
+		} else if (this.$localStorage.get('language') !== '') {
+			var lang = this.$localStorage.get('language')
+			Vue.config.lang = lang
+			this.$store.commit('setLanguage', { lang })
+			this.language = lang
 		}
 	},
 	computed: {
@@ -154,4 +197,6 @@ export default {
 	.toolbar-title
 		text-align center
 		font-size 25px
+	#row-language-select
+		margin-top 50px
 </style>

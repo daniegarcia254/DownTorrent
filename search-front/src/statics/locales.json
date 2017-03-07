@@ -3,7 +3,14 @@
 		"login": {
 			"title": "Login",
 			"message": "Insert your system username",
-			"button": "Go"
+			"button": "Go",
+			"selectLanguage": "Select language:",
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error (status: {0})</br></br>{1}"
+				}
+			}
 		},
 		"search": {
 			"title": "Search",
@@ -96,13 +103,24 @@
 			"loading": "Loading...",
 			"searching": "Searching...",
 			"addTorrent": "Adding torrent..."
+		},
+		"languages":{
+			"english": "English",
+			"spanish": "Spanish"
 		}
 	},
 	"es": {
 		"login": {
 			"title": "Login",
 			"message": "Introduce tu nombre de usuario",
-			"button": "Entrar"
+			"button": "Entrar",
+			"selectLanguage": "Selecciona idioma:",
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "Ha ocurrido un error (estado: {0})</br></br>{1}"
+				}
+			}
 		},
 		"search": {
 			"title": "Búsqueda",
@@ -126,7 +144,7 @@
 			"errors": {
 				"title": "Error",
 				"messages": {
-					"base": "Ha ocurrido un error (status: {0})</br></br>{1}"
+					"base": "Ha ocurrido un error (estado: {0})</br></br>{1}"
 				}
 			},
 			"success": {
@@ -173,7 +191,7 @@
 			"errors": {
 				"title": "Error",
 				"messages": {
-					"base": "Ha ocurrido un error {0} (status: {1})</br></br>{2}<br><br>Por favor, inténtelo de nuevo."
+					"base": "Ha ocurrido un error {0} (estado: {1})</br></br>{2}<br><br>Por favor, inténtelo de nuevo."
 				},
 				"actions":{
 					"delete": "eliminando el torrent",
@@ -195,6 +213,10 @@
 			"loading": "Carcando...",
 			"searching": "Buscando...",
 			"addTorrent": "Añadiendo torrent..."
+		},
+		"languages":{
+			"english": "Inglés",
+			"spanish": "Español"
 		}
 	}
 }

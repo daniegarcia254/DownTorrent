@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const state = {
 	username: '',
 	lastQuery: '',
+	language: null,
 	lastSearchResult: []
 }
 
@@ -19,6 +20,9 @@ const state = {
 const mutations = {
 	setUsername (state, { name }) {
 		state.username = name;
+	},
+	setLanguage (state, { lang }) {
+		state.language = lang;
 	},
 	setLastQuery (state, { query }) {
 		state.lastQuery = query;

@@ -31,6 +31,7 @@
 
 import { Utils, Toast, Loading, Dialog } from 'quasar'
 import moment from 'moment'
+import router from '../router'
 
 export default {
 	methods: {
