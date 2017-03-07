@@ -1,8 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import locales from './statics/locales.json'
+import VueI18n from 'vue-i18n'
 
 Vue.use(VueRouter)
 
+// Install and init i18n
+Vue.use(VueI18n)
+
+var lang = window.location.pathname.replace(/\//g,'');
+if (!lang || lang.length === 0) lang = 'en';
+
+Vue.config.lang = lang
+Vue.config.fallbackLang = 'en'
+
+Object.keys(locales).forEach(function (lang) {
+  Vue.locale(lang, locales[lang])
+})
+
+//Export router
 function load (component) {
 	return () => System.import(`components/${component}.vue`)
 }
@@ -22,15 +38,15 @@ export default new VueRouter({
 
 	routes: [{
 		path: '/',
-		name: 'Login',
+		name: Vue.t('login.title'),
 		component: load('Login'),
 		children: [{
 			path: 'search',
-			name: 'Search',
+			name: Vue.t('search.title'),
 			component: load('Search')
 		},{
 			path: 'info',
-			name: 'Torrents',
+			name: Vue.t('downloads.title'),
 			component: load('Info')
 		}]
 		},{

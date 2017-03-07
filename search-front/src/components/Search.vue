@@ -50,20 +50,21 @@ export default {
 			})
 		},
 		errorHandling(error){
+			var error_title = this.$t("search.errors.title");
 			if (error.response) {
 				var status = error.response.status,
 						data = error.response.data;
-				this.showDialog('Error', 'There has been an error (status: '+status+')</br></br>'+data)
+				this.showDialog(error_title, this.$t("search.errors.messages.base", [status,data]))
 			} if (error.message && error.status) {
-				this.showDialog('Error', 'There has been an error (status: '+error.status+')</br></br>'+error.message)
+				this.showDialog(error_title, this.$t("search.errors.messages.base", [error.status,error.message]))
 			} else {
-				this.showDialog('Error', error.message);
+				this.showDialog(error_title, error.message)
 			}
 		},
 		query (event, done){
 			var self = this;
 			var query = self.search_query;
-			self.showLoading('Searching...')
+			self.showLoading(self.$t("spinners.searching"))
 			self.url_query = location.protocol + '//' + location.hostname + ':10005/api?q=' + query;
 			self.axios.get(encodeURI(self.url_query)).then((response) => {
 				var result = response.data
@@ -83,21 +84,21 @@ export default {
 			var torrent = props.rows[0].data;
 			var self = this;
 			Dialog.create({
-				title: 'Confirm',
-				message: 'Are you sure you want to download the file ' + torrent.name + ' ?',
+				title: self.$t("search.dialog.title"),
+				message: self.$t("search.dialog.message",[torrent.name]),
 				buttons: [
 					{
-						label: 'Cancel',
+						label: self.$t("search.dialog.cancelBtn"),
 						classes: 'tertiary',
 						style: 'width: 100px; margin-right: 30px;'
 					},
 					{
-						label: 'OK',
+						label: self.$t("search.dialog.okBtn"),
 						classes: 'positive',
 						style: 'width: 100px; margin-right: 40px;',
 						handler () {
 							console.log("Download", props);
-							self.showLoading('Adding torrent...')
+							self.showLoading(self.$t("spinners.addTorrent"))
 							var url = location.protocol + '//' + location.hostname + ':10005/api/download';
 							var username = self.$store.state.username;
 							self.axios.post(url, {
@@ -111,7 +112,7 @@ export default {
 								} else {
 									console.log("Success downloading", response);
 									Toast.create({
-										html: 'The torrent has been successfully added.',
+										html: self.$t("search.success.addTorrent"),
 										timeout: 5000
 									})
 								}
@@ -148,7 +149,7 @@ export default {
 			result_query: [],
 			url_query: '',
 			config: {
-				title: 'Search result',
+				title: this.$t("search.table.title"),
 				refresh: true,
 				columnPicker: false,
 				leftStickyColumns: 0,
@@ -161,17 +162,17 @@ export default {
 				},
 				selection: 'single',
 				messages: {
-					noData: '<i>warning</i> No data available to show.'
+					noData: this.$t("search.table.noData")
 				}
 			},
 			columns_thepiratebay: [
 				{
-					label: 'Name',
+					label: this.$t("search.table.fields.name"),
 					field: 'name',
 					width: '200px',
 					sort: true
 				},{
-					label: 'Size',
+					label: this.$t("search.table.fields.size"),
 					field: 'size',
 					width: '50px',
 					sort (a,b) {
@@ -192,19 +193,19 @@ export default {
 						return a_value - b_value;
 					}
 				},{
-					label: 'Seeders',
+					label: this.$t("search.table.fields.seeders"),
 					field: 'seeders',
 					width: '50px',
 					sort (a,b) { return (parseInt(a) - parseInt(b)) },
 					format (value,row) { return parseInt(value) }
 				},{
-					label: 'Leechers',
+					label: this.$t("search.table.fields.leechers"),
 					field: 'leechers',
 					width: '50px',
 					sort (a,b) { return (parseInt(a) - parseInt(b)) },
 					format (value,row) { return parseInt(value) }
 				},{
-					label: 'Date',
+					label: this.$t("search.table.fields.date"),
 					field: 'uploadDate',
 					width: '80px',
 					format (value, row) {

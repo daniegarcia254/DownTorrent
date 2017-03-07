@@ -68,7 +68,7 @@ export default {
 		info: function(torrents){
 			if (torrents.error) {
 				console.log('sockets: info error',torrents)
-				this.showSocketError(torrents.error, 'loading torrents info', true)
+				this.showSocketError(torrents.error, this.$t("downloads.errors.actions.load"), true)
 				this.$socket.emit('closeInfoSocket', null)
 			} else {
 				console.log('sockets: info',torrents)
@@ -77,42 +77,45 @@ export default {
 		},
 		pause: function(data){
 			console.log('sockets: pause',data)
+			var self = this;
 			if (data.error) {
 				console.log('sockets: pause error',data)
-				this.showSocketError(data.error, 'pausing torrent', false)
+				this.showSocketError(data.error, this.$t("downloads.errors.actions.pause"), false)
 				this.$socket.emit('getInfo')
 			} else {
 				this.$socket.emit('getInfo')
 				Toast.create({
-					html: 'Torrent successfully paused',
+					html: self.$t("downloads.success.pauseTorrent"),
 					timeout: 5000
 				})
 			}
 		},
 		resume: function(data){
 			console.log('sockets: resume',data)
+			var self = this;
 			if (data.error) {
 				console.log('sockets: resume error',data)
-				this.showSocketError(data.error, 'resuming torrent', false)
+				this.showSocketError(data.error, this.$t("downloads.errors.actions.resume"), false)
 				this.$socket.emit('getInfo')
 			} else {
 				this.$socket.emit('getInfo')
 				Toast.create({
-					html: 'Torrent successfully resumed',
+					html: self.$t("downloads.success.resumeTorrent"),
 					timeout: 5000
 				})
 			}
 		},
 		delete: function(data){
-			console.log('sockets: delete',data)
+			console.log('sockets: delete',data);
+			var self = this;
 			if (data.error) {
 				console.log('sockets: delete error',data)
-				this.showSocketError(data.error, 'deleting torrent', false)
+				this.showSocketError(data.error, this.$t("downloads.errors.actions.delete"), false)
 				this.$socket.emit('getInfo')
 			} else {
 				this.$socket.emit('getInfo')
 				Toast.create({
-					html: 'Torrent successfully deleted',
+					html: self.$t("downloads.success.deleteTorrent"),
 					timeout: 5000
 				})
 			}
@@ -122,18 +125,18 @@ export default {
 			if (this.progressDialog !== null) this.progressDialog.close();
 			if (data.error) {
 				console.log('sockets: scan error',data)
-				this.showSocketError(data.error, 'scanning torrent', false)
+				this.showSocketError(data.error, this.$t("downloads.errors.actions.scan"), false)
 				this.$socket.emit('getInfo')
 			} else {
 				this.$socket.emit('getInfo')
 				if (data.bad_files && data.bad_files.length > 0) {
 					Toast.create({
-						html: 'Torrent successfully scanned. Virus found and deleted.',
+						html: self.$t("downloads.success.scanVirusDeleted"),
 						timeout: 5000
 					})
 				} else {
 					Toast.create({
-						html: 'Torrent successfully scanned. No virus found',
+						html: self.$t("downloads.success.scanVirus"),
 						timeout: 5000
 					})
 				}
@@ -188,15 +191,17 @@ export default {
 			console.log("downloadTorrent", props)
 		},
 		showSocketError(error, action, ret) {
-			this.showSocketErrorDialog('Error', 'There has been an error '+ action +' (status: '+error.status+')</br></br>'+error.message + '<br><br>Please, try again', ret);
+			var message = this.$t("downloads.errors.messages.base",[action,error.status,error.message]);
+			this.showSocketErrorDialog(this.$t("downloads.errors.title"), message, ret);
 		},
 		showSocketErrorDialog(title, message, ret) {
+			var self = this;
 			Dialog.create({
 				title: title,
 				message: message,
 				buttons: [
 					{
-						label: 'Ok',
+						label: self.$t("downloads.dialog.okBtn"),
 						handler () {
 							if (ret === true) router.push({ path: 'search'})
 						}
@@ -207,16 +212,16 @@ export default {
 		showConfirmDialog(action, torrent, data) {
 			var self = this;
 			Dialog.create({
-				title: 'Confirm',
-				message: 'Are you sure you want to ' + action + ' torrent ' + torrent.name + ' ?',
+				title: self.$t("downloads.dialog.title"),
+				message: self.$t("downloads.dialog.message",[self.$t("downloads.dialog.actions."+action),torrent.name]),
 				buttons: [
 					{
-						label: 'Cancel',
+						label: self.$t("downloads.dialog.cancelBtn"),
 						classes: 'tertiary',
 						style: 'width: 100px; margin-right: 30px;'
 					},
 					{
-						label: 'OK',
+						label: self.$t("downloads.dialog.okBtn"),
 						classes: 'positive',
 						style: 'width: 100px; margin-right: 40px;',
 						handler () {
@@ -230,11 +235,11 @@ export default {
 		showConfirmDeleteDialog(torrent, data) {
 			var self = this;
 			Dialog.create({
-				title: 'Confirm',
-				message: 'Are you sure you want to delete torrent ' + torrent.name + ' ?',
+				title: self.$t("downloads.dialog-delete.title"),
+				message: self.$t("downloads.dialog-delete.message",[torrent.name]),
 				buttons: [
 					{
-						label: 'Delete only torrent',
+						label: self.$t("downloads.dialog-delete.deleteBtn"),
 						classes: 'warning',
 						style: 'width: 220px; margin-right: 30px;',
 						handler () {
@@ -242,7 +247,7 @@ export default {
 						}
 					},
 					{
-						label: 'Delete torrent and data',
+						label: self.$t("downloads.dialog-delete.deleteAllBtn"),
 						classes: 'negative',
 						style: 'width: 220px; margin-right: 40px;',
 						handler () {
@@ -251,7 +256,7 @@ export default {
 						}
 					},
 					{
-						label: 'Cancel',
+						label: self.$t("downloads.dialog-delete.cancelBtn"),
 						classes: 'tertiary',
 						style: 'width: 100px; margin-right: 30px;'
 					}
@@ -260,8 +265,8 @@ export default {
 		},
 		showProgressDialog () {
 			this.progressDialog = Dialog.create({
-				title: 'Scanning',
-				message: 'Scanning torrent. Please be patient, this could take a few minutes.',
+				title: self.$t("downloads.dialog-scanning.title"),
+				message: self.$t("downloads.dialog-scanning.message"),
 				buttons: [],
 				progress: {
 					indeterminate: true
@@ -297,7 +302,7 @@ export default {
 			info_result: [],
 			progressDialog: null,
 			config: {
-				title: 'Download info',
+				title: this.$t("downloads.table.title"),
 				refresh: true,
 				columnPicker: false,
 				leftStickyColumns: 0,
@@ -306,17 +311,17 @@ export default {
 				responsive: true,
 				selection: 'single',
 				messages: {
-					noData: '<i>warning</i> No data available to show.'
+					noData: this.$t("downloads.table.noData")
 				}
 			},
 			columns: [
 				{
-					label: 'Name',
+					label: this.$t("downloads.table.fields.name"),
 					field: 'name',
-					width: '200px',
+					width: '180px',
 					sort: true
 				},{
-					label: 'Size',
+					label: this.$t("downloads.table.fields.size"),
 					field: 'size',
 					width: '50px',
 					format (value,row) {
@@ -340,22 +345,22 @@ export default {
 						return a_value - b_value;
 					}
 				},{
-					label: 'Status',
+					label: this.$t("downloads.table.fields.status"),
 					field: 'status',
 					width: '50px',
 					sort: true
 				},{
-					label: 'Progress',
+					label: this.$t("downloads.table.fields.progress"),
 					field: 'progress',
 					width: '150px',
 					sort: false
 				},{
-					label: 'Speed',
+					label: this.$t("downloads.table.fields.speed"),
 					field: 'speed',
 					width: '50px',
 					sort: false
 				},{
-					label: 'ETA',
+					label: this.$t("downloads.table.fields.eta"),
 					field: 'eta',
 					width: '50px',
 					sort: false

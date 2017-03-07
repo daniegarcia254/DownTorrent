@@ -8,12 +8,12 @@ require(`./themes/app.${__THEME}.styl`)
 
 import Vue from 'vue'
 import Quasar from 'quasar'
-import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from './store/store'
 import VueLocalStorage from 'vue-localstorage'
 import VueSocketio from 'vue-socket.io'
+import router from './router'
 
 Vue.use(VueSocketio, location.protocol + '//' + location.hostname+':10005');
 
@@ -21,8 +21,10 @@ Vue.use(VueLocalStorage)
 
 Vue.use(VueAxios, axios)
 
-Vue.use(Quasar) // Install Quasar Framework
+// Install Quasar Framework
+Vue.use(Quasar)
 
+// Start app
 Quasar.start(() => {
 	/* eslint-disable no-new */
 	new Vue({

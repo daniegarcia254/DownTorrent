@@ -22,7 +22,7 @@
 			<div class="layout-padding">
 				<div class="row">
 					<div class="text-center auto">
-						<p class="caption user-label">Insert your system username</p>
+						<p class="caption user-label">{{ $t("login.message") }}</p>
 					</div>
 				</div>
 				<div class="row">
@@ -33,7 +33,7 @@
 				<div class="row">
 					<div class="text-center auto">
 						<button class="primary circular big login-btn" :disabled="(username.length === 0) ? true : false" @click="login()">
-							Go
+							{{ $t("login.button") }}
 						</button>
 					</div>
 				</div>
