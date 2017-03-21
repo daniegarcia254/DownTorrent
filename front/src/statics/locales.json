@@ -1,0 +1,272 @@
+{
+	"en": {
+		"login": {
+			"title": "Login",
+			"message": "Insert your system username",
+			"button": "Go",
+			"selectLanguage": "Select language:",
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error (status: {0})</br></br>{1}"
+				}
+			}
+		},
+		"search": {
+			"title": "Search",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No data available to show.",
+				"fields": {
+					"name":"Name",
+					"size":"Size",
+					"seeders":"Seeders",
+					"leechers":"Leechers",
+					"date":"Date"
+				}
+			},
+			"dialog":{
+				"title": "",
+				"message": "Are you sure you want to download the file {0} ?",
+				"cancelBtn": "Cancel",
+				"okBtn": "Ok"
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error (status: {0})</br></br>{1}"
+				}
+			},
+			"success": {
+				"addTorrent": "The torrent has been successfully added."
+			}
+		},
+		"info": {
+			"title": "Downloads",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No data available to show.",
+				"fields": {
+					"name":"Name",
+					"size":"Size",
+					"status":"Status",
+					"progress":"Progress",
+					"speed":"Speed",
+					"eta":"ETA"
+				}
+			},
+			"dialog":{
+				"title": "",
+				"message": "Are you sure you want to {0} torrent {1} ?",
+				"cancelBtn": "Cancel",
+				"okBtn": "Ok",
+				"actions": {
+					"pause": "pause",
+					"resume": "resume",
+					"delete": "delete",
+					"scan": "scan for viruses in the files of",
+					"upload": "generate the download links for the"
+				}
+			},
+			"dialog-scan":{
+				"title": "Scanning",
+				"message": "Scanning files. Please be patient, this could take a few minutes."
+			},
+			"dialog-upload":{
+				"title": "Generating links",
+				"message": "Files are uploading. Please be patient, this could take a few minutes.<br><br>When the process is finished, you'll be given the links for download the files."
+			},
+			"dialog-delete":{
+				"title": "",
+				"message": "Are you sure you want to delete torrent {0} ?",
+				"deleteBtn": "Delete only torrent",
+				"deleteAllBtn": "Delete torrent and data",
+				"cancelBtn": "Cancel"
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error {0} (status: {1})</br></br>{2}<br><br>Please, try again"
+				},
+				"actions":{
+					"delete": "deleting torrent",
+					"scan": "scanning torrent",
+					"upload": "uploading files",
+					"resume": "resuming torrent",
+					"pause": "pausing torrent",
+					"load": "loading torrents info"
+				}
+			},
+			"success": {
+				"scanVirus": "Torrent successfully scanned. No virus found",
+				"scanVirusDeleted": "Torrent successfully scanned. Virus found and deleted.",
+				"deleteTorrent": "Torrent successfully deleted",
+				"resumeTorrent": "Torrent successfully resumed",
+				"pauseTorrent": "Torrent successfully paused",
+				"uploadTorrent": "Torrent successfully uploaded."
+			}
+		},
+		"links": {
+			"title": "Files",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No data available to show.",
+				"fields": {
+					"name":"Name",
+					"size":"Size",
+					"lastModified":"Last modified"
+				}
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error (status: {0})</br></br>{1}"
+				}
+			}
+		},
+		"spinners":{
+			"loading": "Loading...",
+			"searching": "Searching...",
+			"addTorrent": "Adding torrent..."
+		},
+		"languages":{
+			"english": "English",
+			"spanish": "Spanish"
+		}
+	},
+	"es": {
+		"login": {
+			"title": "Login",
+			"message": "Introduce tu nombre de usuario",
+			"button": "Entrar",
+			"selectLanguage": "Selecciona idioma:",
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "Ha ocurrido un error (estado: {0})</br></br>{1}"
+				}
+			}
+		},
+		"search": {
+			"title": "Búsqueda",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No hay datos para mostrar.",
+				"fields": {
+					"name":"Nombre",
+					"size":"Tamaño",
+					"seeders":"Seeders",
+					"leechers":"Leechers",
+					"date":"Fecha"
+				}
+			},
+			"dialog":{
+				"title": "",
+				"message": "¿Estás seguro de que quieres descargar el archivo {0} ?",
+				"cancelBtn": "Cancelar",
+				"okBtn": "Ok"
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "Ha ocurrido un error (estado: {0})</br></br>{1}"
+				}
+			},
+			"success": {
+				"addTorrent": "Torrent añadido con éxito."
+			}
+		},
+		"info": {
+			"title": "Descargas",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No hay datos para mostrar.",
+				"fields": {
+					"name":"Nombre",
+					"size":"Tamaño",
+					"status":"Estado",
+					"progress":"Progreso",
+					"speed":"Velocidad",
+					"eta":"ETA"
+				}
+			},
+			"dialog":{
+				"title": "",
+				"message": "¿Está seguro de que desea {0} el torrent {1} ?",
+				"cancelBtn": "Cancelar",
+				"okBtn": "Ok",
+				"actions": {
+					"pause": "pausar",
+					"resume": "resumir",
+					"delete": "eliminar",
+					"scan": "escanear en busca de virus",
+					"upload": "generar los links de descarga para"
+				}
+			},
+			"dialog-scan":{
+				"title": "Escaneando",
+				"message": "Escaneando archivos en busca de virus. Este proceso puede tardar unos minutos."
+			},
+			"dialog-upload":{
+				"title": "Generando links",
+				"message": "Una vez terminado el proceso, se le mostrarán los links de descarga de los archivos.<br><br>Este proceso puede tardar unos minutos."
+			},
+			"dialog-delete":{
+				"title": "",
+				"message": "¿Está seguro de que quiere el eliminar el torrent {0} ?",
+				"deleteBtn": "Eliminar torrent",
+				"deleteAllBtn": "Eliminar torrent y datos",
+				"cancelBtn": "Cancelar"
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "Ha ocurrido un error {0} (estado: {1})</br></br>{2}<br><br>Por favor, inténtelo de nuevo."
+				},
+				"actions":{
+					"delete": "eliminando el torrent",
+					"scan": "escaneando el torrent",
+					"upload": "generando los links de descarga",
+					"resume": "volviendo a descargar el torrent",
+					"pause": "pausando el torrent",
+					"load": "cargando la información de los torrents"
+				}
+			},
+			"success": {
+				"scanVirus": "Torrent escaneado. No se han encontrado virus.",
+				"scanVirusDeleted": "Torrent escaneado. Virus encontrados y eliminados.",
+				"deleteTorrent": "Torrent eliminado",
+				"resumeTorrent": "Torrent descargando",
+				"pauseTorrent": "Torrent pausado",
+				"uploadTorrent": "Link de descarga generado"
+			}
+		},
+		"links": {
+			"title": "Ficheros",
+			"table": {
+				"title": "",
+				"noData": "<i>warning</i> No hay datos para mostrar.",
+				"fields": {
+					"name":"Nombre",
+					"size":"Tamaño",
+					"lastModified":"Modificado"
+				}
+			},
+			"errors": {
+				"title": "Error",
+				"messages": {
+					"base": "There has been an error (status: {0})</br></br>{1}"
+				}
+			}
+		},
+		"spinners":{
+			"loading": "Carcando...",
+			"searching": "Buscando...",
+			"addTorrent": "Añadiendo torrent..."
+		},
+		"languages":{
+			"english": "Inglés",
+			"spanish": "Español"
+		}
+	}
+}

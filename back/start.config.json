@@ -1,0 +1,27 @@
+{
+  "apps": [{
+    "name": "search",
+    "script": "./app.js",
+    "watch": true,
+    "ignoreWatch": ["newrelic_agent.log"],
+    "instances": 1,
+		"log_date_format" : "DD-MM-YYYY HH:mm Z",
+    "exec_mode": "cluster",
+    "env": {
+      "NODE_ENV": "local",
+      "APP_PORT": 10005,
+			"VALID_USERS": ["user1","user2"],
+			"S3_BUCKET": "s3bucket",
+			"AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXXX",
+			"AWS_SECRET_ACCESS_KEY":"XXXXXXXXXXXXXXXXXXXXXXXX",
+			"AWS_REGION":"eu-west-1",
+			"TRANSMISSION_USER":"user",
+			"TRANSMISSION_PWD": "pwd",
+			"TRANSMISSION_HOST":"localhost",
+			"TRANSMISSION_PORT":9091
+    },
+    "env_staging": {
+      "NODE_ENV": "staging"
+    }
+  }]
+}
