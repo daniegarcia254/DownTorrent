@@ -117,16 +117,13 @@ export default {
 				columnPicker: false,
 				leftStickyColumns: 0,
 				rightStickyColumns: 0,
-				rowHeight: '50px',
+				rowHeight: 'auto',
 				responsive: true,
 				selection: 'single',
-        pagination: {
-          rowsPerPage: 10,
-          options: [5, 10, 15, 30]
-        },
-				bodyStyle: {
-          maxHeight: Platform.is.mobile ? '50vh' : '500px'
-        },
+				pagination: {
+					rowsPerPage: 10,
+					options: [5, 10, 15, 30]
+				},
 				messages: {
 					noData: this.$t("links.table.noData")
 				}
@@ -149,7 +146,7 @@ export default {
 				}
 			],
 			pagination: true,
-			rowHeight: 50,
+			rowHeight: 'auto',
 			bodyHeightProp: 'auto',
 			bodyHeight: 'auto'
 		}

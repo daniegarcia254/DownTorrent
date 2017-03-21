@@ -162,9 +162,6 @@ export default {
 					rowsPerPage: 10,
 					options: [5, 10, 15, 30, 50]
 				},
-				bodyStyle: {
-          maxHeight: Platform.is.mobile ? '50vh' : '500px'
-        },
 				messages: {
 					noData: this.$t("search.table.noData")
 				}

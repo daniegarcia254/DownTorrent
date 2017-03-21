@@ -155,6 +155,7 @@ export default {
 					html: self.$t("info.success.uploadTorrent"),
 					timeout: 5000
 				})
+				self.$router.push({ path: 'links'})
 			}
 		},
 		progress: function(data){
@@ -351,12 +352,9 @@ export default {
 				columnPicker: false,
 				leftStickyColumns: 0,
 				rightStickyColumns: 0,
-				rowHeight: '50px',
+				rowHeight: 'auto',
 				responsive: true,
 				selection: 'single',
-				bodyStyle: {
-          maxHeight: Platform.is.mobile ? '50vh' : '500px'
-        },
 				messages: {
 					noData: this.$t("info.table.noData")
 				}
@@ -419,7 +417,7 @@ export default {
 				}
 			],
 			pagination: false,
-			rowHeight: 50,
+			rowHeight: 'auto',
 			bodyHeightProp: 'auto',
 			bodyHeight: 'auto'
 		}
