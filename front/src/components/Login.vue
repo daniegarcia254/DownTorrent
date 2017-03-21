@@ -23,7 +23,7 @@
 				<q-drawer-link icon="home" to="/" exact>{{ $t("login.title") }}</q-drawer-link>
 				<hr/>
 				<q-drawer-link icon="search" to="/search" exact>{{ $t("search.title") }}</q-drawer-link>
-				<q-drawer-link icon="file_download" to="/info" exact>{{ $t("downloads.title") }}</q-drawer-link>
+				<q-drawer-link icon="file_download" to="/info" exact>{{ $t("info.title") }}</q-drawer-link>
 				<q-drawer-link icon="cloud_download" to="/links" exact>{{ $t("links.title") }}</q-drawer-link>
 			</div>
 		</q-drawer>

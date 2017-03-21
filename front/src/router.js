@@ -36,7 +36,7 @@ export default new VueRouter({
 
 	routes: [{
 		path: '/',
-		name: Vue.t('login.title'),
+		name: 'login',
 		component: load('Login'),
 		children: [{
 			path: 'search',
