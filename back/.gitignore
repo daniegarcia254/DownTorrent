@@ -17,3 +17,5 @@
 coverage
 node_modules
 npm-debug.log
+start.sh
+start.config.local.json
