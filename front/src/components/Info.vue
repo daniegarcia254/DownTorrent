@@ -57,7 +57,7 @@
 
 <script>
 
-import { Utils, Toast, Loading, Dialog } from 'quasar'
+import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
 import router from '../router'
 
 export default {
@@ -354,6 +354,9 @@ export default {
 				rowHeight: '50px',
 				responsive: true,
 				selection: 'single',
+				bodyStyle: {
+          maxHeight: Platform.is.mobile ? '50vh' : '500px'
+        },
 				messages: {
 					noData: this.$t("info.table.noData")
 				}
@@ -421,25 +424,6 @@ export default {
 			bodyHeight: 'auto'
 		}
 	},
-	watch: {
-		rowHeight (value) {
-			this.config.rowHeight = value + 'px'
-		},
-		bodyHeight (value) {
-			let style = {}
-			if (this.bodyHeightProp !== 'auto') {
-				style[this.bodyHeightProp] = value + 'px'
-			}
-			this.config.bodyStyle = style
-		},
-		bodyHeightProp (value) {
-			let style = {}
-			if (value !== 'auto') {
-				style[value] = this.bodyHeight + 'px'
-			}
-			this.config.bodyStyle = style
-		}
-	},
 	computed: {
 		columns: {
 			get () {
@@ -469,6 +453,10 @@ export default {
 		font-size 25px
 	.layout-padding
 		padding-bottom 50px !important
+	.scroll
+		width: 100%;
+	.q-data-table
+		width 100%
 	.q-data-table table tr
 		height 56px !important
 </style>

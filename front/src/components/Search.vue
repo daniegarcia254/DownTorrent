@@ -29,7 +29,7 @@
 
 <script>
 
-import { Utils, Toast, Loading, Dialog } from 'quasar'
+import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
 import moment from 'moment'
 
 export default {
@@ -157,11 +157,14 @@ export default {
 				rightStickyColumns: 0,
 				rowHeight: '50px',
 				responsive: true,
+				selection: 'single',
 				pagination: {
 					rowsPerPage: 10,
 					options: [5, 10, 15, 30, 50]
 				},
-				selection: 'single',
+				bodyStyle: {
+          maxHeight: Platform.is.mobile ? '50vh' : '500px'
+        },
 				messages: {
 					noData: this.$t("search.table.noData")
 				}
@@ -258,23 +261,6 @@ export default {
 				return
 			}
 			this.config.pagination = this.oldPagination
-		},
-		rowHeight (value) {
-			this.config.rowHeight = value + 'px'
-		},
-		bodyHeight (value) {
-			let style = {}
-			if (this.bodyHeightProp !== 'auto') {
-				style[this.bodyHeightProp] = value + 'px'
-			}
-			this.config.bodyStyle = style
-		},
-		bodyHeightProp (value) {
-			let style = {}
-			if (value !== 'auto') {
-				style[value] = this.bodyHeight + 'px'
-			}
-			this.config.bodyStyle = style
 		}
 	}
 }
@@ -291,6 +277,10 @@ export default {
 		width 45px !important
 		margin-left 20px
 		margin-right 10px
+	.scroll
+		width: 100%;
+	.q-data-table
+		width 100%
 	.q-data-table-toolbar .q-search
 		display: none
 	.q-data-table-toolbar .q-picker-textfield

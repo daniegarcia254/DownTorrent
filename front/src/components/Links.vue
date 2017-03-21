@@ -23,7 +23,7 @@
 
 <script>
 
-import { Utils, Toast, Loading, Dialog } from 'quasar'
+import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
 import router from '../router'
 
 export default {
@@ -112,7 +112,7 @@ export default {
 		return {
 			links_result: [],
 			config: {
-				title: this.$t("downloads.table.title"),
+				title: this.$t("info.table.title"),
 				refresh: true,
 				columnPicker: false,
 				leftStickyColumns: 0,
@@ -120,6 +120,13 @@ export default {
 				rowHeight: '50px',
 				responsive: true,
 				selection: 'single',
+        pagination: {
+          rowsPerPage: 10,
+          options: [5, 10, 15, 30]
+        },
+				bodyStyle: {
+          maxHeight: Platform.is.mobile ? '50vh' : '500px'
+        },
 				messages: {
 					noData: this.$t("links.table.noData")
 				}
@@ -155,23 +162,6 @@ export default {
 				return
 			}
 			this.config.pagination = this.oldPagination
-		},
-		rowHeight (value) {
-			this.config.rowHeight = value + 'px'
-		},
-		bodyHeight (value) {
-			let style = {}
-			if (this.bodyHeightProp !== 'auto') {
-				style[this.bodyHeightProp] = value + 'px'
-			}
-			this.config.bodyStyle = style
-		},
-		bodyHeightProp (value) {
-			let style = {}
-			if (value !== 'auto') {
-				style[value] = this.bodyHeight + 'px'
-			}
-			this.config.bodyStyle = style
 		}
 	}
 }
@@ -185,6 +175,10 @@ export default {
 		font-size 25px
 	.layout-padding
 		padding-bottom 50px !important
+	.scroll
+		width: 100%;
+	.q-data-table
+		width 100%
 	.q-data-table table tr
 		height 56px !important
 </style>
