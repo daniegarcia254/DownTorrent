@@ -49,8 +49,8 @@ module.exports = function() {
 							var torrent = {};
 							torrent.id = t.id;
 							torrent.name = t.name;
-							torrent.status = t.isFinished ? 'Completed' : getStatusType(t.status)
 							torrent.size = t.totalSize === 0 ? '-' : prettyBytes(t.totalSize)
+							torrent.status = t.totalSize === 0 ? 'Checking' : (t.isFinished ? 'Completed' : getStatusType(t.status))
 							torrent.progress = t.percentDone*100
 							torrent.speed = t.totalSize === 0 ? '-' : prettyBytes(t.rateDownload)+'/s'
 							torrent.magnetLink = t.magnetLink

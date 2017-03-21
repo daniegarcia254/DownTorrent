@@ -35,17 +35,14 @@ router.get('/user/login/:username', function(req, res) {
 
 	var err = utils.handleSpawnError(id_user)
 
-	if (username === 'root') {
-		err = {"message": "Login not allowed with user 'root'","status": 401}
-	}
+	if (!utils.checkValidUser(username)){
+		err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+	} 
 
 	if (err !== null) {
 		console.log("Error checking user", err)
 		res.send({"error": err})
-	} else if (process.env.VALID_USERS.indexOf(username) === -1){
-		console.log("Invalid user", username)
-		res.send({"error": { "message": "Invalid username. The user is no registered in the system." }})
-	}	else {
+	} else {
 		console.log("Success checking user", id_user.stdout.toString())
 		res.send({"output":id_user.stdout.toString()})
 	}
@@ -61,12 +58,9 @@ router.post('/deluge/download', function(req, res) {
 
 	var err = null;
 
-	if (username === 'root') {
-		err = {"message": "No action is allowed with user 'root'","status": 401}
+	if (!utils.checkValidUser(username)){
+		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
-	} else if (process.env.VALID_USERS.indexOf(username) === -1){
-		console.log("Invalid user", username)
-		res.send({"error": { "message": "Invalid username. The user is no registered in the system." }})
 	} else {
 		deluge.addMagnet(magnetLink, dir, function(err, result){
 			if (err) {
@@ -88,13 +82,13 @@ router.post('/transmission/download', function(req, res) {
 
 	console.log("Download", username, torrent)
 
-	if (username === 'root') {
-		var err = {"message": "No action is allowed with user 'root'","status": 401}
+	if (!utils.checkValidUser(username)){
+		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
-	} else if (process.env.VALID_USERS.indexOf(username) === -1){
-		console.log("Invalid user", username)
-		res.send({"error": { "message": "Invalid username. The user is no registered in the system." }})
-	} else {
+	} else if (!utils.checkAvailableSpace()){
+		var err = { "message": "Can't start a new download. No available space on disk.","status": 403}
+		res.send({"error": err})
+	}else {
 		transmission.addMagnet(magnetLink, dir, function(err, result){
 			if (err) {
 				console.log("Error add torrent", err)
@@ -110,12 +104,9 @@ router.post('/transmission/download', function(req, res) {
 router.get('/links/:username', function(req, res) {
 	var username = utils.sanitize(req.params.username);
 
-	if (username === 'root') {
-		var err = {"message": "No action is allowed with user 'root'","status": 401}
+	if (!utils.checkValidUser(username)){
+		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
-	} else if (process.env.VALID_USERS.indexOf(username) === -1){
-		console.log("Invalid user", username)
-		res.send({"error": { "message": "Invalid username. The user is no registered in the system." }})
 	} else {
 		uploader.getLinks(username, function(err, links){
 			if (err) {
@@ -133,12 +124,9 @@ router.get('/links/:username/:key', function(req, res) {
 	var username = utils.sanitize(req.params.username),
 			key = req.params.key;
 
-	if (username === 'root') {
-		var err = {"message": "No action is allowed with user 'root'","status": 401}
+	if (!utils.checkValidUser(username)){
+		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
-	} else if (process.env.VALID_USERS.indexOf(username) === -1){
-		console.log("Invalid user", username)
-		res.send({"error": { "message": "Invalid username. The user is no registered in the system." }})
 	} else {
 		res.send(uploader.getFileURL(username, key));
 	}

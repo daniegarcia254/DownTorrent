@@ -52,10 +52,11 @@ export default {
 		openLink: function(props){
 			var self = this,
 				username = self.$store.state.username,
-				file = props.rows[0].data;
+				fileObject = props.rows[0].data,
+				file = fileObject.Key.split('/')[1]
 
 			self.showLoading('')
-			var url = location.protocol + '//' + location.hostname + ':10005/api/links/' + username + '/' + file.Key;
+			var url = location.protocol + '//' + location.hostname + ':10005/api/links/' + username + '/' + file;
 			self.axios.get(encodeURI(url)).then((response) => {
 				Loading.hide()
 				if (response.data.error) {
@@ -133,7 +134,10 @@ export default {
 					label: this.$t("links.table.fields.name"),
 					field: 'Key',
 					width: '180px',
-					sort: true
+					sort: true,
+					format (value, row) {
+			      return value.split('/')[1]
+			    }
 				},{
 					label: this.$t("links.table.fields.lastModified"),
 					field: 'LastModified',

@@ -34,7 +34,7 @@
 							<button class="primary clear" @click="deleteTorrent(props)" v-if="props.rows[0]">
 								<i>delete</i>
 							</button>
-							<button class="primary clear" @click="pauseTorrent(props)" v-if="props.rows[0] && props.rows[0].data.status === 'Downloading'">
+							<button class="primary clear" @click="pauseTorrent(props)" v-if="props.rows[0] && (props.rows[0].data.status === 'Downloading' || props.rows[0].data.status === 'Checking')">
 								<i>pause</i>
 							</button>
 							<button class="primary clear" @click="resumeTorrent(props)" v-if="props.rows[0] && props.rows[0].data.status === 'Paused'">

@@ -43,8 +43,14 @@ module.exports = function() {
 		console.log("Upload files", utils.sanitize(username), utils.sanitizeURI(torrent.name));
 
 		try {
+			if (!utils.checkValidUser(username)){
+				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+				return callback({"error":err});
+			}
+
 			var fileName = '/home/'+utils.sanitize(username)+'/downloads/'+utils.sanitizeURI(torrent.name),
-			baseDir = '/home/'+utils.sanitize(username)+'/downloads/';
+					baseDir = '/home/'+utils.sanitize(username)+'/downloads/',
+					username = utils.sanitize(username);
 
 			// Create zip
 			createZip(fileName, baseDir, function(err, zipName) {
@@ -54,17 +60,17 @@ module.exports = function() {
 				}
 				else {
 					console.log('Success creating zip', zipName);
-					var url = s3lib.getPublicUrl(process.env.S3_BUCKET,zipName,process.env.AWS_REGION);
+					var url = s3lib.getPublicUrl(process.env.S3_BUCKET, username + '/' + zipName,process.env.AWS_REGION);
 					// First, check if file already exists in S3
 					var params = { Bucket: process.env.S3_BUCKET, Key: zipName };
 					s3aws.headObject(params, function (err, metadata) {
 						console.log("Check if file exists", url, err, metadata);
 						if (err && (err.code === 'NotFound' || err.code === 'Forbidden')) {
 							// If it doesn't exists --> Upload
-							uploadFile(client, baseDir+zipName, function(err, data){
+							uploadFile(client, username, baseDir+zipName, function(err, data){
 								if (err) {
 									console.log("Error uploading zip file", err);
-									callback({"message":err.message,"status": 500});
+									callback({"error":{"message":err.message,"status": 500}});
 								}
 								else {
 									deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
@@ -84,12 +90,21 @@ module.exports = function() {
 			});
 		} catch(err) {
 			console.log("Error uploading files", err);
-			callback({"message":err.message,"status": 500});
+			callback({"error":{"message":err.message,"status": 500}});
 		}
 	}
 
 	module.getLinks = function(username, callback){
-		s3aws.listObjects({Bucket: process.env.S3_BUCKET}, function(err, data) {
+
+		if (!utils.checkValidUser(username)){
+			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+			return callback({"error":err});
+		}
+
+		s3aws.listObjects({
+			Bucket: process.env.S3_BUCKET,
+			Prefix: utils.sanitize(username)
+		}, function(err, data) {
 			if (err) callback(err)
 			else  {
 				var files = [];
@@ -108,8 +123,14 @@ module.exports = function() {
 	}
 
 	module.getFileURL = function(username, file, callback){
-		console.log("getFileURL", process.env.S3_BUCKET, file, process.env.AWS_REGION);
-		return s3lib.getPublicUrl(process.env.S3_BUCKET, file, process.env.AWS_REGION);
+		
+		if (!utils.checkValidUser(username)){
+			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+			return callback({"error":err});
+		}
+
+		console.log("getFileURL", process.env.S3_BUCKET, username, file, process.env.AWS_REGION);
+		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
 	}
 
 	/*----------------------------------------------------*/
@@ -135,20 +156,20 @@ module.exports = function() {
 		}
 	}
 
-	function uploadFile(client, absoluteFilePath, uploadCb) {
+	function uploadFile(client, username, absoluteFilePath, uploadCb) {
 		var fileName = path.basename(absoluteFilePath),
 		stats = fs.statSync(absoluteFilePath),
 		fileSizeInBytes = stats["size"];
 
-		uploadMultipart(client, absoluteFilePath, fileName, uploadCb)
+		uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 	}
 
-	function uploadMultipart(client, absoluteFilePath, fileName, uploadCb) {
+	function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb) {
 		var params = {
 			localFile: absoluteFilePath,
 			s3Params: {
 				Bucket: process.env.S3_BUCKET,
-				Key: fileName,
+				Key:  username + '/' + fileName,
 				ACL: 'public-read',
 				ContentType: getContentTypeByFile(fileName)
 					// other options supported by putObject, except Body and ContentLength.

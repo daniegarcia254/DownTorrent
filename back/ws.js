@@ -83,8 +83,9 @@ module.exports = function (io) {
 	function scan(client){
 		client.on('scan', function(data){
 			console.log('scan',data);
-			if (data.username === 'root') {
-				client.emit('scan', {'error': {"message": "No action is allowed with user 'root'","status": 401}})
+			if (!utils.checkValidUser(data.username)){
+				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+				client.emit('upload', {'error': err})
 			} else {
 				clamav.scanFiles(data.username, data.torrent, function(err,result){
 					if (err) {
@@ -102,8 +103,9 @@ module.exports = function (io) {
 	function upload(client){
 		client.on('upload', function(data){
 			console.log('upload',data);
-			if (data.username === 'root') {
-				client.emit('upload', {'error': {"message": "No action is allowed with user 'root'","status": 401}})
+			if (!utils.checkValidUser(data.username)){
+				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+				client.emit('upload', {'error': err})
 			} else {
 				uploader.upload(client, data.client, data.username, data.torrent, function(err, result){
 					if (err) {

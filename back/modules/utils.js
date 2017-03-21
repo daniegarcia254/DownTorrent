@@ -34,5 +34,30 @@ module.exports = function() {
 		return string.replace(/[><;|\//].*$/g, '');
 	}
 
+	module.checkValidUser = function(username){
+		var username = this.sanitize(username);
+		if (username === 'root') return false
+		else if (process.env.VALID_USERS.indexOf(username) === -1) return false
+		else return true
+	}
+
+	module.checkAvailableSpace = function(){
+		var check = spawn("df", ["-h","/home"]);
+		var err = utils.handleSpawnError(check)
+		if (err !== null) {
+			console.log("Error testing available space", err)
+			return false;
+		} else {
+			console.log("Success testing available space", check.stdout.toString())
+			var line = t.split('\n')[1];
+			var spacePercentAvailable = (100 - parseFloat(line[1].split(' ')[line[1].split(' ').length-2].split('%')[0]))
+			if (spacePercentAvailable < 10) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
 	return module;
 }
