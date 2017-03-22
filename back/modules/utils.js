@@ -1,5 +1,7 @@
 'use strict'
 
+const spawn = require('child_process').spawnSync
+
 module.exports = function() {
 	var module = {};
 
@@ -43,14 +45,14 @@ module.exports = function() {
 
 	module.checkAvailableSpace = function(){
 		var check = spawn("df", ["-h","/home"]);
-		var err = utils.handleSpawnError(check)
+		var err = this.handleSpawnError(check)
 		if (err !== null) {
 			console.log("Error testing available space", err)
 			return false;
 		} else {
 			console.log("Success testing available space", check.stdout.toString())
-			var line = t.split('\n')[1];
-			var spacePercentAvailable = (100 - parseFloat(line[1].split(' ')[line[1].split(' ').length-2].split('%')[0]))
+			var line = check.stdout.toString().split('\n')[1];
+			var spacePercentAvailable = (100 - parseFloat(line.split(' ')[line.split(' ').length-2].split('%')[0]))
 			if (spacePercentAvailable < 10) {
 				return false;
 			} else {
