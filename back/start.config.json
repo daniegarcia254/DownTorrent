@@ -1,6 +1,6 @@
 {
   "apps": [{
-    "name": "search",
+    "name": "torrent-webapp",
     "script": "./app.js",
     "watch": true,
     "ignoreWatch": ["newrelic_agent.log"],
