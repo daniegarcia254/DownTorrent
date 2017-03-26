@@ -109,7 +109,7 @@ Yet to be deployed and tested on a live system.
 
 * **Daniel García** - *Software developer* - [Github](https://github.com/daniegarcia254)
 
-See also the list of [contributors](https://github.com/daniegarcia254/URL-Shortener/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/daniegarcia254/DownTorrent/graphs/contributors) who participated in this project.
 
 ## License
 
