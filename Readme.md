@@ -40,11 +40,11 @@ The backend service will be launched and monitored with [PM2](http://pm2.keymetr
 ```
 sudo npm i -g pm2
 ```
-**_Step 2:_** Now inside the repo 'back/' dir, install the needed packages
+**_Step 2:_** Now inside the _'back/'_ dir, install the needed packages
 ```
 npm install
 ```
-**_Step 3:_** Configure the service ENV vars in the _start.config.json_ file
+**_Step 3:_** Configure the service ENV vars in the [start.config.json](back/start.config.json) file
 ```
 "APP_PORT": 10005                   // Port where the service will be available
 "VALID_USERS": ["user1","user2"],   // Usernames that will have access
@@ -74,11 +74,11 @@ The webapp is developed using the [Quasar Framework](http://quasar-framework.org
 ```
 sudo npm i -g quasar-cli
 ```
-**_Step 2:_** Now inside the repo 'back/' dir, install the needed packages
+**_Step 2:_** Now inside the _'front/'_ dir, install the needed packages
 ```
 npm install
 ```
-**_Step 3:_** To start a development server of the app on _https://localhost:10003_, equipped with hot reload, execute inside the _'front/'_ folder the command:
+**_Step 3:_** To start a development server of the app on _https://localhost:10003_, equipped with hot reload, execute the following command inside the _'front/'_ folder:
 ```
 quasar dev
 ```
