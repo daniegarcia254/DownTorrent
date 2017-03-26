@@ -15,11 +15,11 @@ In your Linux machine, you will need the following programs installed and runnin
 
 ##### - Transmission BitTorrent Client
 _**Transmission**_ is a cross-platform and open source BitTorrent client, designed for easy and powerful use.
-In order to install it, you can follow [this tutorial:](https://help.ubuntu.com/community/TransmissionHowTo). You cant totally ignore the part about the Web Interface, the app will only use Transmission from its command-line interface.
+In order to install it, you can follow [this tutorial](https://help.ubuntu.com/community/TransmissionHowTo). You cant totally ignore the part about the Web Interface, the app will only use Transmission from its command-line interface.
 
 ##### - ClamAV
 _**ClamAV**_ is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
-In order to install it, you can use this [interactive tutorial:](https://www.katacoda.com/dgarcia/scenarios/clamav).
+In order to install it, you can use this [interactive tutorial](https://www.katacoda.com/dgarcia/scenarios/clamav).
 
 ##### - Deluge BitTorrent Client (optional)
 The backend service can use either the Transmission BitTorrent Client or either Deluge BitTorrent Client for downloading and manage torrents. So if you prefer this one over Transmission, you can install it following [this tutorial](http://dev.deluge-torrent.org/wiki/UserGuide/Service/systemd). The software will be installed and runned as a system daemon, so you can skip the part about the _Deluge Web UI (deluge-web) Service_.
