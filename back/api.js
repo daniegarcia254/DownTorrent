@@ -132,4 +132,24 @@ router.get('/links/:username/:key', function(req, res) {
 	}
 });
 
+router.delete('/links/:username/:key', function(req, res) {
+	var username = utils.sanitize(req.params.username),
+			key = req.params.key;
+
+	if (!utils.checkValidUser(username)){
+		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+		res.send({"error": err})
+	} else {
+		uploader.deleteS3Object(username, key, function(err, result){
+			if (err) {
+				console.log("Error deleting S3 Object", err)
+				res.send({"error": err})
+			} else {
+				console.log("Success deleting S3 Object", result)
+				res.send(result);
+			}
+		});
+	}
+});
+
 module.exports = router

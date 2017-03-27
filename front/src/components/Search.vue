@@ -55,7 +55,7 @@ export default {
 				var status = error.response.status,
 						data = error.response.data;
 				this.showDialog(error_title, this.$t("search.errors.messages.base", [status,data]))
-			} if (error.message && error.status) {
+			} else if (error.message && error.status) {
 				this.showDialog(error_title, this.$t("search.errors.messages.base", [error.status,error.message]))
 			} else {
 				this.showDialog(error_title, error.message)

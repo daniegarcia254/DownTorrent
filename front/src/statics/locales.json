@@ -73,8 +73,8 @@
 				"message": "Scanning files. Please be patient, this could take a few minutes."
 			},
 			"dialog-upload":{
-				"title": "Generating links",
-				"message": "Files are uploading. Please be patient, this could take a few minutes.<br><br>When the process is finished, you'll be given the links for download the files."
+				"title": "Storing torrent in S3 bucket",
+				"message": "Files are uploading. Please be patient, this could take a few minutes.<br><br>When the process is finished, you'll be redirected to download the fiels."
 			},
 			"dialog-delete":{
 				"title": "",
@@ -116,6 +116,15 @@
 					"size":"Size",
 					"lastModified":"Last modified"
 				}
+			},
+			"dialog-delete":{
+				"title":"Delete file",
+				"message":"Are you sure you ant to delete the {0} file?<br><br>Once is deleted, won't be available again for downloading.",
+				"cancelBtn":"Cancel",
+				"okBtn":"Ok"
+			},
+			"success":{
+				"deleting": "File successfully deleted"
 			},
 			"errors": {
 				"title": "Error",
@@ -208,8 +217,8 @@
 				"message": "Escaneando archivos en busca de virus. Este proceso puede tardar unos minutos."
 			},
 			"dialog-upload":{
-				"title": "Generando links",
-				"message": "Una vez terminado el proceso, se le mostrarán los links de descarga de los archivos.<br><br>Este proceso puede tardar unos minutos."
+				"title": "Almacenando torrent",
+				"message": "Una vez terminado el proceso, será redirigido a la descarga del archivo.<br><br>Este proceso puede tardar unos minutos."
 			},
 			"dialog-delete":{
 				"title": "",
@@ -252,10 +261,19 @@
 					"lastModified":"Modificado"
 				}
 			},
+			"dialog-delete":{
+				"title":"Eliminar",
+				"message":"¿Estás seguro de que deseas eliminar el archivo {0}?<br><br>Una vez eliminado, no estará disponible de nuevo para su descarga.",
+				"cancelBtn":"Cancelar",
+				"okBtn":"Eliminar"
+			},
+			"success":{
+				"deleting": "Archivo eliminado con éxito"
+			},
 			"errors": {
 				"title": "Error",
 				"messages": {
-					"base": "There has been an error (status: {0})</br></br>{1}"
+					"base": "Ha ocurrido un error (status: {0})</br></br>{1}"
 				}
 			}
 		},

@@ -5,7 +5,6 @@ const path = require('path')
 const spawn = require('child_process').spawnSync
 const s3lib = require('s3')
 const AWS = require('aws-sdk')
-const utils = require('./utils.js')()
 const zipFolder = require('zip-folder')
 const async = require('async')
 const rimraf = require('rimraf')
@@ -14,6 +13,7 @@ const _ = require('underscore')
 const moment = require('moment')
 const transmission = require('./transmission.js')()
 const deluge = require('./deluge.js')()
+const utils = require('./utils.js')()
 
 // Create S3 AWS-SDK client
 const s3aws = new AWS.S3();
@@ -122,15 +122,30 @@ module.exports = function() {
 		});
 	}
 
-	module.getFileURL = function(username, file, callback){
+	module.getFileURL = function(username, file){
+		
+		if (!utils.checkValidUser(username)){
+			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+			return {"error":err};
+		}
+
+		console.log("getFileURL", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
+		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
+	}
+
+	module.deleteS3Object = function(username, file, callback){
 		
 		if (!utils.checkValidUser(username)){
 			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 			return callback({"error":err});
 		}
 
-		console.log("getFileURL", process.env.S3_BUCKET, username, file, process.env.AWS_REGION);
-		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
+		console.log("deleteS3Object", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file);
+
+		s3aws.deleteObject({
+			Bucket: process.env.S3_BUCKET,
+			Key:  utils.sanitize(username) + '/' + file
+		}, callback);
 	}
 
 	/*----------------------------------------------------*/
