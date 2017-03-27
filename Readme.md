@@ -15,11 +15,11 @@ In your Linux machine, you will need the following programs installed and runnin
 
 ##### - Transmission BitTorrent Client
 _**Transmission**_ is a cross-platform and open source BitTorrent client, designed for easy and powerful use.
-In order to install it, you can follow [this tutorial:](https://help.ubuntu.com/community/TransmissionHowTo). You cant totally ignore the part about the Web Interface, the app will only use Transmission from its command-line interface.
+In order to install it, you can follow [this tutorial](https://help.ubuntu.com/community/TransmissionHowTo). You cant totally ignore the part about the Web Interface, the app will only use Transmission from its command-line interface.
 
 ##### - ClamAV
 _**ClamAV**_ is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
-In order to install it, you can use this [interactive tutorial:](https://www.katacoda.com/dgarcia/scenarios/clamav).
+In order to install it, you can use this [interactive tutorial](https://www.katacoda.com/dgarcia/scenarios/clamav).
 
 ##### - Deluge BitTorrent Client (optional)
 The backend service can use either the Transmission BitTorrent Client or either Deluge BitTorrent Client for downloading and manage torrents. So if you prefer this one over Transmission, you can install it following [this tutorial](http://dev.deluge-torrent.org/wiki/UserGuide/Service/systemd). The software will be installed and runned as a system daemon, so you can skip the part about the _Deluge Web UI (deluge-web) Service_.
@@ -40,11 +40,11 @@ The backend service will be launched and monitored with [PM2](http://pm2.keymetr
 ```
 sudo npm i -g pm2
 ```
-**_Step 2:_** Now inside the repo 'back/' dir, install the needed packages
+**_Step 2:_** Now inside the _'back/'_ dir, install the needed packages
 ```
 npm install
 ```
-**_Step 3:_** Configure the service ENV vars in the _start.config.json_ file
+**_Step 3:_** Configure the service ENV vars in the [start.config.json](back/start.config.json) file
 ```
 "APP_PORT": 10005                   // Port where the service will be available
 "VALID_USERS": ["user1","user2"],   // Usernames that will have access
@@ -74,11 +74,11 @@ The webapp is developed using the [Quasar Framework](http://quasar-framework.org
 ```
 sudo npm i -g quasar-cli
 ```
-**_Step 2:_** Now inside the repo 'back/' dir, install the needed packages
+**_Step 2:_** Now inside the _'front/'_ dir, install the needed packages
 ```
 npm install
 ```
-**_Step 3:_** To start a development server of the app on _https://localhost:10003_, equipped with hot reload, execute inside the _'front/'_ folder the command:
+**_Step 3:_** To start a development server of the app on _https://localhost:10003_, equipped with hot reload, execute the following command inside the _'front/'_ folder:
 ```
 quasar dev
 ```
@@ -109,7 +109,7 @@ Yet to be deployed and tested on a live system.
 
 * **Daniel García** - *Software developer* - [Github](https://github.com/daniegarcia254)
 
-See also the list of [contributors](https://github.com/daniegarcia254/URL-Shortener/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/daniegarcia254/DownTorrent/graphs/contributors) who participated in this project.
 
 ## License
 
