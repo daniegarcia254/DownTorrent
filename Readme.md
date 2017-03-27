@@ -1,5 +1,9 @@
 #  DownTorrent
-_**DownTorrent**_ is a webapp that simplifies and unifies the process of download a torrent. In the same app you can search for a torrent, get it to download in a torrent client in the same webapp and finally download it to your computer. Besides, you can scan the downloaded torrents with an antivirus.
+_**DownTorrent**_ is a webapp that simplifies and unifies the process of download a torrent. In the same app you can:
+* Search for a torrent in The Pirate Bay
+* Get it to download  and manage (delete, pause, resume) the torrent as well as watch the download progress
+* Scan the downloaded torrents with an antivirus if you want to make sure it is free of viruses
+* Upload the torrents to a S3 bucket, and download them anytime you want
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. You will need some knowledge about linux adminsitration as well the use of AWS.
