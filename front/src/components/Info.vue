@@ -304,9 +304,6 @@ export default {
 		showProgressDialog (action) {
 			var self = this;
 			var progress = this.progress;
-			if (action === 'scan') {
-				dialogObject.progress = { indeterminate: true }
-			}
 			var dialogObject = {
 				title: self.$t("info.dialog-"+action+".title"),
 				message: self.$t("info.dialog-"+action+".message"),
@@ -314,6 +311,9 @@ export default {
 				progress,
 				noBackdropDismiss: true,
 				noEscDismiss: true
+			}
+			if (action === 'scan') {
+				dialogObject.progress = { indeterminate: true }
 			}
 			self.progressDialog = Dialog.create(dialogObject)
 		},
