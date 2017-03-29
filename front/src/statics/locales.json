@@ -45,7 +45,7 @@
 			"title": "Downloads",
 			"table": {
 				"title": "",
-				"noData": "<i>warning</i> No data available to show.",
+				"noData": "<i>warning</i> No torrents in progress.",
 				"fields": {
 					"name":"Name",
 					"size":"Size",
@@ -70,7 +70,7 @@
 			},
 			"dialog-scan":{
 				"title": "Scanning",
-				"message": "Scanning files. Please be patient, this could take a few minutes."
+				"message": "Scanning files for virus. Please be patient, this could take a few minutes."
 			},
 			"dialog-upload":{
 				"title": "Storing torrent in S3 bucket",
@@ -110,7 +110,7 @@
 			"title": "Files",
 			"table": {
 				"title": "",
-				"noData": "<i>warning</i> No data available to show.",
+				"noData": "<i>warning</i> No files to download.",
 				"fields": {
 					"name":"Name",
 					"size":"Size",
@@ -189,7 +189,7 @@
 			"title": "Descargas",
 			"table": {
 				"title": "",
-				"noData": "<i>warning</i> No hay datos para mostrar.",
+				"noData": "<i>warning</i> No hay torrents en progreso.",
 				"fields": {
 					"name":"Nombre",
 					"size":"Tamaño",
@@ -254,7 +254,7 @@
 			"title": "Ficheros",
 			"table": {
 				"title": "",
-				"noData": "<i>warning</i> No hay datos para mostrar.",
+				"noData": "<i>warning</i> No hay archivos para descargar.",
 				"fields": {
 					"name":"Nombre",
 					"size":"Tamaño",
