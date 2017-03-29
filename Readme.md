@@ -1,5 +1,12 @@
 #  DownTorrent
-_**DownTorrent**_ is a webapp that simplifies and unifies the process of download a torrent. In the same app you can search for a torrent, get it to download in a torrent client in the same webapp and finally download it to your computer. Besides, you can scan the downloaded torrents with an antivirus.
+_**DownTorrent**_ is a webapp that simplifies and unifies the process of download a torrent. In the same app you can:
+* Search for a torrent in The Pirate Bay
+* Get it to download  and manage (delete, pause, resume) the torrent as well as watch the download progress
+* Scan the downloaded torrents with an antivirus if you want to make sure it is free of viruses
+* Upload the torrents to a S3 bucket, and download them anytime you want
+
+## Motivation
+This project is motived by the need of some familiars to download films, books, etc. from the internet without the difficulty of search for it in the browser (as well to avoid all the advertising these kind of pages produce), know how to add it to a torrent client and use that torrent client. The fact of have it all in the same app, make it easier for them.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. You will need some knowledge about linux adminsitration as well the use of AWS.
@@ -84,11 +91,11 @@ quasar dev
 ```
 You also can use [Quasar Play App](http://quasar-framework.org/guide/#Quasar-Play-App) if you want test the app directly in a mobile/tablet device, with hot reload.
 
-## Running the tests
-There are no tests implemented so far.
-
-## Deployment
-Yet to be deployed and tested on a live system.
+## ToDo
+There are some features I would like to implement for the app in a near future. Feel free to contribute to the project in order to complete them:
+* Create a Dockerfile to deploy the app in a simpler way and get it running instantly
+* Add real Authentication to the system, no using one based on the Ubuntu system users. Using a database and JSON Web Tokens for example.
+* Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
 
 ## Built With
 ### - Backend
