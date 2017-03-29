@@ -1,0 +1,22 @@
+#Using NODE latest with debian:jessie
+FROM node:latest
+
+#Replace shell with bash so we can source files
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+#SET ENVIROMENT VARIABLES
+ENV FRONT_DIR /usr/src/app/frontend
+
+#Set the FRONTEND work directory
+RUN mkdir -p /usr/src/app/frontend
+WORKDIR ${FRONT_DIR}
+
+# Add our package.json and install *before* adding our FRONTEND app files
+ADD front/package.json ./
+RUN npm install -g --silent quasar-cli@0.5.2 && \
+    npm install --silent
+#Copy rest of the FRONTEND files and config env
+COPY front /usr/src/app/frontend
+
+WORKDIR ${FRONT_DIR}
+CMD ["quasar","dev","--play"]
