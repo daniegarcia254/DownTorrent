@@ -1,6 +1,7 @@
 version: '3'
 services:
   downtorrent_back:
+    container_name: downtorrent_back
     build:
       context: .
       dockerfile: Dockerfile-back
@@ -12,10 +13,11 @@ services:
       - "10005:10005"
       - "9090:9090"
   downtorrent_front:
+    container_name: downtorrent_front
     build:
       context: .
       dockerfile: Dockerfile-front
     expose:
-      - "10003"
+      - "80"
     ports:
-      - "10003:10003"
+      - "10003:80"
