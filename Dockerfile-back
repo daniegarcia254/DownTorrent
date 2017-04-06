@@ -1,74 +1,39 @@
-#Using NODE latest with debian:jessie
-FROM node:latest
+FROM dgarcia254/debian8-node7-pm2-transmission-clamav:latest
 
-#Replace shell with bash so we can source files
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+LABEL maintaner "Daniel Garcia - daniegarcia254@gmail.com"
 
-#SET ENVIROMENT VARIABLES
-ENV BACK_DIR /usr/src/app/backend
+#Set ENV vars
+ENV BACK_DIR /usr/src/app
 
-#INSTALL BASICS
-RUN apt-get update && apt-get install -y \
-	unzip \
-	wget \
-	make \
-	zlib1g-dev \
-	host \
-	curl \
-	rsync
-
-#CREATE test USER
-RUN adduser test --shell /bin/bash --disabled-password && \
+#Create 'test' user
+RUN adduser --shell /bin/bash --disabled-password --gecos "" test && \
     mkdir /home/test/downloads && \
     chmod -R 0777 /home/test/downloads && \
     chown test:test -R /home/test/downloads
-
-
-#INSTALL && CONFIG TRANSMISSION
-RUN  apt-get install -y transmission-cli transmission-common transmission-daemon && \
-     service transmission-daemon stop && \
+    
+#Config Transmissio torrent client
+RUN  service transmission-daemon stop && \
      sed -i 's/9091/9090/g' /etc/transmission-daemon/settings.json && \
      sed -i 's/"rpc-username": "transmission"/"rpc-username": "truser"/g' /etc/transmission-daemon/settings.json && \
      sed -i 's/"rpc-password": "transmission"/"rpc-password": "trpwd"/g' /etc/transmission-daemon/settings.json && \
      sed -i 's/127\.0\.0\.1/\*\.\*\.\*\.\*/g' /etc/transmission-daemon/settings.json && \
      sed -i 's/"umask": 18/"umask": 2/g' /etc/transmission-daemon/settings.json && \
      service transmission-daemon start && \ 
-     cat /etc/transmission-daemon/settings.json && \
      usermod -a -G debian-transmission test
 
-#INSTALL && CONFIG CLAMAV
-RUN apt-get install -y clamav clamav-daemon clamav-freshclam && \
-    ldconfig && \
-    wget https://github.com/extremeshok/clamav-unofficial-sigs/archive/master.zip && \
-    unzip master.zip && \
-    cp clamav-unofficial-sigs-master/clamav-unofficial-sigs.sh /usr/local/bin/ && \
-    chmod 0775 /usr/local/bin/clamav-unofficial-sigs.sh && \
-    mkdir /etc/clamav-unofficial-sigs/ && \
-    cp -vr clamav-unofficial-sigs-master/config/* /etc/clamav-unofficial-sigs/ && \
-    mv /etc/clamav-unofficial-sigs/os.debian8.conf /etc/clamav-unofficial-sigs/os.conf && \
-    sed -i 's/#user_configuration_complete/user_configuration_complete/g' /etc/clamav-unofficial-sigs/user.conf && \
-    /bin/bash -c "/usr/local/bin/clamav-unofficial-sigs.sh --install-cron --install-logrotate --install-man" && \
-    whereis clamscan && \
-    freshclam
-
-########################
-# BACKEND 
-########################
-
 #Set the backend work directory
-RUN mkdir -p /usr/src/app/backend
+RUN mkdir -p /usr/src/app
 WORKDIR ${BACK_DIR}
 
 #Add our package.json and install *before* adding our backend app files
 ADD back/package.json ./
-RUN npm install -g --silent pm2@2.4.0 && \
-    npm install --silent --production
+RUN npm install --silent
 
 #Copy rest of the backend files and config env
-COPY back /usr/src/app/backend
-RUN sed -i 's/localhost/downtorrent_back/g' start.config.local.json && \
-    sed -i 's/9091/9090/g' start.config.local.json && \
-    cat start.config.local.json
+COPY back /usr/src/app/
+RUN sed -i 's/localhost/downtorrent_back/g' start.config.json && \
+    sed -i 's/9091/9090/g' start.config.json && \
+    cat start.config.json
 
 #START APP
 WORKDIR ${BACK_DIR}

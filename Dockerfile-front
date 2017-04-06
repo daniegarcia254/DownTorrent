@@ -1,22 +1,27 @@
-#Using NODE latest with debian:jessie
-FROM node:latest
+FROM dgarcia254/debian8-apache-androidsdk-node-quasar:latest
 
-#Replace shell with bash so we can source files
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+LABEL maintainer "Daniel Garcia - daniegarcia254@gmail.com"
 
 #SET ENVIROMENT VARIABLES
-ENV FRONT_DIR /usr/src/app/frontend
+ENV FRONT_DIR /usr/src/app/
 
 #Set the FRONTEND work directory
-RUN mkdir -p /usr/src/app/frontend
+RUN mkdir -p /usr/src/app/
 WORKDIR ${FRONT_DIR}
 
 # Add our package.json and install *before* adding our FRONTEND app files
 ADD front/package.json ./
-RUN npm install -g --silent quasar-cli@0.5.2 && \
-    npm install --silent
-#Copy rest of the FRONTEND files and config env
-COPY front /usr/src/app/frontend
+RUN npm install --silent
 
-WORKDIR ${FRONT_DIR}
-CMD ["quasar","dev","--play"]
+#Copy rest of the FRONTEND files and config env
+COPY front /usr/src/app/
+
+# Build app
+RUN quasar build && \
+    cp -r dist /var/www/html/downtorrent
+
+# Avoid Apache warning
+RUN sed -i 's/# Global configuration/# Global configuration\nServerName downtorrent_front/g' /etc/apache2/apache2.conf
+
+# Start Apache
+CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
