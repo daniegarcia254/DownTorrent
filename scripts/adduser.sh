@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 CONFIG_FILE="/usr/src/app/backend/start.config.json"
 USER=$1
