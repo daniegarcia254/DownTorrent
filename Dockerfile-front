@@ -1,4 +1,4 @@
-FROM dgarcia254/debian8-apache-androidsdk-node-quasar:latest
+FROM dgarcia254/debian8-apache-sdk-cordova-quasar:latest
 
 LABEL maintainer "Daniel Garcia - daniegarcia254@gmail.com"
 
