@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 echo "Force restart of service..."
 

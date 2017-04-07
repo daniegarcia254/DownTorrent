@@ -31,10 +31,7 @@ RUN npm install --silent
 
 #Copy rest of the backend files and config env
 COPY back /usr/src/app/
-RUN sed -i 's/localhost/downtorrent_back/g' start.config.json && \
-    sed -i 's/9091/9090/g' start.config.json && \
-    cat start.config.json
 
-#START APP
-WORKDIR ${BACK_DIR}
+#Start service
 CMD ["/bin/bash","start.sh"]
+
