@@ -19,5 +19,7 @@ services:
       dockerfile: Dockerfile-front
     expose:
       - "80"
+      - "10004"
     ports:
       - "10003:80"
+      - "10004:10004"
