@@ -10,6 +10,8 @@ const state = {
 	lastQuery: '',
 	language: null,
 	client: 'transmission',
+	backend_port: BACKEND_PORT_VALUE,
+	backend_url: BACKEND_URL_VALUE,
 	lastSearchResult: []
 }
 
@@ -41,7 +43,10 @@ const actions = {
 
 // getters are functions
 const getters = {
-
+	getBackURL: (state,getters) => (isCordova)  => {
+		if (isCordova) return state.backend_url + ':' + state.backend_port;
+		else return location.protocol + '//' + location.hostname  +  ':' + state.backend_port;
+	}
 }
 
 // A Vuex instance is created by combining the state, mutations, actions,

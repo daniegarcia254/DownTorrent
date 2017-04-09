@@ -122,24 +122,25 @@ export default {
 		},
 		login (){
 			var self = this,
-				name = self.username
-			self.showLoading('')
-			self.url_login = location.protocol + '//' + location.hostname + ':10005/api/user/login/' + name;
-			self.axios.get(encodeURI(self.url_login)).then((response) => {
+				name = self.username;
+
+			self.showLoading('');
+			var url_login = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/user/login/' + name;
+			self.axios.get(encodeURI(url_login)).then((response) => {
 				Loading.hide()
 				if (response.data.error) {
-					self.errorHandling(response.data.error)
+					self.errorHandling(response.data.error);
 				} else {
 					console.log("Success login", response);
-					self.$store.commit('setUsername', { name })
-					self.$localStorage.set('username', name)
-					self.$router.push({ path: 'search'})
+					self.$store.commit('setUsername', { name });
+					self.$localStorage.set('username', name);
+					self.$router.push({ path: 'search'});
 				}
 			}, (err) => {
 				console.log("Error login", err);
-				Loading.hide()
-				if (done) done()
-				self.errorHandling(err)
+				Loading.hide();
+				if (done) done();
+				self.errorHandling(err);
 			})
 		},
 		changeLanguage (value) {

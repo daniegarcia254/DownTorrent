@@ -57,7 +57,7 @@
 
 <script>
 
-import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
+import { Utils, Toast, Loading, Dialog } from 'quasar'
 import router from '../router'
 
 export default {
