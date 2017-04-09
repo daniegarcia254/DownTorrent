@@ -65,7 +65,7 @@ export default {
 			var self = this;
 			var query = self.search_query;
 			self.showLoading(self.$t("spinners.searching"))
-			self.url_query = location.protocol + '//' + location.hostname + ':10005/api/search/piratebay?q=' + query;
+			self.url_query = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/search/piratebay?q=' + query;
 			self.axios.get(encodeURI(self.url_query)).then((response) => {
 				var result = response.data
 				self.result_query = result
@@ -100,7 +100,7 @@ export default {
 							console.log("Download", props);
 							self.showLoading(self.$t("spinners.addTorrent"))
 							var torrentClient = self.$store.state.client
-							var url = location.protocol + '//' + location.hostname + ':10005/api/'+torrentClient+'/download';
+							var url = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/'+torrentClient+'/download';
 							var username = self.$store.state.username;
 							self.axios.post(url, {
 								torrent: torrent,

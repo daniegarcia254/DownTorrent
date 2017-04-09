@@ -35,7 +35,7 @@ export default {
 			var self = this,
 				username = self.$store.state.username
 			self.showLoading('')
-			var url = location.protocol + '//' + location.hostname + ':10005/api/links/' + username;
+			var url = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/links/' + username;
 			self.axios.get(encodeURI(url)).then((response) => {
 				Loading.hide()
 				if (done) done()
@@ -81,7 +81,7 @@ export default {
 		deleteS3Object: function(username, file){
 			var self = this;
 			self.showLoading('')
-			var url = location.protocol + '//' + location.hostname + ':10005/api/links/' + username + '/' + file;
+			var url = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/links/' + username + '/' + file;
 			self.axios.delete(encodeURI(url)).then((response) => {
 				Loading.hide()
 				self.refresh()
@@ -108,7 +108,7 @@ export default {
 				file = fileObject.Key.split('/')[1]
 
 			self.showLoading('')
-			var url = location.protocol + '//' + location.hostname + ':10005/api/links/' + username + '/' + file;
+			var url = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/links/' + username + '/' + file;
 			self.axios.get(encodeURI(url)).then((response) => {
 				Loading.hide()
 				self.refresh()
