@@ -16,6 +16,12 @@ RUN npm install --silent
 #Copy rest of the FRONTEND files and config env
 COPY front /usr/src/app/
 
+#Config connection (url:port) to backend service
+RUN sed -i 's/BACKEND_PORT_VALUE/10005/g' src/main.js && \
+    sed -i 's/BACKEND_URL_VALUE/"http\/\/danigarcia-dev.com"/g' src/main.js && \
+    sed -i 's/BACKEND_PORT_VALUE/10005/g' src/store/store.js && \
+    sed -i 's/BACKEND_URL_VALUE/"http\/\/danigarcia-dev.com"/g' src/store/store.js
+
 # Build app
 RUN quasar build && \
     cp -r dist /var/www/html/downtorrent

@@ -8,6 +8,7 @@ require(`./themes/app.${__THEME}.styl`)
 
 import Vue from 'vue'
 import Quasar from 'quasar'
+import Platform from 'quasar'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import store from './store/store'
@@ -15,14 +16,24 @@ import VueLocalStorage from 'vue-localstorage'
 import VueSocketio from 'vue-socket.io'
 import router from './router'
 
-Vue.use(VueSocketio, location.protocol + '//' + location.hostname+':10005');
-
 Vue.use(VueLocalStorage)
 
 Vue.use(VueAxios, axios)
 
 // Install Quasar Framework
 Vue.use(Quasar)
+
+// Configure	backend service URL
+var backend_port = BACKEND_PORT_VALUE;
+var backend_url = BACKEND_URL_VALUE;
+var socket_url = location.protocol + '//' + location.hostname + ':' + backend_port;
+
+if (Platform.Platform.is.cordova) {
+	socket_url = backend_url + ':' + backend_port;
+}
+
+// Start socket
+Vue.use(VueSocketio, socket_url, store);
 
 // Start app
 Quasar.start(() => {
