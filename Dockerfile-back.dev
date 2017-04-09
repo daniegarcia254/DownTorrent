@@ -33,5 +33,4 @@ RUN npm install --silent
 COPY back /usr/src/app/
 
 #Start service
-CMD ["/bin/bash","start.sh"]
-
+CMD ["/bin/bash","start.sh","dev"]

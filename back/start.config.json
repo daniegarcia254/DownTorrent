@@ -7,21 +7,31 @@
     "instances": 2,
 		"log_date_format" : "DD-MM-YYYY HH:mm Z",
     "exec_mode": "cluster",
-    "env": {
-      "NODE_ENV": "local",
-      "APP_PORT": 10005,
+    "env_dev": {
+      "NODE_ENV": "dev",
+      "APP_PORT": 10002,
 			"VALID_USERS": ["test"],
 			"S3_BUCKET": "downtorrent",
-			"AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXXX",
-			"AWS_SECRET_ACCESS_KEY":"XXXXXXXXXXXXXXXXXXXXXXXX",
+			"AWS_ACCESS_KEY_ID": "XXXXXXXXXXX",
+			"AWS_SECRET_ACCESS_KEY":"XXXXXXXX",
 			"AWS_REGION":"eu-west-1",
 			"TRANSMISSION_USER":"truser",
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9091
     },
-    "env_staging": {
-      "NODE_ENV": "staging"
+    "env_prod": {
+      "NODE_ENV": "prod",
+      "APP_PORT": 10003,
+			"VALID_USERS": ["test"],
+			"S3_BUCKET": "downtorrent",
+			"AWS_ACCESS_KEY_ID": "XXXXXXXXXX",
+			"AWS_SECRET_ACCESS_KEY":"XXXXXXX",
+			"AWS_REGION":"eu-west-1",
+			"TRANSMISSION_USER":"truser",
+			"TRANSMISSION_PWD": "trpwd",
+			"TRANSMISSION_HOST":"localhost",
+			"TRANSMISSION_PORT":9091
     }
   }]
 }
