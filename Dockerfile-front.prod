@@ -17,17 +17,20 @@ RUN npm install --silent
 COPY front /usr/src/app/
 
 #Config connection (url:port) to backend service
-RUN sed -i 's/BACKEND_PORT_VALUE/10005/g' src/main.js && \
-    sed -i 's/BACKEND_URL_VALUE/"http\/\/danigarcia-dev.com"/g' src/main.js && \
-    sed -i 's/BACKEND_PORT_VALUE/10005/g' src/store/store.js && \
-    sed -i 's/BACKEND_URL_VALUE/"http\/\/danigarcia-dev.com"/g' src/store/store.js
+RUN sed -i 's/BACKEND_PORT_VALUE/10003/g' src/main.js && \
+    sed -i 's/BACKEND_URL_CORDOVA/"http\/\/danigarcia-dev.com"/g' src/main.js && \
+    sed -i 's/BACKEND_PORT_VALUE/10003/g' src/store/store.js && \
+    sed -i 's/BACKEND_URL_CORDOVA/"http\/\/danigarcia-dev.com"/g' src/store/store.js && \
+    sed -i 's/10002/10003/g' src/main.js && \
+    sed -i 's/10002/10003/g' src/store/store.js
 
 # Build app
 RUN quasar build && \
-    cp -r dist /var/www/html/downtorrent
+    cp -r dist /var/www/html/downtorrent && \
+    cp -r src/statics /var/www/html/
 
 # Avoid Apache warning
-RUN sed -i 's/# Global configuration/# Global configuration\nServerName downtorrent_front/g' /etc/apache2/apache2.conf
+RUN sed -i 's/# Global configuration/# Global configuration\nServerName downtorrent_front_prod/g' /etc/apache2/apache2.conf
 
 # Start Apache
 CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]

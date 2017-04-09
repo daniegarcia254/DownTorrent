@@ -25,11 +25,11 @@ Vue.use(Quasar)
 
 // Configure	backend service URL
 var backend_port = BACKEND_PORT_VALUE;
-var backend_url = BACKEND_URL_VALUE;
+var backend_url_cordova = BACKEND_URL_CORDOVA;
 var socket_url = location.protocol + '//' + location.hostname + ':' + backend_port;
 
 if (Platform.Platform.is.cordova) {
-	socket_url = backend_url + ':' + backend_port;
+	socket_url = backend_url_cordova + ':' + backend_port;
 }
 
 // Start socket
