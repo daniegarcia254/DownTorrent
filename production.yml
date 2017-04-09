@@ -1,0 +1,23 @@
+version: '3'
+services:
+  downtorrent_back_prod:
+    container_name: downtorrent_back_prod
+    build:
+      context: .
+      dockerfile: Dockerfile-back.prod
+    expose:
+      - "10003"
+      - "9090"
+      - "51413"
+    ports:
+      - "10003:10003"
+      - "9090:9090"
+  downtorrent_front_prod:
+    container_name: downtorrent_front_prod
+    build:
+      context: .
+      dockerfile: Dockerfile-front.prod
+    expose:
+      - "80"
+    ports:
+      - "10005:80"

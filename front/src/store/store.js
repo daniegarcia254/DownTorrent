@@ -11,7 +11,7 @@ const state = {
 	language: null,
 	client: 'transmission',
 	backend_port: BACKEND_PORT_VALUE,
-	backend_url: BACKEND_URL_VALUE,
+	backend_url_cordova: BACKEND_URL_CORDOVA,
 	lastSearchResult: []
 }
 
@@ -44,7 +44,7 @@ const actions = {
 // getters are functions
 const getters = {
 	getBackURL: (state,getters) => (isCordova)  => {
-		if (isCordova) return state.backend_url + ':' + state.backend_port;
+		if (isCordova) return state.backend_url_cordova + ':' + state.backend_port;
 		else return location.protocol + '//' + location.hostname  +  ':' + state.backend_port;
 	}
 }

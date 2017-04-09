@@ -1,0 +1,36 @@
+FROM dgarcia254/debian8-node7-pm2-transmission-clamav:latest
+
+LABEL maintaner "Daniel Garcia - daniegarcia254@gmail.com"
+
+#Set ENV vars
+ENV BACK_DIR /usr/src/app
+
+#Create 'test' user
+RUN adduser --shell /bin/bash --disabled-password --gecos "" test && \
+    mkdir /home/test/downloads && \
+    chmod -R 0777 /home/test/downloads && \
+    chown test:test -R /home/test/downloads
+    
+#Config Transmissio torrent client
+RUN  service transmission-daemon stop && \
+     sed -i 's/9091/9090/g' /etc/transmission-daemon/settings.json && \
+     sed -i 's/"rpc-username": "transmission"/"rpc-username": "truser"/g' /etc/transmission-daemon/settings.json && \
+     sed -i 's/"rpc-password": "transmission"/"rpc-password": "trpwd"/g' /etc/transmission-daemon/settings.json && \
+     sed -i 's/127\.0\.0\.1/\*\.\*\.\*\.\*/g' /etc/transmission-daemon/settings.json && \
+     sed -i 's/"umask": 18/"umask": 2/g' /etc/transmission-daemon/settings.json && \
+     service transmission-daemon start && \ 
+     usermod -a -G debian-transmission test
+
+#Set the backend work directory
+RUN mkdir -p /usr/src/app
+WORKDIR ${BACK_DIR}
+
+#Add our package.json and install *before* adding our backend app files
+ADD back/package.json ./
+RUN npm install --silent
+
+#Copy rest of the backend files and config env
+COPY back /usr/src/app/
+
+#Start service
+CMD ["/bin/bash","start.sh","prod"]

@@ -1,0 +1,20 @@
+FROM dgarcia254/debian8-apache-sdk-cordova-quasar:latest
+
+LABEL maintainer "Daniel Garcia - daniegarcia254@gmail.com"
+
+#SET ENVIROMENT VARIABLES
+ENV FRONT_DIR /usr/src/app/
+
+#Set the FRONTEND work directory
+RUN mkdir -p /usr/src/app/
+WORKDIR ${FRONT_DIR}
+
+# Add our package.json and install *before* adding our FRONTEND app files
+ADD front/package.json ./
+RUN npm install --silent
+
+#Copy rest of the FRONTEND files and config env
+COPY front /usr/src/app/
+
+# Start Apache
+CMD ["/bin/bash","start-dev.sh"]
