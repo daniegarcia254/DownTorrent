@@ -25,8 +25,6 @@ You can follow the [official tutorial](https://docs.docker.com/engine/installati
 
 You will also need to install [Docker-compose](https://docs.docker.com/compose/install/).
 
-For a more detailed explatanation on what programs are configured and running inside the containers, please read the [Docker-readme.md](docker/Docker-readme.md) file.
-
 #### - AWS S3 bucket
 You will need an [AWS](https://aws.amazon.com/) account in order to configure an [S3 bucket](https://aws.amazon.com/s3/?nc1=h_ls) where the torrents will be uploaded. This way we will avoid the need of infinite disk space in our system. It is recommend that you create a new user in your [AWS IAM](https://aws.amazon.com/iam/?nc1=h_ls) with specific permissions to access the S3 bucket, whose keys will be used later in the app configuration.
 
