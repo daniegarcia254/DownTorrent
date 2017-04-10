@@ -12,25 +12,27 @@ This project is motived by the need of some relatives to download films, books, 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. You will need some knowledge about linux administration as well the use of AWS and Docker.
 
 ### Prerequisites
-What things you need to install & run the software.
+What do you need to install && run the software.
 
-##### - Ubuntu/Debian server
+#### - Ubuntu/Debian server
 You are going to need at least an _**Ubuntu or Debain**_ machine (you can use your own or one deployed on an _AWS EC2 instance_ for example) for test, develope and deploy the app.
 Of course you can use any Linux distribution and version you want, but these are the ones where the app has been developed and tested.
 In your Linux machine, you will need the following programs installed and running.
 
-##### - Docker
+#### - Docker
 _**Docker**_ provides a way to run applications securely isolated in a container, packaged with all its dependencies and libraries.
 You can follow the [official tutorial](https://docs.docker.com/engine/installation/) to install it in your system.
 
 You will also need to install [Docker-compose](https://docs.docker.com/compose/install/).
 
+For a more detailed explatanation on what programs are configured and running inside the containers, please read the [Docker-readme.md](docker/Docker-readme.md) file.
+
 #### - AWS S3 bucket
 You will need an [AWS](https://aws.amazon.com/) account in order to configure an [S3 bucket](https://aws.amazon.com/s3/?nc1=h_ls) where the torrents will be uploaded. This way we will avoid the need of infinite disk space in our system. It is recommend that you create a new user in your [AWS IAM](https://aws.amazon.com/iam/?nc1=h_ls) with specific permissions to access the S3 bucket, whose keys will be used later in the app configuration.
 
+## Configuration
 Once you have all the pre-requisites ready, the app can be configured in order to get a development or production enviroment running.
 
-## Configuration
 ### Development enviroment
 * **_[development.yml](development.yml)_**: ports that will be exposed in the docker containers
   * Default backend port: 10002
@@ -38,7 +40,7 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * Default trasmission port: 9090
 * **_[front/start-dev.sh](front/start-dev.sh)_**: in these script you can configure two values
   * _BACKEND_PORT_VALUE_: Port where the back service will be available (default value: 10002)
-  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova (default "http://danigarcia-dev.com")
+  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova
 * **_[Dockerfile-back.dev](Dockerfile-back.dev)_**: Transmission torrent client port, username and password config
   * Default tranmission port: 9090
   * Default transmission user: trsuer
@@ -54,7 +56,7 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * Default transmission user: trpwd
 * **_[Dockerfile-front.prod](Dockerfile-front.prod)_**: here you can configure the following values
   * _BACKEND_PORT_VALUE_: Port where the back service will be available (default value: 10003)
-  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova (default "http://danigarcia-dev.com")
+  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova
 ### Backend configuration for development and production enviroment
 * **_[back/start.config.json](back/start.config.json)_**: config file that PM2 will use to launch the service
   * APP_PORT: Port where the service will be listening
@@ -75,7 +77,6 @@ In order to get running a development enviroment, you just need to execute:
 ```
 docker-compose -f development.yml up --build
 ```
-
 A docker container will be running and every change that you make in the _front_ or _back_ folder will be automatically applied, so you can programme in a hot reload development enviroment.
 
 ### Production enviroment
@@ -83,7 +84,6 @@ In order to get running a prouction enviroment, you just need to execute:
 ```
 docker-compose -f production.yml up --build
 ```
-
 
 ### Production scripts
 Some scripts are available in the folder [scripts](scripts) that can be applied to the production running containers. Following a sort description of each script functionality:
