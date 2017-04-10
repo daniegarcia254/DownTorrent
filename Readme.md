@@ -30,6 +30,13 @@ For a more detailed explatanation on what programs are configured and running in
 #### - AWS S3 bucket
 You will need an [AWS](https://aws.amazon.com/) account in order to configure an [S3 bucket](https://aws.amazon.com/s3/?nc1=h_ls) where the torrents will be uploaded. This way we will avoid the need of infinite disk space in our system. It is recommend that you create a new user in your [AWS IAM](https://aws.amazon.com/iam/?nc1=h_ls) with specific permissions to access the S3 bucket, whose keys will be used later in the app configuration.
 
+#### - Others
+* _**Transmission**_ is a cross-platform and open source BitTorrent client, designed for easy and powerful use.
+* _**Deluge BitTorrent Client**_ is a lightweight, Free Software, cross-platform BitTorrent client.
+* _**ClamAV**_ is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
+
+These programs are already installed in the Docker images.
+
 ## Configuration
 Once you have all the pre-requisites ready, the app can be configured in order to get a development or production enviroment running.
 
@@ -97,6 +104,7 @@ There are some features I would like to implement for the app in a near future. 
 * Create a Dockerfile to deploy the app in a simpler way and get it running instantly <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
 * Add real Authentication to the system, no using one based on the Ubuntu system users. Using a database and JSON Web Tokens for example.
 * Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
+* As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents.
 
 ## Built With
 ### - Backend
