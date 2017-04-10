@@ -43,7 +43,7 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * Default backend port: 10002
   * Default backend port: 10004
   * Default trasmission port: 9090
-* **_[front/start-dev.sh](front/start-dev.sh)_**: in these script you can configure two values
+* **_[front/start-dev.sh](front/start-dev.sh)_**: in this script you can configure two values
   * _BACKEND_PORT_VALUE_: Port where the back service will be available (default value: 10002)
   * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova
 * **_[Dockerfile-back.dev](Dockerfile-back.dev)_**: Transmission torrent client port, username and password config
@@ -73,8 +73,8 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * TRANSMISSION_PWD: Default password for transmission torrent client
   * TRANSMISSION_HOST: Default host for transmission torrent client
   * TRANSMISSION_PORT: Default port for transmission torrent client
-  
-  The Transmission torrent client values must mutch those specified in the corresponding Dockerfile-back.
+
+The Transmission torrent client values must mutch those specified in the corresponding Dockerfile-back as well as the backend service port.
 
 ## Deployment
 ### Development enviroment
