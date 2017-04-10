@@ -104,6 +104,7 @@ Some features to implement for improve the app in a near future. Feel free to co
 * Review and improve the mobile version. For example, data tables are not showing properly.
 * Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
 * As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents.
+* Add testing
 
 ## Built With
 ### - Backend
