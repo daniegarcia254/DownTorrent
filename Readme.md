@@ -91,7 +91,7 @@ docker-compose -f production.yml up --build
 ```
 
 ### Production scripts
-Some scripts are available in the folder [scripts](scripts) that can be applied to the production running containers. Following a sort description of each script functionality:
+You can make use of various [scripts](scripts) that can be applied to the production running containers. Following a sort description of each script functionality:
 * [adduser.sh](scripts/adduser.sh): it adds a new user to the app, so it can be logged in.
 * [removeuser.sh](scripts/removeuser.sh): removes an user from the app, so it can't login again.
 * [restart_service.sh](scripts/restart_service.sh): force a restart of the backend service
