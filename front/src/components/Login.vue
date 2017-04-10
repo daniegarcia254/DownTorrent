@@ -38,7 +38,7 @@
 				</div>
 				<div class="row">
 					<div class="text-center auto">
-						<input class="user-input" v-model="username" v-on:keypress.enter="login()">
+						<input class="user-input" v-model.lazy="username" v-on:keypress.enter="login()">
 					</div>
 				</div>
 				<div class="row">
