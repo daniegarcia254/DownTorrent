@@ -43,9 +43,6 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * Default backend port: 10002
   * Default backend port: 10004
   * Default trasmission port: 9090
-* **_[front/start-dev.sh](front/start-dev.sh)_**: in this script you can configure two values
-  * _BACKEND_PORT_VALUE_: Port where the back service will be available (default value: 10002)
-  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova
 * **_[Dockerfile-back.dev](Dockerfile-back.dev)_**: Transmission torrent client port, username and password config
   * Default tranmission port: 9090
   * Default transmission user: trsuer
@@ -59,10 +56,7 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * Default tranmission port: 9090
   * Default transmission user: trsuer
   * Default transmission user: trpwd
-* **_[Dockerfile-front.prod](Dockerfile-front.prod)_**: here you can configure the following values
-  * _BACKEND_PORT_VALUE_: Port where the back service will be available (default value: 10003)
-  * _BACKEND_URL_CORDOVA_: URL for the back service when the app is running with cordova
-### Backend configuration for development and production enviroment
+### Configuration for both development and production enviroment
 * **_[back/start.config.json](back/start.config.json)_**: config file that PM2 will use to launch the service
   * APP_PORT: Port where the service will be listening
   * S3_BUCKET: AWS S3 bucket name where the torrents will be uploaded and stored
@@ -73,6 +67,11 @@ Once you have all the pre-requisites ready, the app can be configured in order t
   * TRANSMISSION_PWD: Default password for transmission torrent client
   * TRANSMISSION_HOST: Default host for transmission torrent client
   * TRANSMISSION_PORT: Default port for transmission torrent client
+* **_[front/start.sh](front/start.sh)_**: config where the frontend will communicate with the backend service
+  * _DEV_BACKEND_PORT_: Port where the back service will be available (default value: 10002)
+  * _DEV_URL_CORDOVA_: URL for the back service when the app is running with cordova
+  * _PROD_BACKEND_PORT_: Port where the back service will be available (default value: 10002)
+  * _PROD_URL_CORDOVA_: URL for the back service when the app is running with cordova
 
 The Transmission torrent client values must mutch those specified in the corresponding Dockerfile-back as well as the backend service port.
 
@@ -103,7 +102,8 @@ Some features to implement for improve the app in a near future. Feel free to co
 * Add real Authentication to the system, no using one based on the Ubuntu system users. Using a database and JSON Web Tokens for example.
 * Review and improve the mobile version. For example, data tables are not showing properly.
 * Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
-* As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents.
+* As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents. For that, the solution would be to implement a middle database to save the torrents information each user is downloading.
+* Add search on a different torrent search engine. For expample: rarbg.to
 * Add testing
 
 ## Built With
