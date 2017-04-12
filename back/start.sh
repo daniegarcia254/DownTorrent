@@ -15,7 +15,7 @@ else
 	echo "Please chose a valid envoriment: dev/prod"
 fi
 
-ENVIROMENT=$1
+ENVIRONMENT=$1
 
 # Fix limit on system for watching files
 echo fs.inotify.max_user_watches=524288 | tee -a /etc/sysctl.conf && sysctl -p
@@ -27,4 +27,4 @@ service transmission-daemon start
 
 # Start service
 echo "BACKEND: STARTING SERVICE WITH PM2"
-pm2 start start.config.json --only downtorrent --env $ENVIROMENT --no-daemon
+pm2 start start.config.json --only downtorrent --env $ENVIRONMENT --no-daemon
