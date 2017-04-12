@@ -16,5 +16,5 @@ RUN npm install --silent
 #Copy rest of the FRONTEND files and config env
 COPY front /usr/src/app/
 
-# Start Apache
-CMD ["/bin/bash","start-dev.sh"]
+# Start development enviroment
+CMD ["/bin/bash","start.sh","dev"]
