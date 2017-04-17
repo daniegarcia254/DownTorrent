@@ -27,3 +27,5 @@ ws.connect()
 server.listen(process.env.APP_PORT, function () {
 	console.log('Example app listening on port '+process.env.APP_PORT+'!')
 });
+
+module.exports = server;

@@ -36,13 +36,15 @@ router.get('/user/login/:username', function(req, res) {
 	var err = utils.handleSpawnError(id_user)
 
 	if (!utils.checkValidUser(username)){
-		err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
-	} 
-
-	if (err !== null) {
+		console.log("User " + username + " is not between the valid ones");
+		var errAuth = { "message": "Invalid username. The user is no registered in the system.","status": 401};
+		res.status(401).send(errAuth);
+	}
+	else if (err !== null) {
 		console.log("Error checking user", err)
-		res.send({"error": err})
-	} else {
+		res.status(500).send({"error": err})
+	}
+	else {
 		console.log("Success checking user", id_user.stdout.toString())
 		res.send({"output":id_user.stdout.toString()})
 	}
