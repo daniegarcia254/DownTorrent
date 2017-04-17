@@ -28,15 +28,16 @@ module.exports = function() {
 		}
 	}
 
-	module.sanitize = function(string) {
-		return string.replace(/[&><;|\//].*$/g, '');
+	module.sanitize = function(str) {
+		return str.replace(/[\]\[&><;|\//].*$/g, '');
 	}
 
 	module.sanitizeURI = function(string) {
-		return string.replace(/[><;|\//].*$/g, '');
+		return string.replace(/[\]\[><;|\//].*$/g, '');
 	}
 
 	module.checkValidUser = function(username){
+		if (!username) return false;
 		var username = this.sanitize(username);
 		if (username === 'root') return false
 		else if (process.env.VALID_USERS.indexOf(username) === -1) return false
