@@ -17,7 +17,7 @@ describe('Search API', () => {
 		{value: '', status: 200, total: 0},
 		{value: 'Oxford', status: 200, total: 0}
 	]
-  describe('The Pirate Bay search', () => {
+	describe('The Pirate Bay search', () => {
 		searches.forEach(function(search){
 			it('should get a result search with at least 0 elements for search "'+ search.value+'"', (done) => {
 			chai.request(server)
@@ -29,9 +29,9 @@ describe('Search API', () => {
 					expect(res).to.be.json;
 					res.body.should.be.a('array');
 					res.body.length.should.be.least(search.total);
-				  done();
+					done();
 				});
-		  });
+			});
 		});
-  });
+	});
 });

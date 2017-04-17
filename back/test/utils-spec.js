@@ -10,8 +10,8 @@ let expect = chai.expect;
 
 describe('Utils', () => {
 	describe('Sanitize', () => {
-	  describe('Sanitize', () => {
-	  	var strings = [
+		describe('Sanitize', () => {
+			var strings = [
 				'adduser test; rm -Rf / | test',
 				'adduser test; [cat /etc/password >> fake@host]',
 			];
@@ -28,8 +28,8 @@ describe('Utils', () => {
 					expect(result).to.not.contain('/');
 				});
 				done();
-		  });
-	  });
+			});
+		});
 		describe('Sanitize URI', () => {
 			var uris = [
 				'www.my[invalid]url.com',
@@ -48,8 +48,8 @@ describe('Utils', () => {
 					expect(result).to.not.contain('/');
 				});
 				done();
-		  });
-	  });
+			});
+		});
 	});
 	describe('Validate user', () => {
 		var users = [undefined,'','root','myuser','test'];

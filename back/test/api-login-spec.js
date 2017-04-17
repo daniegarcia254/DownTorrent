@@ -31,9 +31,9 @@ describe('Login API', () => {
 						} else {
 							expect(res).to.have.status(user.expected);
 						}
-					  done();
+						done();
 				});
-		  });
+			});
 		});
-  });
+	});
 });
