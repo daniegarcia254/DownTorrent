@@ -39,97 +39,12 @@ const s3client = s3lib.createClient({
 module.exports = function() {
 	var module = {};
 
-	module.upload = function(client, torrentClient, username, torrent, callback){
-		console.log("Upload files", utils.sanitize(username), utils.sanitizeURI(torrent.name));
-
-		try {
-			var fileName = '/home/'+utils.sanitize(username)+'/downloads/'+utils.sanitizeURI(torrent.name),
-					baseDir = '/home/'+utils.sanitize(username)+'/downloads/',
-					username = utils.sanitize(username);
-
-			// Create zip
-			createZip(fileName, baseDir, function(err, zipName) {
-				if (err){
-					console.log("Error creating zip", err);
-					callback(err)
-				}
-				else {
-					console.log('Success creating zip', zipName);
-					var url = s3lib.getPublicUrl(process.env.S3_BUCKET, username + '/' + zipName,process.env.AWS_REGION);
-					// First, check if file already exists in S3
-					var params = { Bucket: process.env.S3_BUCKET, Key: zipName };
-					s3aws.headObject(params, function (err, metadata) {
-						console.log("Check if file exists", url, err, metadata);
-						if (err && (err.code === 'NotFound' || err.code === 'Forbidden')) {
-							// If it doesn't exists --> Upload
-							uploadFile(client, username, baseDir+zipName, function(err, data){
-								if (err) {
-									console.log("Error uploading zip file", err);
-									callback({"error":{"message":err.message,"status": 500}});
-								}
-								else {
-									deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
-										if (err) console.log("Error deleting zip and torrent files", err);
-										callback(null, url);
-									});
-								}
-							});
-						} else {
-							deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
-								if (err) console.log("Error deleting zip and torrent files", err);
-								callback(null, url);
-							});
-						}
-					});
-				}
-			});
-		} catch(err) {
-			console.log("Error uploading files", err);
-			callback({"error":{"message":err.message,"status": 500}});
-		}
-	}
-
-	module.getLinks = function(username, callback){
-		s3aws.listObjects({
-			Bucket: process.env.S3_BUCKET,
-			Prefix: utils.sanitize(username)
-		}, function(err, data) {
-			if (err) callback(err)
-			else  {
-				var files = [];
-				if(data.Contents.length > 0){
-					_.each(data.Contents, function(f){
-						var file = {};
-						file.LastModified = moment(f.LastModified).format('DD/MM/YYYY - HH:mm:ss')
-						file.Size = prettyBytes(f.Size)
-						file.Key = f.Key
-						files.push(file)
-					});
-				}
-				callback(null, files);
-			}
-		});
-	}
-
-	module.getFileURL = function(username, file){
-		console.log("getFileURL", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
-		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
-	}
-
-	module.deleteS3Object = function(username, file, callback){
-		console.log("deleteS3Object", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file);
-		s3aws.deleteObject({
-			Bucket: process.env.S3_BUCKET,
-			Key:  utils.sanitize(username) + '/' + file
-		}, callback);
-	}
-
 	/*----------------------------------------------------*/
 	// Auxiliary functions
 	/*----------------------------------------------------*/
 
 	function createZip(fileName, zipDir, callback){
-		console.log("Create zip", fileName, zipDir)
+		console.log('Create zip', fileName, zipDir)
 
 		var fsStats = fs.statSync(fileName),
 			zipName,
@@ -138,11 +53,14 @@ module.exports = function() {
 		if (fsStats.isDirectory()){
 			zipName = zipDir + path.basename(fileName) + '.zip';
 			zipFolder(fileName, zipName , function(err) {
-				if (err) callback({"error": err})
-				else callback(null, path.basename(zipName))
+				if (err) { 
+					callback({'error': err});
+				} else {
+					callback(null, path.basename(zipName));
+				}
 			});
 		} else {
-			console.log("Don't create zip for file", path.basename(fileName))
+			console.log('Don\'t create zip for file', path.basename(fileName))
 			callback(null, path.basename(fileName))
 		}
 	}
@@ -150,7 +68,7 @@ module.exports = function() {
 	function uploadFile(client, username, absoluteFilePath, uploadCb) {
 		var fileName = path.basename(absoluteFilePath),
 		stats = fs.statSync(absoluteFilePath),
-		fileSizeInBytes = stats["size"];
+		fileSizeInBytes = stats['size'];
 
 		uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 	}
@@ -169,37 +87,38 @@ module.exports = function() {
 		};
 		var uploader = s3client.uploadFile(params);
 		uploader.on('error', function(err) {
-			console.error("s3client[error upload]: ", err.stack);
+			console.error('s3client[error upload]: ', err.stack);
 			uploader.abort();
 			uploadCb(err);
 		});
 		uploader.on('progress', function() {
-			//console.log("s3client[upload progress]: ", parseFloat((uploader.progressAmount/uploader.progressTotal)*100).toFixed(2))
 			var progress = parseFloat((uploader.progressAmount/uploader.progressTotal)*100).toFixed(2)
 			client.emit('progress', {fileName: fileName, progress:progress});
 		});
 		uploader.on('end', function(data) {
-			console.log("s3client[finish upload]: ", data);
+			console.log('s3client[finish upload]: ', data);
 			uploadCb(null,data);
 		});
 	}
 
 	function getContentTypeByFile(fileName) {
 		var rc = 'application/octet-stream',
-		fn = fileName.toLowerCase();
+				ext = path.extname(fileName.toLowerCase());
 
-		if (fn.indexOf('.html') >= 0) rc = 'text/html';
-		else if (fn.indexOf('.css') >= 0) rc = 'text/css';
-		else if (fn.indexOf('.json') >= 0) rc = 'application/json';
-		else if (fn.indexOf('.js') >= 0) rc = 'application/x-javascript';
-		else if (fn.indexOf('.png') >= 0) rc = 'image/png';
-		else if (fn.indexOf('.jpg') >= 0) rc = 'image/jpg';
+		switch (ext) {
+			case '.html': rc = 'text/html'; break;
+			case '.css': rc = 'text/css'; break;
+			case '.json': rc = 'application/json'; break;
+			case '.js': rc = 'application/x-javascript'; break;
+			case '.png': rc = 'image/png'; break;
+			case '.jpg': rc = 'image/jpg'; break;
+		}
 
 		return rc;
 	}
 
 	function deleteFiles(client, torrentClient, torrentId, files, deleteCb){
-		console.log("Deleting files", files);
+		console.log('Deleting files', files);
 		async.forEach(files, function(file, cb){
 			rimraf(file, cb);
 		}, function(err){
@@ -210,6 +129,95 @@ module.exports = function() {
 			}
 			deleteCb(err);
 		});
+	}
+
+	/*----------------------------------------------------*/
+	// Module functions
+	/*----------------------------------------------------*/
+
+	module.upload = function(client, torrentClient, username, torrent, callback){
+		console.log('Upload files', username, torrent.name);
+		try {
+			var user = utils.sanitize(username),
+					fileName = '/home/'+user+'/downloads/'+utils.sanitizeURI(torrent.name),
+					baseDir = '/home/'+user+'/downloads/';
+
+			// Create zip
+			createZip(fileName, baseDir, function(err, zipName) {
+				if (err){
+					console.log('Error creating zip', err);
+					callback(err)
+				}
+				else {
+					console.log('Success creating zip', zipName);
+					var url = s3lib.getPublicUrl(process.env.S3_BUCKET, user + '/' + zipName,process.env.AWS_REGION);
+					// First, check if file already exists in S3
+					var params = { Bucket: process.env.S3_BUCKET, Key: zipName };
+					s3aws.headObject(params, function (err, metadata) {
+						console.log('Check if file exists', url, err, metadata);
+						if (err && (err.code === 'NotFound' || err.code === 'Forbidden')) {
+							// If it doesn't exists --> Upload
+							uploadFile(client, user, baseDir+zipName, function(err, data){
+								if (err) {
+									console.log('Error uploading zip file', err);
+									callback({'error':{'message':err.message,'status': 500}});
+								}
+								else {
+									deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
+										if (err) { console.log('Error deleting zip and torrent files', err); }
+										callback(null, url);
+									});
+								}
+							});
+						} else {
+							deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
+								if (err) { console.log('Error deleting zip and torrent files', err); }
+								callback(null, url);
+							});
+						}
+					});
+				}
+			});
+		} catch(err) {
+			console.log('Error uploading files', err);
+			callback({'error':{'message':err.message,'status': 500}});
+		}
+	}
+
+	module.getLinks = function(username, callback){
+		s3aws.listObjects({
+			Bucket: process.env.S3_BUCKET,
+			Prefix: utils.sanitize(username)
+		}, function(err, data) {
+			if (err) {
+				callback(err)
+			} else {
+				var files = [];
+				if(data.Contents.length > 0){
+					_.each(data.Contents, function(f){
+						var file = {};
+						file.LastModified = moment(f.LastModified).format('DD/MM/YYYY - HH:mm:ss')
+						file.Size = prettyBytes(f.Size)
+						file.Key = f.Key
+						files.push(file)
+					});
+				}
+				callback(null, files);
+			}
+		});
+	}
+
+	module.getFileURL = function(username, file){
+		console.log('getFileURL', process.env.S3_BUCKET, username + '/' + file, process.env.AWS_REGION);
+		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
+	}
+
+	module.deleteS3Object = function(username, file, callback){
+		console.log('deleteS3Object', process.env.S3_BUCKET, username + '/' + file);
+		s3aws.deleteObject({
+			Bucket: process.env.S3_BUCKET,
+			Key:  utils.sanitize(username) + '/' + file
+		}, callback);
 	}
 
 	return module;
