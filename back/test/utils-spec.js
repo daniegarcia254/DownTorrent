@@ -56,8 +56,11 @@ describe('Utils', () => {
 		it('should return true for valid users and false for invalid users', (done) => {
 			users.forEach(function(user){
 				var result = utils.checkValidUser(user);
-				if (user !== 'test') expect(result).to.be.false;
-				else expect(result).to.be.true;
+				if (user !== 'test') {
+					expect(result).to.be.false;
+				} else {
+					expect(result).to.be.true;
+				}
 			});
 			done();
 		});
@@ -84,7 +87,9 @@ describe('Utils', () => {
 			errors.forEach(function(err){
 				var result = utils.handleSpawnError(err.errObject);
 				expect(result).to.deep.equal(err.expected);
-				if (result !== null) expect(result).to.have.all.keys('message', 'status');
+				if (result !== null) {
+					expect(result).to.have.all.keys('message', 'status');
+				}
 			});
 			done();
 		});

@@ -22,9 +22,11 @@ describe('Search API', () => {
 			it('should get a result search with at least 0 elements for search "'+ search.value+'"', (done) => {
 			chai.request(server)
 				.get('/api/search/piratebay')
-				.query({"q":search.value})
+				.query({q:search.value})
 				.end((err, res) => {
-					if (err) return done(err);
+					if (err) {
+						return done(err);
+					}
 					expect(res).to.have.status(search.status);
 					expect(res).to.be.json;
 					res.body.should.be.a('array');
