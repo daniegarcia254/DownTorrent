@@ -1,6 +1,5 @@
 process.env.NODE_ENV = 'test';
 process.env.APP_PORT = 10000;
-process.env.CODACY_PROJECT_TOKEN = 'e87a659511b6485682a466bcfa523fc2';
 
 //Require the dev-dependencies
 let chai = require('chai');
