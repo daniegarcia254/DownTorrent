@@ -43,11 +43,6 @@ module.exports = function() {
 		console.log("Upload files", utils.sanitize(username), utils.sanitizeURI(torrent.name));
 
 		try {
-			if (!utils.checkValidUser(username)){
-				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
-				return callback({"error":err});
-			}
-
 			var fileName = '/home/'+utils.sanitize(username)+'/downloads/'+utils.sanitizeURI(torrent.name),
 					baseDir = '/home/'+utils.sanitize(username)+'/downloads/',
 					username = utils.sanitize(username);
@@ -95,12 +90,6 @@ module.exports = function() {
 	}
 
 	module.getLinks = function(username, callback){
-
-		if (!utils.checkValidUser(username)){
-			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
-			return callback({"error":err});
-		}
-
 		s3aws.listObjects({
 			Bucket: process.env.S3_BUCKET,
 			Prefix: utils.sanitize(username)
@@ -123,25 +112,12 @@ module.exports = function() {
 	}
 
 	module.getFileURL = function(username, file){
-		
-		if (!utils.checkValidUser(username)){
-			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
-			return {"error":err};
-		}
-
 		console.log("getFileURL", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
 		return s3lib.getPublicUrl(process.env.S3_BUCKET, utils.sanitize(username) + '/' + file, process.env.AWS_REGION);
 	}
 
 	module.deleteS3Object = function(username, file, callback){
-		
-		if (!utils.checkValidUser(username)){
-			var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
-			return callback({"error":err});
-		}
-
 		console.log("deleteS3Object", process.env.S3_BUCKET, utils.sanitize(username) + '/' + file);
-
 		s3aws.deleteObject({
 			Bucket: process.env.S3_BUCKET,
 			Key:  utils.sanitize(username) + '/' + file
