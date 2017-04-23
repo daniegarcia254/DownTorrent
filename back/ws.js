@@ -9,28 +9,12 @@ const clamav = require('./modules/clamav.js')()
 
 module.exports = function (io) {
 	var module = {};
-	var io = io;
 	var client = null;
 	var infoIntervalId = null,
 			uploadIntervalId = null;
 
-	module.connect = function () {
-		io.on('connection', function(client) {
-			console.log('Client connected...');
-			client = client;
-			getInfo(client);
-			startInfoInterval(client);
-			closeInfoSocket(client);
-			pause(client);
-			resume(client);
-			del(client);
-			scan(client);
-			upload(client);
-		});
-	};
-
 	module.sendProgress = function(progress) {
-		console.log("Send Progress", progress, client);
+		console.log('Send Progress', progress, client);
 		if (client !== null) {
 			client.emit('uploadProgress', progress)
 		}
@@ -84,15 +68,15 @@ module.exports = function (io) {
 		client.on('scan', function(data){
 			console.log('scan',data);
 			if (!utils.checkValidUser(data.username)){
-				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+				var err = { 'message': 'Invalid username. The user is no registered in the system.','status': 401}
 				client.emit('upload', {'error': err})
 			} else {
 				clamav.scanFiles(data.username, data.torrent, function(err,result){
 					if (err) {
-						console.log("Error scanning torrent", err)
-						client.emit('scan', {'error': {"message":err.message,"status": 500}})
+						console.log('Error scanning torrent', err)
+						client.emit('scan', {'error': {'message':err.message,'status': 500}})
 					} else {
-						console.log("Success scanning torrent", result)
+						console.log('Success scanning torrent', result)
 						client.emit('scan', result);
 					}
 				});
@@ -104,15 +88,15 @@ module.exports = function (io) {
 		client.on('upload', function(data){
 			console.log('upload',data);
 			if (!utils.checkValidUser(data.username)){
-				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
+				var err = { 'message': 'Invalid username. The user is no registered in the system.','status': 401}
 				client.emit('upload', {'error': err})
 			} else {
 				awsS3Handler.upload(client, data.client, data.username, data.torrent, function(err, result){
 					if (err) {
-						console.log("Error uploading torrent", err)
-						client.emit('upload', {'error': {"message":err.message,"status": 500}})
+						console.log('Error uploading torrent', err)
+						client.emit('upload', {'error': {'message':err.message,'status': 500}})
 					} else {
-						console.log("Success uploading torrent", result)
+						console.log('Success uploading torrent', result)
 						client.emit('upload', result);
 					}
 				});
@@ -145,6 +129,21 @@ module.exports = function (io) {
 			infoIntervalId = null;
 		});
 	}
+
+	module.connect = function () {
+		io.on('connection', function(client) {
+			console.log('Client connected...');
+			client = client;
+			getInfo(client);
+			startInfoInterval(client);
+			closeInfoSocket(client);
+			pause(client);
+			resume(client);
+			del(client);
+			scan(client);
+			upload(client);
+		});
+	};
 
 	return module;
 };

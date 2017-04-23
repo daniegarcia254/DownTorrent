@@ -61,12 +61,25 @@ function createZip(fileName, zipDir, callback){
 	}
 }
 
-function uploadFile(client, username, absoluteFilePath, uploadCb) {
-	var fileName = path.basename(absoluteFilePath),
-	stats = fs.statSync(absoluteFilePath),
-	fileSizeInBytes = stats['size'];
+function getContentTypeByFile(fileName) {
+	var rc = 'application/octet-stream',
+			ext = path.extname(fileName.toLowerCase());
 
-	uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
+	switch (ext) {
+		case '.html':
+		case '.txt':
+		case '.css': {
+			rc = 'text/'+ext.split('.')[1]; break;
+		}
+		case '.png':
+		case '.jpg': {
+			rc = 'image/'+ext.split('.')[1]; break;
+		}
+		case '.json': rc = 'application/json'; break;
+		case '.js': rc = 'application/x-javascript'; break;
+	}
+
+	return rc;
 }
 
 function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb) {
@@ -97,21 +110,12 @@ function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 	});
 }
 
-function getContentTypeByFile(fileName) {
-	var rc = 'application/octet-stream',
-			ext = path.extname(fileName.toLowerCase());
+function uploadFile(client, username, absoluteFilePath, uploadCb) {
+	var fileName = path.basename(absoluteFilePath),
+	stats = fs.statSync(absoluteFilePath),
+	fileSizeInBytes = stats['size'];
 
-	switch (ext) {
-		case '.html': rc = 'text/html'; break;
-		case '.txt': rc = 'text/html'; break;
-		case '.css': rc = 'text/css'; break;
-		case '.json': rc = 'application/json'; break;
-		case '.js': rc = 'application/x-javascript'; break;
-		case '.png': rc = 'image/png'; break;
-		case '.jpg': rc = 'image/jpg'; break;
-	}
-
-	return rc;
+	uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 }
 
 function deleteFiles(client, torrentClient, torrentId, files, deleteCb){

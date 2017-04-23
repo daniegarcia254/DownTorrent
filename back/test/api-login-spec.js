@@ -33,7 +33,6 @@ describe('/user/login/:username', function() {
 			chai.request(server)
 				.get('/api/user/login/'+user.name)
 				.end((err, res) => {
-					console.log("STATUS", res.status);
 					if (user.name==='test' || user.name==='test2') {
 						expect(res.status).to.be.oneOf(user.expected);
 					} else {
