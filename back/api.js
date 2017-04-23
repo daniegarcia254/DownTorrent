@@ -5,11 +5,11 @@ const router = express.Router()
 
 const fs = require('fs')
 const PirateBay = require('thepiratebay')
-const spawn = require('child_process').spawnSync
+const spawnSync = require('child_process').spawnSync
 const utils = require('./modules/utils.js')()
 const deluge = require('./modules/deluge.js')()
 const transmission = require('./modules/transmission.js')()
-const uploader = require('./modules/uploader.js')()
+const awsS3Handler = require('./modules/awsS3Handler.js')
 
 // Main search
 router.get('/search/piratebay', function (req, res) {
@@ -27,26 +27,27 @@ router.get('/search/piratebay', function (req, res) {
 })
 
 router.get('/user/login/:username', function(req, res) {
+
 	var username = utils.sanitize(req.params.username);
-
 	console.log("Check user", username)
-
-	var id_user = spawn('id',[username])
-
-	var err = utils.handleSpawnError(id_user)
 
 	if (!utils.checkValidUser(username)){
 		console.log("User " + username + " is not between the valid ones");
 		var errAuth = { "message": "Invalid username. The user is no registered in the system.","status": 401};
 		res.status(401).send(errAuth);
-	}
-	else if (err !== null) {
-		console.log("Error checking user", err)
-		res.status(500).send({"error": err})
-	}
-	else {
-		console.log("Success checking user", id_user.stdout.toString())
-		res.send({"output":id_user.stdout.toString()})
+	} else {
+		var id_user = spawnSync('id',[username])
+
+		var err = utils.handleSpawnError(id_user)
+
+		if (err !== null) {
+			console.log("Error checking user", err)
+			res.status(500).send({"error": err})
+		}
+		else {
+			console.log("Success checking user", id_user.stdout.toString())
+			res.send({"output":id_user.stdout.toString()})
+		}
 	}
 });
 
@@ -110,7 +111,7 @@ router.get('/links/:username', function(req, res) {
 		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
 	} else {
-		uploader.getLinks(username, function(err, links){
+		awsS3Handler.getLinks(username, function(err, links){
 			if (err) {
 				console.log("Error getting links", err)
 				res.send({"error": err})
@@ -130,7 +131,7 @@ router.get('/links/:username/:key', function(req, res) {
 		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
 	} else {
-		res.send(uploader.getFileURL(username, key));
+		res.send(awsS3Handler.getFileURL(username, key));
 	}
 });
 
@@ -142,7 +143,7 @@ router.delete('/links/:username/:key', function(req, res) {
 		var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 		res.send({"error": err})
 	} else {
-		uploader.deleteS3Object(username, key, function(err, result){
+		awsS3Handler.deleteS3Object(username, key, function(err, result){
 			if (err) {
 				console.log("Error deleting S3 Object", err)
 				res.send({"error": err})

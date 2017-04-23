@@ -4,7 +4,7 @@ const spawn = require('child_process').spawnSync
 const utils = require('./modules/utils.js')()
 const deluge = require('./modules/deluge.js')()
 const transmission = require('./modules/transmission.js')()
-const uploader = require('./modules/uploader.js')()
+const awsS3Handler = require('./modules/awsS3Handler.js')
 const clamav = require('./modules/clamav.js')()
 
 module.exports = function (io) {
@@ -107,7 +107,7 @@ module.exports = function (io) {
 				var err = { "message": "Invalid username. The user is no registered in the system.","status": 401}
 				client.emit('upload', {'error': err})
 			} else {
-				uploader.upload(client, data.client, data.username, data.torrent, function(err, result){
+				awsS3Handler.upload(client, data.client, data.username, data.torrent, function(err, result){
 					if (err) {
 						console.log("Error uploading torrent", err)
 						client.emit('upload', {'error': {"message":err.message,"status": 500}})

@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
-process.env.VALID_USERS = ['test'];
+process.env.APP_PORT = 10000;
+process.env.VALID_USERS = ['test','test2'];
 
 //Require the dev-dependencies
 let chai = require('chai');
