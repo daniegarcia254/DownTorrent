@@ -4,7 +4,7 @@ process.env.VALID_USERS = ['test','test2'];
 
 //Require the dev-dependencies
 let chai = require('chai');
-let utils = require('../modules/utils.js')();
+let utils = require('../modules/utils.js');
 let should = chai.should();
 let expect = chai.expect;
 

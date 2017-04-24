@@ -1,15 +1,15 @@
 'use strict'
 
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const fs = require('fs')
-const PirateBay = require('thepiratebay')
-const spawnSync = require('child_process').spawnSync
-const utils = require('./modules/utils.js')()
-const deluge = require('./modules/deluge.js')()
-const transmission = require('./modules/transmission.js')()
-const awsS3Handler = require('./modules/awsS3Handler.js')
+const fs = require('fs');
+const PirateBay = require('thepiratebay');
+const spawnSync = require('child_process').spawnSync;
+const utils = require('./modules/utils.js');
+const deluge = require('./modules/deluge.js');
+const transmission = require('./modules/transmission.js');
+const awsS3Handler = require('./modules/awsS3Handler.js');
 
 // Main search
 router.get('/search/piratebay', function (req, res) {
@@ -18,35 +18,35 @@ router.get('/search/piratebay', function (req, res) {
 	PirateBay.search(q)
 	.then(results => {
 		console.log('Success searching PirateBay', results.length)
-		res.send(results)
+		res.send(results);
 	})
-	.catch(err) => {
+	.catch(err => {
 		console.log('Error searching PirateBay: ', err)
-		res.send(err)
-	}
+		res.send(err);
+	});
 })
 
 router.get('/user/login/:username', function(req, res) {
 
 	var userName = utils.sanitize(req.params.username);
-	console.log('Check user', userName)
+	console.log('Check user', userName);
 
 	if (!utils.checkValidUser(userName)){
 		console.log('User ' + userName + ' is not between the valid ones');
 		var errAuth = { 'message': 'Invalid username. The user is no registered in the system.','status': 401};
 		res.status(401).send(errAuth);
 	} else {
-		var id_user = spawnSync('id',[userName])
+		var id_user = spawnSync('id',[userName]);
 
-		var err = utils.handleSpawnError(id_user)
+		var err = utils.handleSpawnError(id_user);
 
 		if (err !== null) {
-			console.log('Error checking user', err)
-			res.status(500).send({'error': err})
+			console.log('Error checking user', err);
+			res.status(500).send({'error': err});
 		}
 		else {
-			console.log('Success checking user', id_user.stdout.toString())
-			res.send({'output':id_user.stdout.toString()})
+			console.log('Success checking user', id_user.stdout.toString());
+			res.send({'output':id_user.stdout.toString()});
 		}
 	}
 });
@@ -81,7 +81,7 @@ router.post('/transmission/download', function(req, res) {
 			magnetLink = utils.sanitizeURI(torrent.magnetLink),
 			dir = '/home/'+userName+'/downloads/';
 
-	console.log('Download', username, torrent)
+	console.log('Download', userName, torrent)
 
 	if (!utils.checkValidUser(userName)){
 		var errAuthMsg = { 'message': 'Invalid username. The user is no registered in the system.','status': 401}

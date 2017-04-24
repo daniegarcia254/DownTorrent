@@ -1,19 +1,19 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
-const spawn = require('child_process').spawnSync
-const s3lib = require('s3')
-const AWS = require('aws-sdk')
-const zipFolder = require('zip-folder')
-const async = require('async')
-const rimraf = require('rimraf')
-const prettyBytes = require('pretty-bytes')
-const _ = require('underscore')
-const moment = require('moment')
-const transmission = require('./transmission.js')()
-const deluge = require('./deluge.js')()
-const utils = require('./utils.js')()
+const fs = require('fs');
+const path = require('path');
+const proc = require('child_process');
+const s3lib = require('s3');
+const AWS = require('aws-sdk');
+const zip = require('zipfolder');
+const async = require('async');
+const rimraf = require('rimraf');
+const prettyBytes = require('pretty-bytes');
+const _ = require('underscore');
+const moment = require('moment');
+const transmission = require('./transmission.js');
+const deluge = require('./deluge.js');
+const utils = require('./utils.js');
 
 // Create S3 AWS-SDK client
 
@@ -33,31 +33,31 @@ const s3client = s3lib.createClient({
 		// sslEnabled: false
 		// any other options are passed to new AWS.S3()
 		// See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
-	},
+	}
 });
 
 /*----------------------------------------------------*/
 // Auxiliary functions
 /*----------------------------------------------------*/
 
-function createZip(fileName, zipDir, callback){
-	console.log('Create zip', fileName, zipDir)
-
-	var fsStats = fs.statSync(fileName);
-	var zipName, dir;
-
-	if (fsStats.isDirectory()){
-		zipName = zipDir + path.basename(fileName) + '.zip';
-		zipFolder(fileName, zipName , function(err) {
-			if (err) {
-				callback({'error': err});
-			} else {
-				callback(null, path.basename(zipName));
-			}
-		});
-	} else {
-		console.log('Don\'t create zip for file', path.basename(fileName))
-		callback(null, path.basename(fileName))
+function createZip(source, dest, callback){
+	console.log('Create zip', source, dest);
+	try {
+		if (fs.lstatSync(source).isDirectory()){
+			var zipName = dest + path.basename(source) + '.zip';
+			zip.zipFolder({folderPath: source}, function (err, zipPath) {
+				if (err) {
+					callback(err);
+				} else {
+					callback(null, path.basename(zipName));
+				}
+			});
+		} else {
+			console.log('Don\'t create zip for file', path.basename(source))
+			callback(null, path.basename(source))
+		}
+	} catch(err) {
+		callback(err);
 	}
 }
 
@@ -110,18 +110,11 @@ function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 	});
 }
 
-function uploadFile(client, username, absoluteFilePath, uploadCb) {
-	var fileName = path.basename(absoluteFilePath),
-	stats = fs.statSync(absoluteFilePath),
-	fileSizeInBytes = stats['size'];
-
-	uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
-}
-
 function deleteFiles(client, torrentClient, torrentId, files, deleteCb){
 	console.log('Deleting files', files);
+	var exec = proc.exec;
 	async.forEach(files, function(file, cb){
-		rimraf(file, cb);
+		exec('rm -Rif "' + file + '"', cb);
 	}, function(err){
 		switch(torrentClient){
 			case 'transmission': transmission.delete(client,torrentId,true); break;
@@ -159,7 +152,8 @@ exports.upload = function(client, torrentClient, username, torrent, callback){
 					console.log('Check if file exists', url, err, metadata);
 					if (err && (err.code === 'NotFound' || err.code === 'Forbidden')) {
 						// If it doesn't exists --> Upload
-						uploadFile(client, user, baseDir+zipName, function(err, data){
+						var absoluteFilePath = path.basename(baseDir+zipName);
+						uploadMultipart(client, user, baseDir+zipName, absoluteFilePath, function(err, data){
 							if (err) {
 								console.log('Error uploading zip file', err);
 								callback({'error':{'message':err.message,'status': 500}});
@@ -182,17 +176,16 @@ exports.upload = function(client, torrentClient, username, torrent, callback){
 		});
 	} catch(err) {
 		console.log('Error uploading files', err);
-		callback({'error':{'message':err.message,'status': 500}});
+		callback(err);
 	}
 }
 
 exports.getLinks = function(username, callback){
-	var s3aws = new AWS.S3({Bucket: 'dfd'});
-	s3aws.listObjects({
+	var s3aws = new AWS.S3();
+	s3aws.listObjectsV2({
 		Bucket: process.env.S3_BUCKET,
-		Prefix: utils.sanitize(username)
+		StartAfter: utils.sanitize(username)+'/'
 	}, function(err, data) {
-		//console.log("ERR", err, data);
 		if (err) {
 			callback(err)
 		} else {

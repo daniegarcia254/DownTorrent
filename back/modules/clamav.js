@@ -1,6 +1,6 @@
 'use strict'
 
-const utils = require('./utils.js')()
+const utils = require('./utils.js');
 
 // Create ClamAV client
 const clam = require('clamscan')({
@@ -19,28 +19,21 @@ const clam = require('clamscan')({
 		preference: 'clamscan' // If clamdscan is found and active, it will be used by default
 });
 
-
-module.exports = function() {
-	var module = {};
-
-	module.scanFiles = function(username, torrent, callback){
-		console.log("Scan files", utils.sanitize(username), utils.sanitize(torrent.name));
-		var dir = '/home/'+utils.sanitize(username)+'/downloads/'+torrent.name;
-		try {
-			clam.scan_dir(dir, function(err, good_files , bad_files ) {
-		 		if (err) {
-					console.log('Error scanning files', err);
-					callback({"message":err.message,"status": 500});
-				} else {
-					console.log('Success scanning files');
-					callback(null, {good_files: good_files, bad_files: bad_files});
-				}
-			});
-		} catch(err) {
-			console.log('Error scanning torrent', err);
-			callback({"message":err.message,"status": 500});
-		}
+exports.scanFiles = function(username, torrent, callback){
+	console.log("Scan files", utils.sanitize(username), utils.sanitize(torrent.name));
+	var dir = '/home/'+utils.sanitize(username)+'/downloads/'+torrent.name;
+	try {
+		clam.scan_dir(dir, function(err, good_files , bad_files ) {
+	 		if (err) {
+				console.log('Error scanning files', err);
+				callback({"message":err.message,"status": 500});
+			} else {
+				console.log('Success scanning files');
+				callback(null, {good_files: good_files, bad_files: bad_files});
+			}
+		});
+	} catch(err) {
+		console.log('Error scanning torrent', err);
+		callback({"message":err.message,"status": 500});
 	}
-
-	return module;
 }

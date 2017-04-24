@@ -1,11 +1,10 @@
 'use strict'
 
-const spawn = require('child_process').spawnSync
-const utils = require('./modules/utils.js')()
-const deluge = require('./modules/deluge.js')()
-const transmission = require('./modules/transmission.js')()
-const awsS3Handler = require('./modules/awsS3Handler.js')
-const clamav = require('./modules/clamav.js')()
+const utils = require('./modules/utils.js');
+const deluge = require('./modules/deluge.js');
+const transmission = require('./modules/transmission.js');
+const awsS3Handler = require('./modules/awsS3Handler.js');
+const clamav = require('./modules/clamav.js');
 
 module.exports = function (io) {
 	var module = {};

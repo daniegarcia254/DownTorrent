@@ -10,10 +10,11 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('/user/login/:username', function() {
+describe('Login API (/user/login/:username)', function() {
 	var server;
-	before(function(){
+	before(function(done){
 		server = require('../app');
+		done();
 	});
 	after(function(done){
 		server = server.close();
