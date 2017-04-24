@@ -129,20 +129,31 @@ describe('AWS S3 Handler', () => {
 				done();
 			});
 			var deleteFiles = awsS3Handler.__get__('deleteFiles');
-			['transmission','deluge'].forEach(function(torrentClient){
+			['transmission','deluge','default'].forEach(function(torrentClient){
 				it('Should delete all folders and files related to a torrent', function(done){
 					execStub.yields(null,null,null);
 					deleteFiles(client, torrentClient, torrentId, files, function(err,result){
 						expect(err).to.not.exist;
 						expect(result).to.not.exist;
 						sinon.assert.calledTwice(execStub);
-						if (torrentClient === 'transmission'){
-							sinon.assert.calledOnce(transmissionStub);
-						} else {
+						if (torrentClient === 'deluge'){
 							sinon.assert.calledOnce(delugeStub);
+						} else {
+							sinon.assert.calledOnce(transmissionStub);
 						}
 						done();
 					});
+				});
+			});
+			it('Should return error in callback if there is an error deleting files', function(done){
+				execStub.yields(new Error('Error deleting files') ,null,null);
+				deleteFiles(client, torrentClient, torrentId, files, function(err,result){
+					expect(err).to.exist;
+					expect(result).to.not.exist;
+					sinon.assert.calledOnce(execStub);
+					sinon.assert.notCalled(delugeStub);
+					sinon.assert.calledOnce(transmissionStub);
+					done();
 				});
 			});
 		});
