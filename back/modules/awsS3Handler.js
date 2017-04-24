@@ -113,7 +113,7 @@ function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 function deleteFiles(client, torrentClient, torrentId, files, deleteCb){
 	console.log('Deleting files', files);
 	var exec = proc.exec;
-	async.forEach(files, function(file, cb){
+	async.forEachSeries(files, function(file, cb){
 		exec('rm -Rif "' + file + '"', cb);
 	}, function(err){
 		switch(torrentClient){

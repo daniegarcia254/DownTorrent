@@ -8,6 +8,7 @@ var path = require('path');
 var proc = require('child_process');
 var sinon = require('sinon');
 var zip = require('zipfolder');
+var async = require('async');
 
 var fsMock = require('mock-fs');
 
@@ -129,7 +130,8 @@ describe('AWS S3 Handler', () => {
 			});
 			var deleteFiles = awsS3Handler.__get__('deleteFiles');
 			['transmission','deluge'].forEach(function(torrentClient){
-				it('Should delete all folders and files related to a torrent', function(){
+				it('Should delete all folders and files related to a torrent', function(done){
+					execStub.yields(null,null,null);
 					deleteFiles(client, torrentClient, torrentId, files, function(err,result){
 						expect(err).to.not.exist;
 						expect(result).to.not.exist;
@@ -139,6 +141,7 @@ describe('AWS S3 Handler', () => {
 						} else {
 							sinon.assert.calledOnce(delugeStub);
 						}
+						done();
 					});
 				});
 			});
