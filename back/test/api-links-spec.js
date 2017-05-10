@@ -15,7 +15,7 @@ let awsS3 = require('../modules/awsS3Handler.js');
 describe('Links/Files API', function() {
 	var server, sanitizeStub, checkValidUserStub, awsS3GetLinksStub, awsS3GetURLStub, awsS3DeleteFileStub;
 	var userName, key;
-	var linkAPIBase_URI = '/api/links/';
+	var linksAPIBaseURL = '/api/links/';
 	before(function(done){
 		server = require('../app');
 		done();
@@ -51,7 +51,7 @@ describe('Links/Files API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.get(linkAPIBase_URI + userName)
+				.get(linksAPIBaseURL + userName)
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -67,7 +67,7 @@ describe('Links/Files API', function() {
 			checkValidUserStub.returns(true);
 			awsS3GetLinksStub.yields(new Error('Error getting links'))
 			chai.request(server)
-				.get(linkAPIBase_URI + userName)
+				.get(linksAPIBaseURL + userName)
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -84,7 +84,7 @@ describe('Links/Files API', function() {
 			checkValidUserStub.returns(true);
 			awsS3GetLinksStub.yields(null, [{'id':1,'name':'link1'},{'id':2,'name':'link2'}]);
 			chai.request(server)
-				.get(linkAPIBase_URI + userName)
+				.get(linksAPIBaseURL + userName)
 				.end((err, res) => {
 					expect(err).to.not.exist;
 					expect(res).to.exist;
@@ -107,7 +107,7 @@ describe('Links/Files API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.get(linkAPIBase_URI + userName + '/' + key)
+				.get(linksAPIBaseURL + userName + '/' + key)
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -123,7 +123,7 @@ describe('Links/Files API', function() {
 			checkValidUserStub.returns(true);
 			awsS3GetURLStub.returns();
 			chai.request(server)
-				.get(linkAPIBase_URI + userName + '/' + key)
+				.get(linksAPIBaseURL + userName + '/' + key)
 				.end((err, res) => {
 					expect(err).to.not.exist;
 					expect(res).to.exist;
@@ -146,7 +146,7 @@ describe('Links/Files API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.del(linkAPIBase_URI + userName + '/' + key)
+				.del(linksAPIBaseURL + userName + '/' + key)
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -162,7 +162,7 @@ describe('Links/Files API', function() {
 			checkValidUserStub.returns(true);
 			awsS3DeleteFileStub.yields(new Error('Error deleting file from S3'))
 			chai.request(server)
-				.del(linkAPIBase_URI + userName + '/' + key)
+				.del(linksAPIBaseURL + userName + '/' + key)
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -179,7 +179,7 @@ describe('Links/Files API', function() {
 			checkValidUserStub.returns(true);
 			awsS3DeleteFileStub.yields(null, null);
 			chai.request(server)
-				.del(linkAPIBase_URI + userName + '/' + key)
+				.del(linksAPIBaseURL + userName + '/' + key)
 				.end((err, res) => {
 					expect(err).to.not.exist;
 					expect(res).to.exist;

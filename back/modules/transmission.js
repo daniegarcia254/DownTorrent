@@ -109,11 +109,11 @@ exports.resume = function(client, id){
 }
 
 // Delete the torrent with id {id}
-exports.delete = function(client, id, remove_data){
-	console.log('Delete torrent', id, remove_data);
+exports.delete = function(client, id, removeData){
+	console.log('Delete torrent', id, removeData);
 
 	//Delete torrent and data
-	if (remove_data && remove_data === true) {
+	if (removeData && removeData === true) {
 		transmission.remove(id, true, function(err, result){
 			if (err) { client.emit('delete', {'error': {'message':err.message,'status': 500}}); }
 			else { client.emit('delete', id); }

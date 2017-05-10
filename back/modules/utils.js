@@ -34,11 +34,16 @@ exports.sanitizeURI = function(string) {
 }
 
 exports.checkValidUser = function(userName){
-	if (!userName) return false;
+	if (!userName) { return false; }
 	userName = this.sanitize(userName);
-	if (userName === 'root') return false
-	else if (process.env.VALID_USERS.indexOf(userName) === -1) return false;
-	else return true;
+
+	if (userName === 'root') {
+		return false;
+	} else if (process.env.VALID_USERS.indexOf(userName) === -1) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 exports.checkAvailableSpace = function(){

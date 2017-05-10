@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 
 describe('Login API', function() {
 	var server, sanitizeStub, checkUserStub, handleSpawnErrorStub, spawnSyncStub;
-	var loginAPI_baseURL = '/api/user/login/';
+	var loginAPIBaseURL = '/api/user/login/';
 	var userName = 'test';
 	var spawnObjectError = {error: 'Error spawn'};
 	var spawnObjectSuccess = {stdout: 'User exists'};
@@ -47,7 +47,7 @@ describe('Login API', function() {
   it('should return error 401 if user is not valid', function(done) {
 		checkUserStub.returns(false);
 		chai.request(server)
-			.get(loginAPI_baseURL + userName)
+			.get(loginAPIBaseURL + userName)
 			.end((err, res) => {
 				expect(err).to.exist;
 				expect(res).to.exist;
@@ -67,7 +67,7 @@ describe('Login API', function() {
 		spawnSyncStub.returns(spawnObjectError);
 		handleSpawnErrorStub.returns(new Error('Error checking user'));
 		chai.request(server)
-			.get(loginAPI_baseURL + userName)
+			.get(loginAPIBaseURL + userName)
 			.end((err, res) => {
 				expect(err).to.exist;
 				expect(res).to.exist;
@@ -89,7 +89,7 @@ describe('Login API', function() {
 		spawnSyncStub.returns(spawnObjectSuccess);
 		handleSpawnErrorStub.returns(null);
 		chai.request(server)
-			.get(loginAPI_baseURL + userName)
+			.get(loginAPIBaseURL + userName)
 			.end((err, res) => {
 				expect(err).to.not.exist;
 				expect(res).to.exist;

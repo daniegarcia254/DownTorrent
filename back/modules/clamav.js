@@ -20,13 +20,13 @@ const clam = require('clamscan')({
 });
 
 exports.scanFiles = function(userName, torrent, callback){
-	console.log("Scan files", userName, torrent.name);
+	console.log('Scan files', userName, torrent.name);
 	var dir = '/home/'+utils.sanitize(userName)+'/downloads/'+torrent.name;
 
 	clam.scan_dir(dir, function(err, good_files , bad_files ) {
 		if (err) {
 			console.log('Error scanning files', err);
-			callback({"message":err.message,"status": 500});
+			callback({'message':err.message,'status': 500});
 		} else {
 			console.log('Success scanning files');
 			callback(null, {good_files: good_files, bad_files: bad_files});

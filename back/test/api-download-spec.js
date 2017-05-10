@@ -17,7 +17,7 @@ let deluge = require('../modules/deluge.js');
 describe('Download API', function() {
 	var server, sanitizeStub, sanitizeURIStub, checkValidUserStub, checkSpaceStub, transmissionStub, delugeStub;
 	var userName, torrent;
-	var transmissionAPI_URL = '/api/transmission/download';
+	var transmissionApiURL = '/api/transmission/download';
 	var delugeAPI_URL = '/api/deluge/download';
 	before(function(done){
 		server = require('../app');
@@ -53,7 +53,7 @@ describe('Download API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.post(transmissionAPI_URL)
+				.post(transmissionApiURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -72,7 +72,7 @@ describe('Download API', function() {
 			checkValidUserStub.returns(true);
 			checkSpaceStub.returns(false);
 			chai.request(server)
-				.post(transmissionAPI_URL)
+				.post(transmissionApiURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -92,7 +92,7 @@ describe('Download API', function() {
 			checkSpaceStub.returns(true);
 			transmissionStub.yields(new Error('Error adding magnet link', null));
 			chai.request(server)
-				.post(transmissionAPI_URL)
+				.post(transmissionApiURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -111,9 +111,9 @@ describe('Download API', function() {
 		it('should return error 200 if transmission success on adding magnet link to download', function(done) {
 			checkValidUserStub.returns(true);
 			checkSpaceStub.returns(true);
-			transmissionStub.yields(null, "Added correctly");
+			transmissionStub.yields(null, 'Added correctly');
 			chai.request(server)
-				.post(transmissionAPI_URL)
+				.post(transmissionApiURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.not.exist;
@@ -191,7 +191,7 @@ describe('Download API', function() {
 		it('should return error 200 if Deluge success on adding magnet link to download', function(done) {
 			checkValidUserStub.returns(true);
 			checkSpaceStub.returns(true);
-			delugeStub.yields(null, "Added correctly");
+			delugeStub.yields(null, 'Added correctly');
 			chai.request(server)
 				.post(delugeAPI_URL)
 				.send({ username: userName, torrent: torrent })
