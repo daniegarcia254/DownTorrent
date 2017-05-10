@@ -24,14 +24,14 @@ describe('Search API', function() {
 	describe('The Pirate Bay search', function() {
 		it('should get a result search with at least 0 elements for a valid search', function(done) {
 
-			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
-			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
-			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
-			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
+			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get('/').reply(200, '');
+			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get('/').reply(200, '');
+			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get('/').reply(200, '');
+			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get('/').reply(200, '');
 
 			chai.request(server)
 				.get('/api/search/piratebay')
-				.query({q:"test"})
+				.query({q:'test'})
 				.end((err, res, body) => {
 					expect(err).to.not.exist;
 					expect(res).to.have.status(200);
@@ -45,22 +45,20 @@ describe('Search API', function() {
 			//Can't test error functionality until returned promise is correctly handled by the library
 			this.skip();
 
-			this.timeout(10000);
-
-			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
-			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
-			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
-			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
+			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get('/').reply(502, '502: Bad gateway');
+			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get('/').reply(502, '502: Bad gateway');
+			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get('/').reply(502, '502: Bad gateway');
+			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get('/').reply(502, '502: Bad gateway');
 
 			chai.request(server)
 				.get('/api/search/piratebay')
-				.query({q:"test"})
+				.query({q:'test'})
 				.end((err, res, body) => {
 					expect(err).to.not.exist;
-					expect(res).to.have.status(search.status);
+					expect(res).to.have.status(200);
 					expect(res).to.be.json;
 					res.body.should.be.a('array');
-					res.body.length.should.be.least(search.total);
+					res.body.length.should.be.least(0);
 					done();
 				});
 		});

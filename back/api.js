@@ -37,9 +37,9 @@ router.get('/user/login/:username', function(req, res) {
 		res.status(401).send(errAuth);
 	} else {
 		var spawnSync = proc.spawnSync;
-		var id_user = spawnSync('id',[userName]);
+		var checkUserResult = spawnSync('id',[userName]);
 
-		var err = utils.handleSpawnError(id_user);
+		var err = utils.handleSpawnError(checkUserResult);
 
 		if (err !== null) {
 			console.log('Error checking user:', err);
@@ -47,7 +47,7 @@ router.get('/user/login/:username', function(req, res) {
 		}
 		else {
 			console.log('Success checking user:', userName);
-			res.send({'output':id_user.stdout.toString()});
+			res.send({'output':checkUserResult.stdout.toString()});
 		}
 	}
 });

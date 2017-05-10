@@ -13,7 +13,7 @@ let utils = require('../modules/utils.js');
 let awsS3 = require('../modules/awsS3Handler.js');
 
 describe('Links/Files API', function() {
-	var server, sanitizeStub, checkValidUserStub, awsS3GetLinksStub;
+	var server, sanitizeStub, checkValidUserStub, awsS3GetLinksStub, awsS3GetURLStub, awsS3DeleteFileStub;
 	var userName, key;
 	var linkAPIBase_URI = '/api/links/';
 	before(function(done){
@@ -82,7 +82,7 @@ describe('Links/Files API', function() {
 		});
 		it('should return 200 OK otherwise', function(done) {
 			checkValidUserStub.returns(true);
-			awsS3GetLinksStub.yields(null, [{"id":1,"name":"link1"},{"id":2,"name":"link2"}]);
+			awsS3GetLinksStub.yields(null, [{'id':1,'name':'link1'},{'id':2,'name':'link2'}]);
 			chai.request(server)
 				.get(linkAPIBase_URI + userName)
 				.end((err, res) => {

@@ -15,7 +15,7 @@ function sanitize(string) {
 	return string.replace(/[&><;|\//].*$/g, '');
 }
 
-// Transform Deluge "info" output into a readable JSON
+// Transform Deluge 'info' output into a readable JSON
 function transformDelugeInfoOutputToJSON (output) {
 	try {
 		if (output.length <= 1) return [];
@@ -69,7 +69,7 @@ function transformDelugeInfoOutputToJSON (output) {
 		});
 		return result;
 	} catch (err) {
-		return {'error': {"message":err.message,"status": 500}}
+		return {'error': {'message':err.message,'status': 500}}
 	}
 }
 
@@ -79,16 +79,16 @@ function transformDelugeInfoOutputToJSON (output) {
 
 // Add a new torrent to downloading
 exports.addMagnet = function(magnetLink, dir, callback) {
-	console.log("Add torrent", magnetLink, dir);
+	console.log('Add torrent', magnetLink, dir);
 
 	try {
 		var err = null;
-		var deluge_console = spawn('deluge-console',['add','-p',dir,"'"+magnetLink+"'"])
+		var delugeConsole = spawn('deluge-console',['add','-p',dir,'''+magnetLink+'''])
 
-		err = utils.handleSpawnError(deluge_console)
+		err = utils.handleSpawnError(delugeConsole)
 
 		if (err !== null) callback(err)
-		else callback(null, {"output":deluge_console.stdout.toString()})
+		else callback(null, {'output':delugeConsole.stdout.toString()})
 	}
 	catch (err) {
 		callback(err)
@@ -98,19 +98,19 @@ exports.addMagnet = function(magnetLink, dir, callback) {
 // Get current status of torrents
 exports.getInfo = function(client){
 	try {
-		var deluge_console = spawn('deluge-console',['info','--sort-reverse','file_progress']);
-		var err = utils.handleSpawnError(deluge_console);
+		var delugeConsole = spawn('deluge-console',['info','--sort-reverse','file_progress']);
+		var err = utils.handleSpawnError(delugeConsole);
 
 		if (err !== null) {
 			console.log('Error getting torrents info', err);
 			client.emit('info', {'error': err});
 		} else {
-			var result = transformDelugeInfoOutputToJSON(escape(deluge_console.stdout.toString()));
+			var result = transformDelugeInfoOutputToJSON(escape(delugeConsole.stdout.toString()));
 			client.emit('info', result);
 		}
 	} catch(err) {
 		console.log('Error getting torrents info', err);
-		client.emit('info', {'error': {"message":err.message,"status": 500}})
+		client.emit('info', {'error': {'message':err.message,'status': 500}})
 	}
 }
 
@@ -122,88 +122,86 @@ exports.getInfo = function(client){
 // Get current status of torrents
 exports.getInfo = function(client){
 	try {
-		var deluge_console = spawn('deluge-console',['info','--sort-reverse','file_progress']);
-		var err = utils.handleSpawnError(deluge_console);
+		var delugeConsole = spawn('deluge-console',['info','--sort-reverse','file_progress']);
+		var err = utils.handleSpawnError(delugeConsole);
 
 		if (err !== null) {
 			console.log('Error getting torrents info', err);
 			client.emit('info', {'error': err});
 		} else {
-			var result = transformDelugeInfoOutputToJSON(escape(deluge_console.stdout.toString()));
+			var result = transformDelugeInfoOutputToJSON(escape(delugeConsole.stdout.toString()));
 			client.emit('info', result);
 		}
 	} catch(err) {
 		console.log('Error getting torrents info', err);
-		client.emit('info', {'error': {"message":err.message,"status": 500}})
+		client.emit('info', {'error': {'message':err.message,'status': 500}})
 	}
 }
 
 // Pause the torrent with id {id}
 exports.pause = function(client,id){
-	console.log("Pause torrent", id);
+	console.log('Pause torrent', id);
 	try {
-		var deluge_console = spawn('deluge-console',['pause',sanitize(id)]);
-		var err = utils.handleSpawnError(deluge_console);
+		var delugeConsole = spawn('deluge-console',['pause',sanitize(id)]);
+		var err = utils.handleSpawnError(delugeConsole);
 
 		if (err !== null) {
 			console.log('Error pausing torrent', err);
 			client.emit('pause', {'error': err});
 		} else {
 			console.log('Success pausing torrent');
-			client.emit('pause', deluge_console.stdout.toString());
+			client.emit('pause', delugeConsole.stdout.toString());
 		}
 	} catch(err) {
 		console.log('Error pausing torrent', err);
-		client.emit('pause', {'error': {"message":err.message,"status": 500}})
+		client.emit('pause', {'error': {'message':err.message,'status': 500}})
 	}
 }
 
 // Resume the torrent with id {id}
 exports.resume = function(client,id){
-	console.log("Resume torrent", id);
+	console.log('Resume torrent', id);
 	try {
-		var deluge_console = spawn('deluge-console',['resume',sanitize(id)]);
-		console.log("DELUGE STDOUT", deluge_console.stdout.toString());
-		console.log("DELUGE STDERR", deluge_console.stderr.toString());
-		var err = utils.handleSpawnError(deluge_console);
+		var delugeConsole = spawn('deluge-console',['resume',sanitize(id)]);
+		var err = utils.handleSpawnError(delugeConsole);
 
 		if (err !== null) {
 			console.log('Error resuming torrent', err);
 			client.emit('resume', {'error': err});
 		} else {
 			console.log('Success resuming torrent');
-			client.emit('resume', deluge_console.stdout.toString());
+			client.emit('resume', delugeConsole.stdout.toString());
 		}
 	} catch(err) {
 		console.log('Error resuming torrent', err);
-		client.emit('resume', {'error': {"message":err.message,"status": 500}})
+		client.emit('resume', {'error': {'message':err.message,'status': 500}})
 	}
 }
 
 // Delete the torrent with id {id}
 exports.delete = function(client,id,remove_data){
-	console.log("Delete torrent", id, remove_data);
+	console.log('Delete torrent', id, remove_data);
 	try {
-		var deluge_console = null;
+		var delugeConsole = null;
 
 		if (remove_data && remove_data === true) {
 			//Delete torrent and data
-			deluge_console = spawn('deluge-console',['rm','--remove_data',sanitize(id)]);
+			delugeConsole = spawn('deluge-console',['rm','--remove_data',sanitize(id)]);
 		} else {
 			//Delete only torrent
-			deluge_console = spawn('deluge-console',['rm',sanitize(id)]);
+			delugeConsole = spawn('deluge-console',['rm',sanitize(id)]);
 		}
-		var err = utils.handleSpawnError(deluge_console);
+		var err = utils.handleSpawnError(delugeConsole);
 
 		if (err !== null) {
 			console.log('Error deleting torrent', err);
 			client.emit('delete', {'error': err});
 		} else {
 			console.log('Success deleting torrent');
-			client.emit('delete', deluge_console.stdout.toString());
+			client.emit('delete', delugeConsole.stdout.toString());
 		}
 	} catch(err) {
 		console.log('Error deleting torrent', err);
-		client.emit('delete', {'error': {"message":err.message,"status": 500}})
+		client.emit('delete', {'error': {'message':err.message,'status': 500}})
 	}
 }

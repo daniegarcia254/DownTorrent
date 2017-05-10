@@ -15,7 +15,7 @@ let transmission = require('../modules/transmission.js');
 let deluge = require('../modules/deluge.js');
 
 describe('Download API', function() {
-	var server, sanitizeStub, sanitizeURI, checkValidUserStub, checkSpaceStub, transmissionStub, delugeStub;
+	var server, sanitizeStub, sanitizeURIStub, checkValidUserStub, checkSpaceStub, transmissionStub, delugeStub;
 	var userName, torrent;
 	var transmissionAPI_URL = '/api/transmission/download';
 	var delugeAPI_URL = '/api/deluge/download';

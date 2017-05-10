@@ -12,11 +12,11 @@ let expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Login API', function() {
-	var server, sanitizeStub, checkUserStub, handleSpawnErrorStub, execStub;
+	var server, sanitizeStub, checkUserStub, handleSpawnErrorStub, spawnSyncStub;
 	var loginAPI_baseURL = '/api/user/login/';
 	var userName = 'test';
-	var spawnObjectError = {error: "Error spawn"};
-	var spawnObjectSuccess = {stdout: "User exists"};
+	var spawnObjectError = {error: 'Error spawn'};
+	var spawnObjectSuccess = {stdout: 'User exists'};
 	before(function(done){
 		server = require('../app');
 		done();
@@ -65,7 +65,7 @@ describe('Login API', function() {
 	it('should return error 500 if error checking user against system', function(done) {
 		checkUserStub.returns(true);
 		spawnSyncStub.returns(spawnObjectError);
-		handleSpawnErrorStub.returns(new Error("Error checking user"));
+		handleSpawnErrorStub.returns(new Error('Error checking user'));
 		chai.request(server)
 			.get(loginAPI_baseURL + userName)
 			.end((err, res) => {
