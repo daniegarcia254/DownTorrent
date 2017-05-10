@@ -17,8 +17,8 @@ let deluge = require('../modules/deluge.js');
 describe('Download API', function() {
 	var server, sanitizeStub, sanitizeURIStub, checkValidUserStub, checkSpaceStub, transmissionStub, delugeStub;
 	var userName, torrent;
-	var transmissionApiURL = '/api/transmission/download';
-	var delugeAPI_URL = '/api/deluge/download';
+	var transmissionAPIBaseURL = '/api/transmission/download';
+	var delugeAPIBaseURL = '/api/deluge/download';
 	before(function(done){
 		server = require('../app');
 		done();
@@ -53,7 +53,7 @@ describe('Download API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.post(transmissionApiURL)
+				.post(transmissionAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -72,7 +72,7 @@ describe('Download API', function() {
 			checkValidUserStub.returns(true);
 			checkSpaceStub.returns(false);
 			chai.request(server)
-				.post(transmissionApiURL)
+				.post(transmissionAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -92,7 +92,7 @@ describe('Download API', function() {
 			checkSpaceStub.returns(true);
 			transmissionStub.yields(new Error('Error adding magnet link', null));
 			chai.request(server)
-				.post(transmissionApiURL)
+				.post(transmissionAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -113,7 +113,7 @@ describe('Download API', function() {
 			checkSpaceStub.returns(true);
 			transmissionStub.yields(null, 'Added correctly');
 			chai.request(server)
-				.post(transmissionApiURL)
+				.post(transmissionAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.not.exist;
@@ -133,7 +133,7 @@ describe('Download API', function() {
 		it('should return error 401 if user is not valid', function(done) {
 			checkValidUserStub.returns(false);
 			chai.request(server)
-				.post(delugeAPI_URL)
+				.post(delugeAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -152,7 +152,7 @@ describe('Download API', function() {
 			checkValidUserStub.returns(true);
 			checkSpaceStub.returns(false);
 			chai.request(server)
-				.post(delugeAPI_URL)
+				.post(delugeAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -172,7 +172,7 @@ describe('Download API', function() {
 			checkSpaceStub.returns(true);
 			delugeStub.yields(new Error('Error adding magnet link', null));
 			chai.request(server)
-				.post(delugeAPI_URL)
+				.post(delugeAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
@@ -193,7 +193,7 @@ describe('Download API', function() {
 			checkSpaceStub.returns(true);
 			delugeStub.yields(null, 'Added correctly');
 			chai.request(server)
-				.post(delugeAPI_URL)
+				.post(delugeAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.not.exist;

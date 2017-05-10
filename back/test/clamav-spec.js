@@ -32,7 +32,7 @@ describe('ClamAV scan', () => {
 
 	describe('Scan files', () => {
 		it('should return error 500 if dir scan fails', (done) => {
-			clamScanDirStub.yields(new Error("Error scanning dir"),null,null);
+			clamScanDirStub.yields(new Error('Error scanning dir'),null,null);
 			clamav.scanFiles(userName,torrent, function(err,res){
 				sinon.assert.calledOnce(sanitizeStub);
 				sinon.assert.calledWith(sanitizeStub, userName);
