@@ -7,42 +7,62 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
 let expect = chai.expect;
+let nock = require('nock');
 
 chai.use(chaiHttp);
 
 describe('Search API', function() {
 	var server;
-	before(function(done){
+	before(function(){
 		server = require('../app');
-		done();
 	});
 	after(function(done){
 		server = server.close();
+		nock.restore();
 		done();
 	});
-	var searches = [
-		{value: undefined, status: 200, total: 0},
-		{value: '', status: 200, total: 0},
-		{value: 'Oxford', status: 200, total: 0}
-	]
 	describe('The Pirate Bay search', function() {
-		searches.forEach(function(search){
-			it('should get a result search with at least 0 elements for search "'+ search.value+'"', function(done) {
-			this.timeout(10000);
+		it('should get a result search with at least 0 elements for a valid search', function(done) {
+
+			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
+			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
+			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
+			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get("/").reply(200, "");
+
 			chai.request(server)
 				.get('/api/search/piratebay')
-				.query({q:search.value})
-				.end((err, res) => {
-					if (err) {
-						return done(err);
-					}
+				.query({q:"test"})
+				.end((err, res, body) => {
+					expect(err).to.not.exist;
+					expect(res).to.have.status(200);
+					expect(res).to.be.json;
+					res.body.should.be.a('array');
+					done();
+				});
+		});
+		it('should return empty array ThePirateBay page returns error',function(done) {
+
+			//Can't test error functionality until returned promise is correctly handled by the library
+			this.skip();
+
+			this.timeout(10000);
+
+			nock('https://thepiratebay.org').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
+			nock('https://thepiratebay.se').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
+			nock('https://thepiratebay.one').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
+			nock('https://ahoy.one').filteringPath(function(path){ return '/';}).get("/").reply(502, "502: Bad gateway");
+
+			chai.request(server)
+				.get('/api/search/piratebay')
+				.query({q:"test"})
+				.end((err, res, body) => {
+					expect(err).to.not.exist;
 					expect(res).to.have.status(search.status);
 					expect(res).to.be.json;
 					res.body.should.be.a('array');
 					res.body.length.should.be.least(search.total);
 					done();
 				});
-			});
 		});
 	});
 });
