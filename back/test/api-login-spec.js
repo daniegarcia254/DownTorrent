@@ -30,7 +30,7 @@ describe('Login API', function() {
 		done();
 	});
 	after(function(done){
-		server = server.close();
+		server.close();
 		done();
 	});
 	afterEach(function(done){

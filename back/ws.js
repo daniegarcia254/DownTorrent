@@ -1,65 +1,41 @@
 'use strict'
 
 const utils = require('./modules/utils.js');
-const deluge = require('./modules/deluge.js');
 const transmission = require('./modules/transmission.js');
 const awsS3Handler = require('./modules/awsS3Handler.js');
 const clamav = require('./modules/clamav.js');
 
-module.exports = function (io) {
+module.exports = function(io) {
 	var module = {};
 	var client = null;
 	var infoIntervalId = null,
 			uploadIntervalId = null;
 
-	module.sendProgress = function(progress) {
-		console.log('Send Progress', progress, client);
-		if (client !== null) {
-			client.emit('uploadProgress', progress)
-		}
-	}
-
 	function getInfo (client) {
 		client.on('getInfo', function(data) {
 			console.log('getInfo',data);
-			switch (data){
-				case 'transmission': transmission.getInfo(client); break;
-				case 'deluge': deluge.getInfo(client); break;
-				default: transmission.getInfo(client); break;
-			}
+			transmission.getInfo(client);
 		});
 	}
 
 	function pause(client){
 		client.on('pause', function(data){
 			console.log('pause',data);
-			switch (data.client){
-				case 'transmission': transmission.pause(client,data.id); break;
-				case 'deluge': deluge.pause(client,data.id); break;
-				default: transmission.pause(client,data.id); break;
-			}
+			transmission.pause(client,data.id);
 		});
 	}
 
 	function resume(client){
 		client.on('resume', function(data){
 			console.log('resume',data);
-			switch (data.client){
-				case 'transmission': transmission.resume(client,data.id); break;
-				case 'deluge': deluge.resume(client,data.id); break;
-				default: transmission.resume(client,data.id); break;
-			}
+			transmission.resume(client,data.id);
 		});
 	}
 
 	function del(client){
 		client.on('delete', function(data){
 			console.log('delete',data);
-			switch (data.client){
-				case 'transmission': transmission.delete(client,data.id,data.remove_data); break;
-				case 'deluge': deluge.delete(client,data.id,data.remove_data); break;
-				default: transmission.delete(client,data.id,data.remove_data); break;
-			}
+			transmission.delete(client,data.id,data.remove_data);
 		});
 	}
 
@@ -108,11 +84,7 @@ module.exports = function (io) {
 			console.log('startInfoInterval', infoIntervalId === null);
 			if (infoIntervalId === null) {
 				infoIntervalId = setInterval(function(){
-					switch (data){
-						case 'transmission': transmission.getInfo(client); break;
-						case 'deluge': deluge.getInfo(client); break;
-						default: transmission.getInfo(client); break;
-					}
+					transmission.getInfo(client);
 				}, 5000);
 			}
 		});
@@ -129,7 +101,8 @@ module.exports = function (io) {
 		});
 	}
 
-	module.connect = function () {
+	module.connect = function() {
+		console.log('Initializating websocket...');
 		io.on('connection', function(client) {
 			console.log('Client connected...');
 			client = client;

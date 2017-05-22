@@ -42,12 +42,16 @@ function getStatusType(type){
 				return 'Completed';
 		} else if(type === 7){
 				return 'Isolated';
+		} else {
+			return  '';
 		}
 }
 
 /*----------------------------------------------------*/
 // Functions that work responding to the HTTP server
 /*----------------------------------------------------*/
+
+exports.transmission = transmission;
 
 // Add a new torrent to downloading
 exports.addMagnet = function(magnetLink, dir, callback) {

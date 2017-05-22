@@ -7,7 +7,6 @@ const fs = require('fs');
 const PirateBay = require('thepiratebay');
 const proc = require('child_process');
 const utils = require('./modules/utils.js');
-const deluge = require('./modules/deluge.js');
 const transmission = require('./modules/transmission.js');
 const awsS3Handler = require('./modules/awsS3Handler.js');
 
@@ -49,31 +48,6 @@ router.get('/user/login/:username', function(req, res) {
 			console.log('Success checking user:', userName);
 			res.send({'output':checkUserResult.stdout.toString()});
 		}
-	}
-});
-
-router.post('/deluge/download', function(req, res) {
-	var userName = utils.sanitize(req.body.username),
-			torrent = req.body.torrent,
-			magnetLink = utils.sanitizeURI(torrent.magnetLink),
-			dir = '/home/'+userName+'/downloads/';
-
-	if (!utils.checkValidUser(userName)){
-		var errMsg = { 'message': 'Invalid username. The user is no registered in the system.','status': 401}
-		res.status(401).send({'error': errMsg})
-	} else if (!utils.checkAvailableSpace()){
-		var errSpace = { 'message': 'Can\'t start a new download. No available space on disk.','status': 403}
-		res.status(403).send({'error': errSpace})
-	}  else {
-		deluge.addMagnet(magnetLink, dir, function(err, result){
-			if (err) {
-				console.log('Error adding torrent:', err)
-				res.status(500).send({'error': err})
-			} else {
-				console.log('Success adding torrent:', result)
-				res.send(result);
-			}
-		});
 	}
 });
 

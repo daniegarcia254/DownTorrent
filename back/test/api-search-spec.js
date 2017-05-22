@@ -5,7 +5,6 @@ process.env.VALID_USERS = ['test','test2'];
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let should = chai.should();
 let expect = chai.expect;
 let nock = require('nock');
 
@@ -17,7 +16,7 @@ describe('Search API', function() {
 		server = require('../app');
 	});
 	after(function(done){
-		server = server.close();
+		server.close();
 		nock.restore();
 		done();
 	});
@@ -36,7 +35,7 @@ describe('Search API', function() {
 					expect(err).to.not.exist;
 					expect(res).to.have.status(200);
 					expect(res).to.be.json;
-					res.body.should.be.a('array');
+					expect(res.body).to.be.an('array');
 					done();
 				});
 		});

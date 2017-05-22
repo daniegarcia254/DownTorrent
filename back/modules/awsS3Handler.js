@@ -7,16 +7,11 @@ const s3lib = require('s3');
 const AWS = require('aws-sdk');
 const zip = require('zipfolder');
 const async = require('async');
-const rimraf = require('rimraf');
 const prettyBytes = require('pretty-bytes');
 const _ = require('underscore');
 const moment = require('moment');
 const transmission = require('./transmission.js');
-const deluge = require('./deluge.js');
 const utils = require('./utils.js');
-
-// Create S3 AWS-SDK client
-
 
 // Create S3 lib client
 const s3client = s3lib.createClient({
@@ -35,6 +30,9 @@ const s3client = s3lib.createClient({
 		// See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
 	}
 });
+
+exports.s3client = s3client;
+
 
 /*----------------------------------------------------*/
 // Auxiliary functions
@@ -83,44 +81,48 @@ function getContentTypeByFile(fileName) {
 }
 
 function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb) {
-	var params = {
-		localFile: absoluteFilePath,
-		s3Params: {
-			Bucket: process.env.S3_BUCKET,
-			Key:  username + '/' + fileName,
-			ACL: 'public-read',
-			ContentType: getContentTypeByFile(fileName)
-				// other options supported by putObject, except Body and ContentLength.
-				// See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
-		}
-	};
-	var uploader = s3client.uploadFile(params);
-	uploader.on('error', function(err) {
-		console.error('s3client[error upload]: ', err.stack);
-		uploader.abort();
+	try {
+		//Create params object for the upload
+		var params = {
+			localFile: absoluteFilePath,
+			s3Params: {
+				Bucket: process.env.S3_BUCKET,
+				Key:  username + '/' + fileName,
+				ACL: 'public-read',
+				ContentType: getContentTypeByFile(fileName)
+					// other options supported by putObject, except Body and ContentLength.
+					// See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+			}
+		};
+
+		//Create uploader
+		var uploader = s3client.uploadFile(params);
+
+		uploader.on('error', function(err) {
+			uploader.abort();
+			uploadCb(err);
+		});
+		uploader.on('progress', function() {
+			var progress = parseFloat((uploader.progressAmount/uploader.progressTotal)*100).toFixed(2)
+			client.emit('progress', {fileName: fileName, progress: progress});
+		});
+		uploader.on('end', function(data) {
+			console.log('s3client[finish upload]: ', data);
+			uploadCb(null,data);
+		});
+	} catch(err) {
+		console.log("Error uploading multipart file to S3", err);
 		uploadCb(err);
-	});
-	uploader.on('progress', function() {
-		var progress = parseFloat((uploader.progressAmount/uploader.progressTotal)*100).toFixed(2)
-		client.emit('progress', {fileName: fileName, progress:progress});
-	});
-	uploader.on('end', function(data) {
-		console.log('s3client[finish upload]: ', data);
-		uploadCb(null,data);
-	});
+	}
 }
 
-function deleteFiles(client, torrentClient, torrentId, files, deleteCb){
+function deleteFiles(client, torrentId, files, deleteCb){
 	console.log('Deleting files', files);
 	var exec = proc.exec;
 	async.forEachSeries(files, function(file, cb){
 		exec('rm -Rif "' + file + '"', cb);
 	}, function(err){
-		switch(torrentClient){
-			case 'transmission': transmission.delete(client,torrentId,true); break;
-			case 'deluge': deluge.delete(client,torrentId,true); break;
-			default: transmission.delete(client,torrentId,true); break;
-		}
+		transmission.delete(client,torrentId,true);
 		deleteCb(err);
 	});
 }
@@ -128,8 +130,9 @@ function deleteFiles(client, torrentClient, torrentId, files, deleteCb){
 /*----------------------------------------------------*/
 // Module functions
 /*----------------------------------------------------*/
+exports.createZip = createZip;
 
-exports.upload = function(client, torrentClient, username, torrent, callback){
+exports.upload = function(client, username, torrent, callback){
 	console.log('Upload files', username, torrent.name);
 	try {
 		var user = utils.sanitize(username),
@@ -144,7 +147,7 @@ exports.upload = function(client, torrentClient, username, torrent, callback){
 			}
 			else {
 				console.log('Success creating zip', zipName);
-				var url = s3lib.getPublicUrl(process.env.S3_BUCKET, user + '/' + zipName,process.env.AWS_REGION);
+				var url = s3lib.getPublicUrl(process.env.S3_BUCKET, user + '/' + zipName, process.env.AWS_REGION);
 				// First, check if file already exists in S3
 				var params = { Bucket: process.env.S3_BUCKET, Key: zipName };
 				var s3aws = new AWS.S3();
@@ -159,14 +162,14 @@ exports.upload = function(client, torrentClient, username, torrent, callback){
 								callback({'error':{'message':err.message,'status': 500}});
 							}
 							else {
-								deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
+								deleteFiles(client, torrent.id, [baseDir+zipName, fileName], function(err, result){
 									if (err) { console.log('Error deleting zip and torrent files', err); }
 									callback(null, url);
 								});
 							}
 						});
 					} else {
-						deleteFiles(client, torrentClient, torrent.id, [baseDir+zipName, fileName], function(err, result){
+						deleteFiles(client, torrent.id, [baseDir+zipName, fileName], function(err, result){
 							if (err) { console.log('Error deleting zip and torrent files', err); }
 							callback(null, url);
 						});
