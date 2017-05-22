@@ -15,11 +15,11 @@ router.get('/search/piratebay', function (req, res) {
 	var q = req.query.q;
 	console.log('Search PirateBay torrent', q);
 	PirateBay.search(q)
-	.then(results => {
+	.then((results) => {
 		console.log('Success searching PirateBay', results.length)
 		res.send(results);
 	})
-	.catch(err => {
+	.catch((err) => {
 		console.log('Error searching PirateBay: ', err)
 		res.send(err);
 	});
