@@ -20,7 +20,7 @@ describe('Transmission torrent client module', () => {
 	/* ------------------------------------------
 	PRIVATE FUNCTIONS
 	--------------------------------------------*/
-	describe('Private functions', () =>{
+	describe('Private functions', () => {
 		/* ------------------------------------------
 		Get string status from int type
 		--------------------------------------------*/
@@ -96,7 +96,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(transmissionStub);
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(clientStub.emit,'info', {'error': {'message':err.message,'status': 500}});
-		    done();
+				done();
 			});
 			it('should emit error 500 if an error occurs processing torrents', function(done){
 				info = {};
@@ -106,7 +106,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(transmissionStub);
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(clientStub.emit,'info', {'error': {'message':errorMsg,'status': 500}});
-		    done();
+				done();
 			});
 			it('should return list of torrents otherwise', function(done){
 				var result =[{
@@ -124,7 +124,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(transmissionStub);
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(clientStub.emit,'info', result);
-		    done();
+				done();
 			});
 		});
 
@@ -192,7 +192,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'pause', {'error': {'message':err.message,'status': 500}});
-		    done();
+				done();
 			});
 			it('should emit torrent id otherwise', function(done){
 				transmissionStub.yields(null, id);
@@ -201,7 +201,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'pause', id);
-		    done();
+				done();
 			});
 		});
 
@@ -230,7 +230,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'resume', {'error': {'message':err.message,'status': 500}});
-		    done();
+				done();
 			});
 			it('should emit torrent id otherwise', function(done){
 				transmissionStub.yields(null, id);
@@ -239,7 +239,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'resume', id);
-		    done();
+				done();
 			});
 		});
 
@@ -268,7 +268,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'delete', {'error': {'message':err.message,'status': 500}});
-		    done();
+				done();
 			});
 			it('should emit torrent id otherwise', function(done){
 				transmissionStub.yields(null, id);
@@ -277,7 +277,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id, true);
 				sinon.assert.calledWith(clientStub.emit,'delete', id);
-		    done();
+				done();
 			});
 		});
 
@@ -306,7 +306,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'delete', {'error': {'message':err.message,'status': 500}});
-		    done();
+				done();
 			});
 			it('should emit torrent id otherwise', function(done){
 				transmissionStub.yields(null, id);
@@ -315,7 +315,7 @@ describe('Transmission torrent client module', () => {
 				sinon.assert.calledOnce(clientStub.emit);
 				sinon.assert.calledWith(transmissionStub, id);
 				sinon.assert.calledWith(clientStub.emit,'delete', id);
-		    done();
+				done();
 			});
 		});
 	});

@@ -215,16 +215,16 @@ describe('AWS S3 Handler', () => {
 			});
 			it('Should return error if uploader emits an error event', function(done){
 				s3uploadStub.returns(emitter);
-				var err =  new Error('Test error');
+				var err =	new Error('Test error');
 				uploadMultipart(clientStub, username, absoluteFilePath, fileName, callback);
-      	emitter.emit('error',err);
-      	sinon.assert.calledOnce(onErrorCallback);
-      	sinon.assert.calledOnce(emitter.abort);
-      	sinon.assert.calledOnce(callback);
-      	sinon.assert.calledWith(callback,err);
-      	sinon.assert.notCalled(onProgressCallback);
-      	sinon.assert.notCalled(onEndCallback);
-      	sinon.assert.notCalled(clientStub.emit);
+				emitter.emit('error',err);
+				sinon.assert.calledOnce(onErrorCallback);
+				sinon.assert.calledOnce(emitter.abort);
+				sinon.assert.calledOnce(callback);
+				sinon.assert.calledWith(callback,err);
+				sinon.assert.notCalled(onProgressCallback);
+				sinon.assert.notCalled(onEndCallback);
+				sinon.assert.notCalled(clientStub.emit);
 				done();
 			});
 			it('Client should emit progress if uploader emits a progress event', function(done){
@@ -232,25 +232,25 @@ describe('AWS S3 Handler', () => {
 				emitter.progressTotal = 100;
 				s3uploadStub.returns(emitter);
 				uploadMultipart(clientStub, username, absoluteFilePath, fileName, callback);
-      	emitter.emit('progress');
-      	sinon.assert.calledOnce(onProgressCallback);
-      	sinon.assert.notCalled(callback);
-      	sinon.assert.notCalled(onErrorCallback);
-      	sinon.assert.notCalled(onEndCallback);
-      	sinon.assert.calledOnce(clientStub.emit);
-      	sinon.assert.calledWith(clientStub.emit, 'progress', {fileName: fileName, progress: '20.00'});
+				emitter.emit('progress');
+				sinon.assert.calledOnce(onProgressCallback);
+				sinon.assert.notCalled(callback);
+				sinon.assert.notCalled(onErrorCallback);
+				sinon.assert.notCalled(onEndCallback);
+				sinon.assert.calledOnce(clientStub.emit);
+				sinon.assert.calledWith(clientStub.emit, 'progress', {fileName: fileName, progress: '20.00'});
 				done();
 			});
 			it('Should return callback if uploader emits an end event', function(done){
 				s3uploadStub.returns(emitter);
 				uploadMultipart(clientStub, username, absoluteFilePath, fileName, callback);
-      	emitter.emit('end', 'data');
-      	sinon.assert.calledOnce(onEndCallback);
-      	sinon.assert.notCalled(onErrorCallback);
-      	sinon.assert.notCalled(onProgressCallback);
-      	sinon.assert.notCalled(clientStub.emit);
-      	sinon.assert.calledOnce(callback);
-      	sinon.assert.calledWith(callback,null,'data');
+				emitter.emit('end', 'data');
+				sinon.assert.calledOnce(onEndCallback);
+				sinon.assert.notCalled(onErrorCallback);
+				sinon.assert.notCalled(onProgressCallback);
+				sinon.assert.notCalled(clientStub.emit);
+				sinon.assert.calledOnce(callback);
+				sinon.assert.calledWith(callback,null,'data');
 				done();
 			});
 		});
@@ -336,7 +336,7 @@ describe('AWS S3 Handler', () => {
 		// Upload file to S3 bucket
 		/*----------------------------------------------------*/
 		describe('Upload file to S3 bucket into a user folder', function(){
-			var sanitizeStub, sanitizeURIStub, s3GetPublicUrlStub, s3GetPublicUrlStub;
+			var sanitizeStub, sanitizeURIStub, s3GetPublicUrlStub;
 			var uploadMultipartStub, deleteFilesStub;
 			var client, username, torrent
 			beforeEach(function(done){
@@ -368,8 +368,8 @@ describe('AWS S3 Handler', () => {
 				AWS.mock('S3', 'headObject', callbackASW);
 				var error = new Error('Error creating zip');
 				awsS3Handler.__set__('createZip', function (source, dest, cb) {
-		        cb(error, null);
-		    });
+						cb(error, null);
+				});
 
 				awsS3Handler.upload(client, username, torrent, function(err, data){
 					expect(err).to.exist;
@@ -386,21 +386,21 @@ describe('AWS S3 Handler', () => {
 					process.env.AWS_REGION = 'test';
 
 					awsS3Handler.__set__('createZip', function (source, dest, cb) {
-			        cb(null, 'zipName');
-			    });
+							cb(null, 'zipName');
+					});
 
-			    s3GetPublicUrlStub.returns('zipS3Url');
+					s3GetPublicUrlStub.returns('zipS3Url');
 
-			    var error = new Error('Error checking file on S3');
-			    error.code = 'Server error';
+					var error = new Error('Error checking file on S3');
+					error.code = 'Server error';
 					AWS.mock('S3', 'headObject', function (params, callback) {
 						callback(error, null);
 					});
 
 					var deleteError = new Error('Error deleting files');
 					awsS3Handler.__set__('deleteFiles', function (client, torrentId, files, deleteCb) {
-			        deleteCb(deleteError, null);
-			    });
+							deleteCb(deleteError, null);
+					});
 
 					awsS3Handler.upload(client, username, torrent, function(err, data){
 						expect(err).to.not.exist;
@@ -417,21 +417,21 @@ describe('AWS S3 Handler', () => {
 					process.env.AWS_REGION = 'test';
 
 					awsS3Handler.__set__('createZip', function (source, dest, cb) {
-			        cb(null, 'zipName');
-			    });
+							cb(null, 'zipName');
+					});
 
-			    s3GetPublicUrlStub.returns('zipS3Url');
+					s3GetPublicUrlStub.returns('zipS3Url');
 
-			    var error = new Error('Error checking file on S3');
-			    error.code = 'Forbidden';
+					var error = new Error('Error checking file on S3');
+					error.code = 'Forbidden';
 					AWS.mock('S3', 'headObject', function (params, callback) {
 						callback(error, null);
 					});
 
 					var uploadError = new Error('Error uploading files');
 					awsS3Handler.__set__('uploadMultipart', function (client, username, absoluteFilePath, fileName, uploadCb) {
-			        uploadCb(uploadError, null);
-			    });
+							uploadCb(uploadError, null);
+					});
 
 					awsS3Handler.upload(client, username, torrent, function(err, data){
 						expect(err).to.exist;
@@ -449,25 +449,25 @@ describe('AWS S3 Handler', () => {
 					process.env.AWS_REGION = 'test';
 
 					awsS3Handler.__set__('createZip', function (source, dest, cb) {
-			        cb(null, 'zipName');
-			    });
+							cb(null, 'zipName');
+					});
 
-			    s3GetPublicUrlStub.returns('zipS3Url');
+					s3GetPublicUrlStub.returns('zipS3Url');
 
-			    var error = new Error('Error checking file on S3');
-			    error.code = 'NotFound';
+					var error = new Error('Error checking file on S3');
+					error.code = 'NotFound';
 					AWS.mock('S3', 'headObject', function (params, callback) {
 						callback(error, null);
 					});
 
 					awsS3Handler.__set__('uploadMultipart', function (client, username, absoluteFilePath, fileName, uploadCb) {
-			        uploadCb(null, {data: 'data'});
-			    });
+							uploadCb(null, {data: 'data'});
+					});
 
 					var deleteError = new Error('Error deleting files');
 					awsS3Handler.__set__('deleteFiles', function (client, torrentId, files, deleteCb) {
-			        deleteCb(deleteError, null);
-			    });
+							deleteCb(deleteError, null);
+					});
 
 					awsS3Handler.upload(client, username, torrent, function(err, data){
 						expect(err).to.not.exist;

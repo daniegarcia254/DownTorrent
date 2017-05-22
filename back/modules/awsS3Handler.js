@@ -87,7 +87,7 @@ function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 			localFile: absoluteFilePath,
 			s3Params: {
 				Bucket: process.env.S3_BUCKET,
-				Key:  username + '/' + fileName,
+				Key: username + '/' + fileName,
 				ACL: 'public-read',
 				ContentType: getContentTypeByFile(fileName)
 					// other options supported by putObject, except Body and ContentLength.
@@ -111,7 +111,7 @@ function uploadMultipart(client, username, absoluteFilePath, fileName, uploadCb)
 			uploadCb(null,data);
 		});
 	} catch(err) {
-		console.log("Error uploading multipart file to S3", err);
+		console.log('Error uploading multipart file to S3', err);
 		uploadCb(err);
 	}
 }
@@ -217,6 +217,6 @@ exports.deleteS3Object = function(username, file, callback){
 	var s3aws = new AWS.S3();
 	s3aws.deleteObject({
 		Bucket: process.env.S3_BUCKET,
-		Key:  utils.sanitize(username) + '/' + file
+		Key: utils.sanitize(username) + '/' + file
 	}, callback);
 }
