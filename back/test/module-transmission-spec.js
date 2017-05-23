@@ -40,21 +40,6 @@ describe('Transmission torrent client module', () => {
 	MODULE FUNCTIONS
 	--------------------------------------------*/
 	describe('Module functions', () => {
-		describe('Private functions', () =>{
-			/* ------------------------------------------
-			Get string status from int type
-			--------------------------------------------*/
-			describe('Get status', () => {
-				it('should return correct string status for a given integer status', function(done){
-					getStatusTypeFunc = transmission.__get__('getStatusType');
-					statusArray.forEach(function(type,idx){
-						statusType = getStatusTypeFunc(idx);
-						expect(statusType).to.equal(type);
-					});
-					done();
-				});
-			});
-		});
 
 		/* ------------------------------------------
 		Get info

@@ -14,9 +14,7 @@ const transmission = new Transmission({
 	password: process.env.TRANSMISSION_PWD,
 });
 
-const arrayStatus = {
-	'stopped':'STOPPED', 'check_wait':'CHECK_WAIT', 'check':'CHECK', 'download_wait':'DOWNLOAD_WAIT',
-	'download':'DOWNLOAD', 'seed_wait':'SEED_WAIT', 'seed':'SEED', 'isolated':'ISOLATED'};
+const arrayStatus = ['Paused','Checking','Checked','Waiting','Downloading','Seeding','Completed','Isolated'];
 
 
 /*----------------------------------------------------*/
@@ -25,23 +23,8 @@ const arrayStatus = {
 
 // Get torrent state
 function getStatusType(type){
-		//return transmission.statusArray[type]
-		if(type === 0){
-				return 'Paused';
-		} else if(type === 1){
-				return 'Checking';
-		} else if(type === 2){
-				return 'Checked';
-		} else if(type === 3){
-				return 'Waiting';
-		} else if(type === 4){
-				return 'Downloading';
-		} else if(type === 5){
-				return 'Seeding';
-		} else if(type === 6){
-				return 'Completed';
-		} else if(type === 7){
-				return 'Isolated';
+		if(type >= 0 && type <= 7){
+			return arrayStatus[type]
 		} else {
 			return  '';
 		}
@@ -73,16 +56,16 @@ exports.getInfo = function(client) {
 				var torrents = [];
 				if(result.torrents.length > 0){
 					_.each(result.torrents, function(t){
-						var torrent = {};
-						torrent.id = t.id;
-						torrent.name = t.name;
-						torrent.size = t.totalSize === 0 ? '-' : prettyBytes(t.totalSize);
-						torrent.status = t.totalSize === 0 ? 'Checking' : (t.isFinished ? 'Completed' : getStatusType(t.status));
-						torrent.progress = t.percentDone*100;
-						torrent.speed = t.totalSize === 0 ? '-' : prettyBytes(t.rateDownload)+'/s';
-						torrent.magnetLink = t.magnetLink;
-						torrent.eta = t.eta < 0 ? '-' : prettyMs(t.eta*1000);
-						torrents.push(torrent);
+						torrents.push({
+							id: t.id,
+							name: t.name,
+							size: t.totalSize === 0 ? '-' : prettyBytes(t.totalSize),
+							status: t.totalSize === 0 ? 'Checking' : (t.isFinished ? 'Completed' : getStatusType(t.status)),
+							progress: t.percentDone*100,
+							speed: t.totalSize === 0 ? '-' : prettyBytes(t.rateDownload)+'/s',
+							magnetLink: t.magnetLink,
+							eta: t.eta < 0 ? '-' : prettyMs(t.eta*1000)
+						});
 					});
 				}
 				client.emit('info', torrents);
