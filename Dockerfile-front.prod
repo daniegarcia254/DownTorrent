@@ -11,7 +11,7 @@ WORKDIR ${FRONT_DIR}
 
 # Add our package.json and install *before* adding our FRONTEND app files
 ADD front/package.json ./
-RUN npm install --silent
+RUN npm install
 
 #Copy rest of the FRONTEND files and config env
 COPY front /usr/src/app/
