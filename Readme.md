@@ -30,7 +30,6 @@ You will need an [AWS](https://aws.amazon.com/) account in order to configure an
 
 #### - Others
 * _**Transmission**_ is a cross-platform and open source BitTorrent client, designed for easy and powerful use.
-* _**Deluge BitTorrent Client**_ is a lightweight, Free Software, cross-platform BitTorrent client.
 * _**ClamAV**_ is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
 
 These programs are already installed in the Docker images.
@@ -101,10 +100,10 @@ You can make use of various [scripts](scripts) that can be applied to the produc
 Some features to implement for improve the app in a near future. Feel free to contribute to the project in order to complete them:
 * Create a Dockerfile to deploy the app in a simpler way and get it running instantly <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
 * Add real Authentication to the system, no using one based on the Ubuntu system users. Using a database and JSON Web Tokens for example.
-* Review and improve the mobile version. For example, data tables are not showing properly.
-* Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
+* Review and improve the mobile version. For example: data tables are not loading information properly.
+* Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback).
 * As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents.
-* Add testing
+* Testing <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
 
 ## Built With
 ### - Backend
