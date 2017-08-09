@@ -11,4 +11,4 @@ fi
 
 CONTAINER=$1
 
-docker-compose exec --privileged $CONTAINER sh restart.sh
+docker exec --privileged $CONTAINER sh restart.sh
