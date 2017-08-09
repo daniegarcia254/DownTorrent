@@ -24,7 +24,7 @@ const arrayStatus = ['Paused','Checking','Checked','Waiting','Downloading','Seed
 // Get torrent state
 function getStatusType(type){
 		if(type >= 0 && type <= 7){
-			return arrayStatus[type]
+			return arrayStatus[type];
 		} else {
 			return  '';
 		}
