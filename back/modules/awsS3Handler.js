@@ -41,18 +41,26 @@ exports.s3client = s3client;
 function createZip(source, dest, callback){
 	console.log('Create zip', source, dest);
 	try {
-		if (fs.lstatSync(source).isDirectory()){
-			var zipName = dest + path.basename(source) + '.zip';
-			zip.zipFolder({folderPath: source}, function (err, zipPath) {
-				if (err) {
-					callback(err);
-				} else {
-					callback(null, path.basename(zipName));
-				}
-			});
+
+		var zipName = dest + path.basename(source) + '.zip';
+		var zipExists = fs.fs.existsSync(zipName);
+		if (!zipExists) {
+			if (fs.lstatSync(source).isDirectory()){
+				var zipName = dest + path.basename(source) + '.zip';
+				zip.zipFolder({folderPath: source}, function (err, zipPath) {
+					if (err) {
+						callback(err);
+					} else {
+						callback(null, path.basename(zipName));
+					}
+				});
+			} else {
+				console.log('Don\'t create zip for file', path.basename(source))
+				callback(null, path.basename(source))
+			}
 		} else {
-			console.log('Don\'t create zip for file', path.basename(source))
-			callback(null, path.basename(source))
+			console.log('Zip already created:', zipName);
+			callback(null, path.basename(zipName));
 		}
 	} catch(err) {
 		callback(err);
