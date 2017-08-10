@@ -66,7 +66,7 @@ module.exports = function(io) {
 				var err = { 'message': 'Invalid username. The user is no registered in the system.','status': 401}
 				client.emit('upload', {'error': err})
 			} else {
-				awsS3Handler.upload(client, data.client, data.username, data.torrent, function(err, result){
+				awsS3Handler.upload(client, data.username, data.torrent, function(err, result){
 					if (err) {
 						console.log('Error uploading torrent', err)
 						client.emit('upload', {'error': {'message':err.message,'status': 500}})
