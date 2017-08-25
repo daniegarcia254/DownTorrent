@@ -96,6 +96,22 @@ You can make use of various [scripts](scripts) that can be applied to the produc
 * [restart_service.sh](scripts/restart_service.sh): force a restart of the backend service
 * [create_apk.sh](scripts/create_apk.sh): creates an unsigned Android APK file to download and install in your mobile device. The file will be available in the Apache server (with the configured port) as "DownTorrent.apk"
 
+## Testing
+
+Testing is implemented for the backend using Mocha, Chai && Sinon.
+
+Run the tests:
+```
+cd back
+npm test
+```
+
+Testing coverage can be generated using Istanbul:
+```
+cd back
+npm run coverage
+```
+
 ## Roadmap
 Some features to implement for improve the app in a near future. Feel free to contribute to the project in order to complete them:
 * Create a Dockerfile to deploy the app in a simpler way and get it running instantly <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
