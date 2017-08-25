@@ -43,7 +43,7 @@ function createZip(source, dest, callback){
 	try {
 
 		var zipName = dest + path.basename(source) + '.zip';
-		var zipExists = fs.fs.existsSync(zipName);
+		var zipExists = fs.existsSync(zipName);
 		if (!zipExists) {
 			if (fs.lstatSync(source).isDirectory()){
 				var zipName = dest + path.basename(source) + '.zip';
