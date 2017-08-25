@@ -126,15 +126,31 @@ export default {
 			})
 		},
 		errorHandling(error){
-			var error_title = this.$t("links.errors.title");
+			console.log("Error response", error.response);
+
+			var self = this;
+			var status, message;
+			var error_title = self.$t("links.errors.title");
+
+			if (error.message) message = error.message;
+			if (error.status) status = error.status;
+
 			if (error.response) {
-				var status = error.response.status,
-						data = error.response.data;
-				this.showDialog(error_title, this.$t("links.errors.messages.base", [status,data]))
-			} else if (error.message && error.status) {
-				this.showDialog(error_title, this.$t("links.errors.messages.base", [error.status,error.message]))
+				status = error.response.status;
+				if (error.response.data && error.response.data.error){
+					status = error.response.data.error.status || status;
+					message = error.response.data.error.message;
+					if (error.response.data.error.result){
+						message = error.response.data.error.result;
+					}
+				} else {
+					message = error.response.data;
+				}
+			}
+			if (message && status) {
+				self.showDialog(error_title, this.$t("links.errors.messages.base", [status,message]))
 			} else {
-				this.showDialog(error_title, error.message);
+				self.showDialog(error_title, error.message)
 			}
 		},
 		refresh: function(done) {

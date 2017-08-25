@@ -110,11 +110,12 @@ export default {
 		},
 		errorHandling(error){
 			var error_title = this.$t("login.errors.title");
+			console.log("Error", error);
 			if (error.response) {
 				var status = error.response.status,
-						data = error.response.data;
-				this.showDialog(error_title, this.$t("login.errors.messages.base", [status,data]))
-			} if (error.message && error.status) {
+						msg = error.response.data.message;
+				this.showDialog(error_title, this.$t("login.errors.messages.base", [status,msg]))
+			} else if (error.message && error.status) {
 				this.showDialog(error_title, this.$t("login.errors.messages.base", [error.status,error.message]))
 			} else {
 				this.showDialog(error_title, error.message);
@@ -137,9 +138,7 @@ export default {
 					self.$router.push({ path: 'search'});
 				}
 			}, (err) => {
-				console.log("Error login", err);
 				Loading.hide();
-				if (done) done();
 				self.errorHandling(err);
 			})
 		},

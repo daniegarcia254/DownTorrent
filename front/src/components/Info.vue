@@ -384,7 +384,7 @@ export default {
 					return a_value - b_value;
 				}
 			},
-			columnsData: [
+			columns: [
 				{
 					label: this.$t("info.table.fields.name"),
 					field: 'name',
@@ -420,24 +420,6 @@ export default {
 			rowHeight: 'auto',
 			bodyHeightProp: 'auto',
 			bodyHeight: 'auto'
-		}
-	},
-	computed: {
-		columns: {
-			get () {
-				switch(this.$store.state.client) {
-					case 'deluge': {
-						this.columnsData[1] = this.sizeColumnDeluge;
-						return this.columnsData;
-						break;
-					}
-					case 'transmission':
-					default: {
-						return this.columnsData;
-						break;
-					}
-				}
-			}
 		}
 	}
 }

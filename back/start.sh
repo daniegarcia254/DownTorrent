@@ -13,6 +13,7 @@ then
 else
 	echo "Enviroment "$1" is not a valid one."
 	echo "Please chose a valid envoriment: dev/prod"
+	exit 1;
 fi
 
 ENVIRONMENT=$1

@@ -30,7 +30,6 @@ You will need an [AWS](https://aws.amazon.com/) account in order to configure an
 
 #### - Others
 * _**Transmission**_ is a cross-platform and open source BitTorrent client, designed for easy and powerful use.
-* _**Deluge BitTorrent Client**_ is a lightweight, Free Software, cross-platform BitTorrent client.
 * _**ClamAV**_ is an open source antivirus engine for detecting trojans, viruses, malware & other malicious threats.
 
 These programs are already installed in the Docker images.
@@ -96,15 +95,30 @@ You can make use of various [scripts](scripts) that can be applied to the produc
 * [restart_service.sh](scripts/restart_service.sh): force a restart of the backend service
 * [create_apk.sh](scripts/create_apk.sh): creates an unsigned Android APK file to download and install in your mobile device. The file will be available in the Apache server (with the configured port) as "DownTorrent.apk"
 
-## ToDo
+## Testing
+
+Testing is implemented for the backend using Mocha, Chai && Sinon.
+
+Run the tests:
+```
+cd back
+npm test
+```
+
+Testing coverage can be generated using Istanbul:
+```
+cd back
+npm run coverage
+```
+
+## Roadmap
 Some features to implement for improve the app in a near future. Feel free to contribute to the project in order to complete them:
 * Create a Dockerfile to deploy the app in a simpler way and get it running instantly <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
 * Add real Authentication to the system, no using one based on the Ubuntu system users. Using a database and JSON Web Tokens for example.
-* Review and improve the mobile version. For example, data tables are not showing properly.
-* Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback), but don't know how to do it with Deluge.
-* As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents. For that, the solution would be to implement a middle database to save the torrents information each user is downloading.
-* Add search on a different torrent search engine. For expample: rarbg.to
-* Add testing
+* Review and improve the mobile version. For example: data tables are not loading information properly.
+* Automatically upload the downloaded torrents to the S3 bucket. It can be done with [Transmission](https://www.npmjs.com/package/transmission#transmissionwaitforstateid-targetstate-callback).
+* As only one instance of the bittorent client is running in the machine, all users can see all downloads. So, it would be ideal if each user only could see and manage its own torrents.
+* Testing <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStLWRMwSAjaGCSxH_vO-G8JhgSlrWevy8gUqvz8WXce3Z6-_lBaQ">
 
 ## Built With
 ### - Backend
