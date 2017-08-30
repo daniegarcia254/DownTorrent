@@ -71,6 +71,22 @@ describe('Utils', () => {
 			done();
 		});
 	});
+	describe('Check max torrent size', () => {
+		it('should return false if size is more than 10 MiB', (done) => {
+			var result = utils.checkMaxTorrentSize('11 MiB');
+			var result2 = utils.checkMaxTorrentSize('1 GiB');
+			expect(result).to.be.false;
+			expect(result2).to.be.false;
+			done();
+		});
+		it('should return true if size is less than 10 MiB', (done) => {
+			var result = utils.checkMaxTorrentSize('9 MiB');
+			var result2 = utils.checkMaxTorrentSize('500 KiB');
+			expect(result).to.be.true;
+			expect(result2).to.be.true;
+			done();
+		});
+	});
 	describe('Handle spawn error', () => {
 		it('should return {message,status} error object if error is a valid error object or null otherwise', (done) => {
 			var errors = [

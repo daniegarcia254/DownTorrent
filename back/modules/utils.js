@@ -63,3 +63,15 @@ exports.checkAvailableSpace = function(){
 		}
 	}
 }
+
+exports.checkMaxTorrentSize = function(size){
+	var size_temp = escape(size).replace(/%20/g,' ').replace(/%A0/g,' ').split(' '),
+			size_value = parseFloat(size_temp[0]);
+
+	switch (size_temp[1]) {
+		case 'MiB': size_value = size_value * 1024; break;
+		case 'GiB': size_value = size_value * 1024 * 1024; break;
+	}
+
+	return size_value <= 10240;
+}

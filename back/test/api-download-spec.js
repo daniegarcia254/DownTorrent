@@ -25,9 +25,10 @@ describe('Download API', function() {
 		sanitizeURIStub = sinon.stub(utils,'sanitizeURI');
 		checkValidUserStub = sinon.stub(utils,'checkValidUser');
 		checkSpaceStub =sinon.stub(utils,'checkAvailableSpace');
+		checkTorrentSizeStub =sinon.stub(utils,'checkMaxTorrentSize');
 		transmissionStub =sinon.stub(transmission,'addMagnet');
 		userName = 'testUser';
-		torrent = {id: 1, magnetLink: 'torrentMagnetLink'};
+		torrent = {id: 1, magnetLink: 'torrentMagnetLink', size: '11 MiB'};
 		sanitizeStub.returns(userName);
 		sanitizeURIStub.returns(torrent.magnetLink);
 		done();
@@ -41,6 +42,7 @@ describe('Download API', function() {
 		sanitizeURIStub.restore();
 		checkValidUserStub.restore();
 		checkSpaceStub.restore();
+		checkTorrentSizeStub.restore();
 		transmissionStub.restore();
 		done();
 	});
@@ -59,6 +61,7 @@ describe('Download API', function() {
 					sinon.assert.calledOnce(sanitizeURIStub);
 					sinon.assert.calledOnce(checkValidUserStub);
 					sinon.assert.notCalled(checkSpaceStub);
+					sinon.assert.notCalled(checkTorrentSizeStub);
 					sinon.assert.notCalled(transmissionStub);
 					done();
 			});
@@ -69,6 +72,28 @@ describe('Download API', function() {
 			chai.request(server)
 				.post(transmissionAPIBaseURL)
 				.send({ username: userName, torrent: torrent })
+				.end((err, res) => {
+					expect(err).to.exist;
+					expect(res).to.exist;
+					expect(err).to.have.status(403);
+					expect(res).to.have.status(403);
+					sinon.assert.calledOnce(sanitizeStub);
+					sinon.assert.calledOnce(sanitizeURIStub);
+					sinon.assert.calledOnce(checkValidUserStub);
+					sinon.assert.calledOnce(checkSpaceStub);
+					sinon.assert.notCalled(checkTorrentSizeStub);
+					sinon.assert.notCalled(transmissionStub);
+					done();
+			});
+		});
+		it('should return error 403 if user is "test" and torrent file size is more than 10 MiB', function(done) {
+			sanitizeStub.returns('test');
+			checkValidUserStub.returns(true);
+			checkSpaceStub.returns(false);
+			checkTorrentSizeStub.returns(false);
+			chai.request(server)
+				.post(transmissionAPIBaseURL)
+				.send({ username: 'test', torrent: torrent })
 				.end((err, res) => {
 					expect(err).to.exist;
 					expect(res).to.exist;
@@ -98,6 +123,7 @@ describe('Download API', function() {
 					sinon.assert.calledOnce(sanitizeURIStub);
 					sinon.assert.calledOnce(checkValidUserStub);
 					sinon.assert.calledOnce(checkSpaceStub);
+					sinon.assert.notCalled(checkTorrentSizeStub);
 					sinon.assert.calledOnce(transmissionStub);
 					sinon.assert.calledWith(transmissionStub, torrent.magnetLink);
 					done();
@@ -118,6 +144,7 @@ describe('Download API', function() {
 					sinon.assert.calledOnce(sanitizeURIStub);
 					sinon.assert.calledOnce(checkValidUserStub);
 					sinon.assert.calledOnce(checkSpaceStub);
+					sinon.assert.notCalled(checkTorrentSizeStub);
 					sinon.assert.calledOnce(transmissionStub);
 					sinon.assert.calledWith(transmissionStub, torrent.magnetLink);
 					done();

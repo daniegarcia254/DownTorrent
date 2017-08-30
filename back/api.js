@@ -63,6 +63,9 @@ router.post('/transmission/download', function(req, res) {
 	} else if (!utils.checkAvailableSpace()){
 		var errSpace = { 'message': 'Can\'t start a new download. No available space on disk.','status': 403}
 		res.status(403).send({'error': errSpace})
+	} else if (userName === 'test' && !utils.checkMaxTorrentSize(torrent.size)) {
+		var errMaxSize = { 'message': 'The max file size for a download with the "test" user is 10MB.','status': 403}
+		res.status(403).send({'error': errMaxSize})
 	} else {
 		transmission.addMagnet(magnetLink, dir, function(err, result){
 			if (err) {
