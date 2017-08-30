@@ -34,6 +34,7 @@
 				<div class="row">
 					<div class="text-center auto">
 						<p class="caption user-label">{{ $t("login.message") }}</p>
+						<p class="caption demo-label">{{ $t("login.demo") }}</p>
 					</div>
 				</div>
 				<div class="row">
@@ -201,6 +202,9 @@ export default {
 	.user-label
 		font-size 20px
 		margin-top 50px
+	.demo-label
+		font-size 14px
+		margin-top -20px !important
 	.user-input
 		font-size 20px !important
 		color grey

@@ -3,6 +3,7 @@
 		"login": {
 			"title": "Login",
 			"message": "Insert your system username",
+			"demo": "(\"demo\" user for testing)",
 			"button": "Go",
 			"selectLanguage": "Select language:",
 			"errors": {
@@ -146,7 +147,8 @@
 	"es": {
 		"login": {
 			"title": "Login",
-			"message": "Introduce tu nombre de usuario",
+			"message": "Introduce tu nombre de usuario<br>",
+			"demo": "(usuario \"demo\" para testing)",
 			"button": "Entrar",
 			"selectLanguage": "Selecciona idioma:",
 			"errors": {
