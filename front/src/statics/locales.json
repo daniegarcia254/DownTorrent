@@ -147,7 +147,7 @@
 	"es": {
 		"login": {
 			"title": "Login",
-			"message": "Introduce tu nombre de usuario<br>",
+			"message": "Introduce tu nombre de usuario",
 			"demo": "(usuario \"demo\" para testing)",
 			"button": "Entrar",
 			"selectLanguage": "Selecciona idioma:",
