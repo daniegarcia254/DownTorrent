@@ -195,7 +195,7 @@ exports.getLinks = function(username, callback){
 	var s3aws = new AWS.S3();
 	s3aws.listObjectsV2({
 		Bucket: process.env.S3_BUCKET,
-		StartAfter: utils.sanitize(username)+'/'
+		Prefix: utils.sanitize(username)
 	}, function(err, data) {
 		if (err) {
 			callback(err)
@@ -203,11 +203,13 @@ exports.getLinks = function(username, callback){
 			var files = [];
 			if(data.Contents.length > 0){
 				_.each(data.Contents, function(f){
-					var file = {};
-					file.LastModified = moment(f.LastModified).format('DD/MM/YYYY - HH:mm:ss')
-					file.Size = prettyBytes(f.Size)
-					file.Key = f.Key
-					files.push(file)
+					if (f.Key !== username+'/'){
+							var file = {};
+							file.LastModified = moment(f.LastModified).format('DD/MM/YYYY - HH:mm:ss')
+							file.Size = prettyBytes(f.Size)
+							file.Key = f.Key
+							files.push(file)
+					}
 				});
 			}
 			callback(null, files);
