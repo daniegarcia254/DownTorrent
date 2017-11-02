@@ -26,11 +26,11 @@ exports.handleSpawnError = function(result) {
 }
 
 exports.sanitize = function(str) {
-	return str.replace(/[\]\[&><;|\//].*$/g, '');
+	return str.replace(/[&><;|\//].*$/g, '');
 }
 
 exports.sanitizeURI = function(string) {
-	return string.replace(/[\]\[><;|\//].*$/g, '');
+	return string.replace(/[><;|\//].*$/g, '');
 }
 
 exports.checkValidUser = function(userName){
