@@ -2,6 +2,7 @@ version: '3'
 services:
   downtorrent_back_prod:
     container_name: downtorrent_back_prod
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile-back.prod
@@ -14,6 +15,7 @@ services:
       - "9090:9090"
   downtorrent_front_prod:
     container_name: downtorrent_front_prod
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile-front.prod
