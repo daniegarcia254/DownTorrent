@@ -1,0 +1,37 @@
+{
+  "apps": [{
+    "name": "downtorrent",
+    "script": "./app.js",
+    "watch": true,
+    "ignoreWatch": ["newrelic_agent.log"],
+    "instances": 2,
+		"log_date_format" : "DD-MM-YYYY HH:mm Z",
+    "exec_mode": "cluster",
+    "env_dev": {
+      "NODE_ENV": "dev",
+      "APP_PORT": 10002,
+			"VALID_USERS": ["user1","user2","userN"],
+			"S3_BUCKET": "downtorrent",
+			"AWS_ACCESS_KEY_ID": "XXXXXXXXXXXXXXXX",
+			"AWS_SECRET_ACCESS_KEY":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+			"AWS_REGION":"eu-west-1",
+			"TRANSMISSION_USER":"truser",
+			"TRANSMISSION_PWD": "trpwd",
+			"TRANSMISSION_HOST":"localhost",
+			"TRANSMISSION_PORT":9090
+    },
+    "env_prod": {
+      "NODE_ENV": "prod",
+      "APP_PORT": 10003,
+			"VALID_USERS": ["user1","user3","userN"],
+			"S3_BUCKET": "downtorrent",
+			"AWS_ACCESS_KEY_ID": "AKIAI7L3QKQ7C2NTTBLQ",
+			"AWS_SECRET_ACCESS_KEY":"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",
+			"AWS_REGION":"eu-west-1",
+			"TRANSMISSION_USER":"truser",
+			"TRANSMISSION_PWD": "trpwd",
+			"TRANSMISSION_HOST":"localhost",
+			"TRANSMISSION_PORT":9090
+    }
+	}]
+}
