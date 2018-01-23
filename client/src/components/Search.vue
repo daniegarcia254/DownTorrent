@@ -10,7 +10,7 @@
 					</button>
 				</div>
 				<div class="row" style="margin-top: 30px;">
-					<q-data-table :data="result_query" :config="config" :columns="columns_thepiratebay" @refresh="refresh">
+					<q-data-table :data="result_query" :config="config" :columns="columns_rarbg" @refresh="refresh">
 						<template slot="col-name" scope="cell">
 							{{cell.data}}<q-tooltip>{{cell.data}}</q-tooltip>
 						</template>
@@ -29,8 +29,9 @@
 
 <script>
 
-import { Platform, Utils, Toast, Loading, Dialog } from 'quasar'
-import moment from 'moment'
+import { Platform, Utils, Toast, Loading, Dialog } from 'quasar';
+import moment from 'moment';
+import prettyBytes from 'pretty-bytes';
 
 export default {
 	methods: {
@@ -81,7 +82,7 @@ export default {
 			var self = this;
 			var query = self.search_query;
 			self.showLoading(self.$t("spinners.searching"))
-			self.url_query = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/search/piratebay?q=' + query;
+			self.url_query = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/search/rarbg?q=' + query;
 			self.axios.get(encodeURI(self.url_query)).then((response) => {
 				var result = response.data
 				self.result_query = result
@@ -101,7 +102,7 @@ export default {
 			var self = this;
 			Dialog.create({
 				title: self.$t("search.dialog.title"),
-				message: self.$t("search.dialog.message",[torrent.name]),
+				message: self.$t("search.dialog.message",[torrent.title]),
 				buttons: [
 					{
 						label: self.$t("search.dialog.cancelBtn"),
@@ -115,7 +116,7 @@ export default {
 						handler () {
 							console.log("Download", props);
 							self.showLoading(self.$t("spinners.addTorrent"))
-							var torrentClient = self.$store.state.client
+							var torrentClient = self.$store.state.client;
 							var url = self.$store.getters.getBackURL(Platform.is.cordova) + '/api/'+torrentClient+'/download';
 							var username = self.$store.state.username;
 							self.axios.post(url, {
@@ -182,82 +183,36 @@ export default {
 					noData: this.$t("search.table.noData")
 				}
 			},
-			columns_thepiratebay: [
+			columns_rarbg: [
 				{
 					label: this.$t("search.table.fields.name"),
-					field: 'name',
+					field: 'title',
 					width: '200px',
 					sort: true
 				},{
 					label: this.$t("search.table.fields.size"),
 					field: 'size',
 					width: '50px',
-					sort (a,b) {
-						var a_temp = escape(a).replace(/%A0/g,' ').split(' '),
-								b_temp = escape(b).replace(/%A0/g,' ').split(' '),
-								a_value = parseFloat(a_temp[0]),
-								b_value = parseFloat(b_temp[0])
-
-						switch (a_temp[1]) {
-							case 'MiB': a_value = a_value * 1024; break;
-							case 'GiB': a_value = a_value * 1024 * 1024; break;
-						}
-						switch (b_temp[1]) {
-							case 'MiB': b_value = b_value * 1024; break;
-							case 'GiB': b_value = b_value * 1024 * 1024; break;
-						}
-
-						return a_value - b_value;
-					}
+					sort (a,b) { return (parseInt(a) - parseInt(b)) },
+					format (value,row) { return prettyBytes(value); }
 				},{
 					label: this.$t("search.table.fields.seeders"),
 					field: 'seeders',
 					width: '50px',
 					sort (a,b) { return (parseInt(a) - parseInt(b)) },
-					format (value,row) { return parseInt(value) }
+					format (value,row) { return parseInt(value); }
 				},{
 					label: this.$t("search.table.fields.leechers"),
 					field: 'leechers',
 					width: '50px',
 					sort (a,b) { return (parseInt(a) - parseInt(b)) },
-					format (value,row) { return parseInt(value) }
+					format (value,row) { return parseInt(value); }
 				},{
 					label: this.$t("search.table.fields.date"),
-					field: 'uploadDate',
+					field: 'pubdate',
 					width: '80px',
-					format (value, row) {
-						var temp_date = escape(value).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
-								month = temp_date[0].split('-')[0],
-								day = temp_date[0].split('-')[1],
-								isTime = temp_date[1].indexOf(':') !== -1,
-								year = isTime ? new Date().getFullYear() : temp_date[1];
-
-						var date = temp_date[0] === 'Today' ? moment() : moment([year,month,day].join('-'));
-						if (temp_date[0] === 'Yday') date = moment().subtract(1, 'days');
-
-						return date.format("DD-MM-YYYY");
-					},
-					sort (a,b) {
-						var a_temp_date = escape(a).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
-								a_month = a_temp_date[0].split('-')[0],
-								a_day = a_temp_date[0].split('-')[1],
-								a_isTime = a_temp_date[1].indexOf(':') !== -1,
-								a_year = a_isTime ? new Date().getFullYear() : a_temp_date[1];
-
-						var a_date = a_temp_date[0] === 'Today' ? moment() : moment([a_year,a_month,a_day].join('-'));
-						if (a_temp_date[0] === 'Yday') a_date = moment().subtract(1, 'days');
-
-						var b_temp_date = escape(b).replace(/%A0/g,' ').replace(/%3A/g,':').replace('Y-day','Yday').split(' '),
-								b_month = b_temp_date[0].split('-')[0],
-								b_day = b_temp_date[0].split('-')[1],
-								b_isTime = b_temp_date[1].indexOf(':') !== -1,
-								b_year = b_isTime ? new Date().getFullYear() : b_temp_date[1];
-
-						var b_date = b_temp_date[0] === 'Today' ? moment() : moment([b_year,b_month,b_day].join('-'));
-						if (b_temp_date[0] === 'Yday') b_date = moment().subtract(1, 'days');
-
-						return a_date.diff(b_date);
-					}
+					format (value, row) { return moment(value).format("DD/MM/YYYY"); },
+					sort (a,b) { return moment(a).diff(moment(b)); }
 				}
 			],
 			pagination: true,

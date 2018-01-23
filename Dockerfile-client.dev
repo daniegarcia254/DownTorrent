@@ -5,16 +5,16 @@ LABEL maintainer "Daniel Garcia - daniegarcia254@gmail.com"
 #SET ENVIROMENT VARIABLES
 ENV FRONT_DIR /usr/src/app/
 
-#Set the FRONTEND work directory
+#Set the client work directory
 RUN mkdir -p /usr/src/app/
 WORKDIR ${FRONT_DIR}
 
-# Add our package.json and install *before* adding our FRONTEND app files
-ADD front/package.json ./
+# Add our package.json and install *before* adding our client app files
+ADD client/package.json ./
 RUN npm install
 
-#Copy rest of the FRONTEND files and config env
-COPY front /usr/src/app/
+#Copy rest of the client files and config env
+COPY client /usr/src/app/
 
 # Start development enviroment
 CMD ["/bin/bash","start.sh","dev"]

@@ -23,13 +23,13 @@ Vue.use(VueAxios, axios)
 // Install Quasar Framework
 Vue.use(Quasar)
 
-// Configure	backend service URL
-var backend_port = BACKEND_PORT_VALUE;
-var backend_url_cordova = BACKEND_URL_CORDOVA;
-var socket_url = location.protocol + '//' + location.hostname + ':' + backend_port;
+// Configure server URL
+var server_port = SERVER_PORT_VALUE;
+var server_url_cordova = SERVER_URL_CORDOVA;
+var socket_url = location.protocol + '//' + location.hostname + ':' + server_port;
 
 if (Platform.Platform.is.cordova) {
-	socket_url = backend_url_cordova + ':' + backend_port;
+	socket_url = server_url_cordova + ':' + server_port;
 }
 
 // Start socket

@@ -4,7 +4,7 @@ if [ -z "$1" ]; then
   echo ""
   echo "Please specifiy a container"
   echo ""
-  echo "Example: sh restart.sh downtorrent_back_prod"
+  echo "Example: sh restart.sh downtorrent_server_prod"
   echo ""
   exit 1
 fi

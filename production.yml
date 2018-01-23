@@ -1,11 +1,11 @@
 version: '3'
 services:
-  downtorrent_back_prod:
-    container_name: downtorrent_back_prod
+  downtorrent_server_prod:
+    container_name: downtorrent_server_prod
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile-back.prod
+      dockerfile: Dockerfile-server.prod
     expose:
       - "10003"
       - "9090"
@@ -13,12 +13,12 @@ services:
     ports:
       - "10003:10003"
       - "9090:9090"
-  downtorrent_front_prod:
-    container_name: downtorrent_front_prod
+  downtorrent_client_prod:
+    container_name: downtorrent_client_prod
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile-front.prod
+      dockerfile: Dockerfile-client.prod
     expose:
       - "80"
     ports:

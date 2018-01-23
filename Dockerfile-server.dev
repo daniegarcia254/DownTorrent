@@ -21,16 +21,16 @@ RUN  service transmission-daemon stop && \
      service transmission-daemon start && \ 
      usermod -a -G debian-transmission test
 
-#Set the backend work directory
+#Set the server work directory
 RUN mkdir -p /usr/src/app
 WORKDIR ${BACK_DIR}
 
-#Add our package.json and install *before* adding our backend app files
-ADD back/package.json ./
+#Add our package.json and install *before* adding our server app files
+ADD server/package.json ./
 RUN npm install --silent
 
-#Copy rest of the backend files and config env
-COPY back /usr/src/app/
+#Copy rest of the server files and config env
+COPY server /usr/src/app/
 
 #Start service
 CMD ["/bin/bash","start.sh","dev"]

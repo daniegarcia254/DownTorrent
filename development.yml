@@ -1,28 +1,28 @@
 version: '3'
 services:
-  downtorrent_back_dev:
-    container_name: downtorrent_back_dev
+  downtorrent_server_dev:
+    container_name: downtorrent_server_dev
     build:
       context: .
-      dockerfile: Dockerfile-back.dev
+      dockerfile: Dockerfile-server.dev
     volumes:
-      - ./back:/usr/src/app
+      - ./server:/usr/src/app
       - /usr/src/app/node_modules
     expose:
       - "10002"
       - "51413"
     ports:
       - "10002:10002"
-  downtorrent_front_dev:
-    container_name: downtorrent_front_dev
+  downtorrent_client_dev:
+    container_name: downtorrent_client_dev
     build:
       context: .
-      dockerfile: Dockerfile-front.dev
+      dockerfile: Dockerfile-client.dev
     environment:
       - BACKEND_PORT=10002
       - BACKEND_URL_CORDOVA="http://danigarcia-dev.com"
     volumes:
-      - ./front:/usr/src/app
+      - ./client:/usr/src/app
     expose:
       - "10004"
     ports:

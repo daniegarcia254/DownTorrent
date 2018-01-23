@@ -18,6 +18,7 @@
     "html-entities": "1.2.1",
     "material-design-icons": "3.0.1",
     "moment": "2.18.1",
+    "pretty-bytes": "3.0.1",
     "quasar-framework": "0.13.9",
     "roboto-fontface": "0.7.0",
     "strip-ansi": "3.0.1",
