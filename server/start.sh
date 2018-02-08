@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ -z "$1"];
+if [ -z "$1" ];
 then
   echo "Please choose an enviroment to deploy: dev/prod";
 	exit 1;
-elif [ "$1" = "dev"];
+elif [ "$1" = "dev" ];
 then
 	echo "SERVER: DEPLOYING DEVELOPMENT ENVIRONMENT";
 elif [ "$1" = "prod" ];
