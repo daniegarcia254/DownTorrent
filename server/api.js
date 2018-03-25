@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const fs = require('fs');
-const rarbgApi = require('rarbg-api');
+const fetch = require('node-fetch');
 const proc = require('child_process');
 const utils = require('./modules/utils.js');
 const transmission = require('./modules/transmission.js');
@@ -14,14 +14,30 @@ const awsS3Handler = require('./modules/awsS3Handler.js');
 router.get('/search/rarbg', function (req, res) {
 	var q = req.query.q;
 	console.log('Search torrent in Rarbg', q);
-	rarbgApi.search(q)
-	.then((results) => {
-		console.log('Success searching in Rarbg', results.length)
-		res.send(results);
+	var baseGetTokenUrl = process.env.TORRENT_API_URL;
+	var baseSearchUrl = baseGetTokenUrl + process.env.TORRENT_SEARCH_OPTIONS;
+	var tokenUrl = baseGetTokenUrl + '&get_token=get_token';
+	console.log('Get token URL: ', tokenUrl);
+	fetch(tokenUrl)
+    .then(res => res.json())
+	.then(json => {
+		console.log('Token: ', token);
+		var searchUrl = baseSearchUrl + '&search_string=' + encodeURIComponent(q) + '&token=' + json.token;
+		console.log('Search URL: ', searchUrl);
+		fetch(searchUrl)
+		.then(Res => res.json())
+		.then(json => {
+			console.log('Search results: ', json ? json.torrent_results.length : json);
+			res.send(json.torrent_results)
+		})
+		.catch(err => {
+			console.log('Error searching in Rarbg: ', err);
+			res.send(err)
+		});
 	})
-	.catch((err) => {
-		console.log('Error searching in Rarbg: ', err)
-		res.send(err);
+	.catch(err => {
+		console.log('Error getting token: ', err);
+		res.send(err)
 	});
 })
 

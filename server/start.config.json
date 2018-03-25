@@ -18,7 +18,9 @@
 			"TRANSMISSION_USER":"truser",
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
-			"TRANSMISSION_PORT":9090
+			"TRANSMISSION_PORT":9090,
+			"TORRENT_API_URL": "https://torrentapi.org/pubapi_v2.php?app_id=downtorrent",
+			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=last&format=json&app_id=downtorrent"
     },
     "env_prod": {
       "NODE_ENV": "prod",
@@ -31,7 +33,9 @@
 			"TRANSMISSION_USER":"truser",
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
-			"TRANSMISSION_PORT":9090
+			"TRANSMISSION_PORT":9090,
+			"TORRENT_API_URL": "https://torrentapi.org/pubapi_v2.php?app_id=downtorrent",
+			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=last&format=json&app_id=downtorrent"
     }
 	}]
 }
