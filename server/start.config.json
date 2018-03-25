@@ -20,7 +20,7 @@
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
 			"TORRENT_API_URL": "https://torrentapi.org/pubapi_v2.php?app_id=downtorrent",
-			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=last&format=json_extended&app_id=downtorrent"
+			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=seeders&format=json_extended&app_id=downtorrent"
     },
     "env_prod": {
       "NODE_ENV": "prod",
@@ -35,7 +35,7 @@
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
 			"TORRENT_API_URL": "https://torrentapi.org/pubapi_v2.php?app_id=downtorrent",
-			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=last&format=json_extended&app_id=downtorrent"
+			"TORRENT_SEARCH_OPTIONS": "&mode=search&limit=25&sort=seeders&format=json_extended&app_id=downtorrent"
     }
 	}]
 }
