@@ -19,15 +19,15 @@ router.get('/search/rarbg', function (req, res) {
 	var tokenUrl = baseGetTokenUrl + '&get_token=get_token';
 	console.log('Get token URL: ', tokenUrl);
 	fetch(tokenUrl)
-    .then(res => res.json())
+    .then(resToken => resToken.json())
 	.then(json => {
-		console.log('Token: ', token);
+		console.log('Token: ', json);
 		var searchUrl = baseSearchUrl + '&search_string=' + encodeURIComponent(q) + '&token=' + json.token;
 		console.log('Search URL: ', searchUrl);
 		fetch(searchUrl)
-		.then(Res => res.json())
+		.then(resResults => resResults.json())
 		.then(json => {
-			console.log('Search results: ', json ? json.torrent_results.length : json);
+			console.log('Search results: ', (json && json.torrent_results) ? json.torrent_results.length : json);
 			res.send(json.torrent_results)
 		})
 		.catch(err => {
