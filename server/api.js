@@ -4,26 +4,68 @@ const express = require('express');
 const router = express.Router();
 
 const fs = require('fs');
-const rarbgApi = require('rarbg-api');
 const proc = require('child_process');
+const https = require('https');
 const utils = require('./modules/utils.js');
 const transmission = require('./modules/transmission.js');
 const awsS3Handler = require('./modules/awsS3Handler.js');
 
 // Main search
 router.get('/search/rarbg', function (req, res) {
-	var q = req.query.q;
-	console.log('Search torrent in Rarbg', q);
-	rarbgApi.search(q)
-	.then((results) => {
-		console.log('Success searching in Rarbg', results.length)
-		res.send(results);
-	})
-	.catch((err) => {
-		console.log('Error searching in Rarbg: ', err)
-		res.send(err);
+
+	var query = req.query.q;
+	if (!query || query === '') return res.send({});
+
+	const reqToken = https.get({
+		host: process.env.TORRENTAPI_HOST,
+		path: process.env.TORRENTAPI_TOKEN_PATH,
+		headers: {
+		   'User-Agent': 'https://github.com/grantholle/rarbg'
+	  	}
+	}, (resToken) => {
+		let body = '';
+		console.log('Get token response tatus:', resToken.statusCode);
+		resToken.setEncoding('utf8');
+		resToken.on('data', (chunk) => body += chunk);
+		resToken.on('end', () => {
+		   console.log('Successfully token', body);
+		   var token = JSON.parse(body).token;
+		   
+		   var url = process.env.TORRENTAPI_SEARCH_PATH;
+		   url += '&search_string=' + encodeURIComponent(query);
+		   url += '&token=' + token;
+		   
+		   setTimeout(function(){
+			   	const reqSearch = https.get({
+				   	host: process.env.TORRENTAPI_HOST,
+				   	path: url,
+				   	headers: {
+					   'User-Agent': 'https://github.com/grantholle/rarbg'
+				   	}
+				}, (resSearch) => {
+					let body = '';
+					console.log('Search response status:', resSearch.headers);
+					resSearch.setEncoding('utf8');
+					resSearch.on('data', (chunk) => body += chunk);
+					resSearch.on('end', () => {
+						console.log('Successfully search', body);
+						res.send(JSON.parse(body).torrent_results);
+				   	});
+			   	});
+				reqSearch.on('error', function(err){
+					console.log('Error searching torrent', err);
+					res.status(500).send(err);
+				});
+				reqSearch.end();
+			},500);
+		});
 	});
-})
+	reqToken.on('error', function(err){
+		console.log('Error getting token', err);
+		res.status(500).send(err);
+	});
+	reqToken.end();
+});
 
 router.get('/user/login/:username', function(req, res) {
 
