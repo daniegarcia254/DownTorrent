@@ -19,7 +19,7 @@
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
-			"TORRENT_API_HOST": "torrentapi.org",
+			"TORRENTAPI_HOST": "torrentapi.org",
 			"TORRENTAPI_TOKEN_PATH": "/pubapi_v2.php?app_id=downtorrent&get_token=get_token",
 			"TORRENTAPI_SEARCH_PATH": "/pubapi_v2.php?mode=search&limit=25&sort=last&format=json_extended&app_id=downtorrent"
     },
@@ -35,7 +35,7 @@
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
-			"TORRENT_API_HOST": "torrentapi.org",
+			"TORRENTAPI_HOST": "torrentapi.org",
 			"TORRENTAPI_TOKEN_PATH": "/pubapi_v2.php?app_id=downtorrent&get_token=get_token",
 			"TORRENTAPI_SEARCH_PATH": "/pubapi_v2.php?mode=search&limit=25&sort=last&format=json_extended&app_id=downtorrent"
     }
