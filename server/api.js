@@ -12,49 +12,23 @@ const awsS3Handler = require('./modules/awsS3Handler.js');
 
 // Main search
 router.get('/search/rarbg', function (req, res) {
-	var q = req.query.q;
-	console.log('Search torrent in Rarbg', q);
-	var tokenUrl = process.env.TORRENT_API_HOST + '/pubapi_v2.php?app_id=downtorrent&get_token=get_token';
-	console.log('Get token URL: ', tokenUrl);
-	fetch(tokenUrl)
-    .then(resToken => resToken.json())
-	.then(json => {
-		console.log('Token: ', json);
-		var searchQueryParams = '&search_string=' + encodeURIComponent(q) + '&token=' + json.token;
-		console.log("Search URL", {
-			host: process.env.TORRENT_API_HOST,
-			path: process.env.TORRENT_API_BASE_PATH + searchQueryParams,
-			headers: {
-			   'User-Agent': process.env.TORRENT_API_USER_AGENT
-		   	}
-		});
-		const req = https.get({
-			host: process.env.TORRENT_API_HOST,
-			path: process.env.TORRENT_API_BASE_PATH + searchQueryParams,
-			headers: {
-			   'User-Agent': process.env.TORRENT_API_USER_AGENT
-		   	}
-		}, (resSearch) => {
-			let body = '';
-			resSearch.setEncoding('utf8');
-			resSearch.on('data', (chunk) => body += chunk);
-			resSearch.on('end', () => {
-				if (resSearch.headers['content-type'] === 'application/json') {
-					body = JSON.parse(body);
-				}
-				res.send(body);
-			});
-		});
-		req.on('error', function(err){
-			console.log("Error searching torrent", err);
-			res.status(500).send(err);
-		});
-		req.end();
-	})
-	.catch(err => {
-		console.log('Error getting token: ', err);
-		res.send(err)
-	});
+	const reqSearch = https.get({
+		host: process.env.SEARCH_API_HOST,
+		path: '/dev/search?query='+encodeURIComponent(req.query.q)
+	  }, (resSearch) => {
+	   let body = '';
+	   console.log('Status:', resSearch.statusCode);
+	   resSearch.setEncoding('utf8');
+	   resSearch.on('data', (chunk) => body += chunk);
+	   resSearch.on('end', () => {
+		   console.log('Successfully processed HTTPS response', body);
+		   res.send(body);
+	   });
+   });
+   reqSearch.on('error', function(err) {
+	   res.status(500).send(error);
+   });
+   reqSearch.end();
 })
 
 router.get('/user/login/:username', function(req, res) {

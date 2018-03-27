@@ -20,8 +20,7 @@
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
 			"TORRENT_API_HOST": "https://torrentapi.org",
-			"TORRENT_API_BASE_PATH": "/pubapi_v2.php?mode=search&limit=50&sort=seeders&format=json_extended&app_id=downtorrent",
-			"TORRENT_API_USER_AGENT": "https://github.com/grantholle/rarbg"
+			"SEARCH_API_HOST": "APIGATEWAY_ID.execute-api.eu-west-1.amazonaws.com"
     },
     "env_prod": {
       "NODE_ENV": "prod",
@@ -35,9 +34,7 @@
 			"TRANSMISSION_PWD": "trpwd",
 			"TRANSMISSION_HOST":"localhost",
 			"TRANSMISSION_PORT":9090,
-			"TORRENT_API_HOST": "torrentapi.org",
-			"TORRENT_API_BASE_PATH": "/pubapi_v2.php?mode=search&limit=50&sort=seeders&format=json_extended&app_id=downtorrent",
-			"TORRENT_API_USER_AGENT": "https://github.com/grantholle/rarbg"
+			"SEARCH_API_HOST": "APIGATEWAY_ID.execute-api.eu-west-1.amazonaws.com"
     }
 	}]
 }
