@@ -14,26 +14,42 @@ const awsS3Handler = require('./modules/awsS3Handler.js');
 router.get('/search/rarbg', function (req, res) {
 	var q = req.query.q;
 	console.log('Search torrent in Rarbg', q);
-	var baseGetTokenUrl = process.env.TORRENT_API_URL;
-	var baseSearchUrl = baseGetTokenUrl + process.env.TORRENT_SEARCH_OPTIONS;
-	var tokenUrl = baseGetTokenUrl + '&get_token=get_token';
+	var tokenUrl = process.env.TORRENT_API_HOST + '/pubapi_v2.php?app_id=downtorrent&get_token=get_token';
 	console.log('Get token URL: ', tokenUrl);
 	fetch(tokenUrl)
     .then(resToken => resToken.json())
 	.then(json => {
 		console.log('Token: ', json);
-		var searchUrl = baseSearchUrl + '&search_string=' + encodeURIComponent(q) + '&token=' + json.token;
-		console.log('Search URL: ', searchUrl);
-		fetch(searchUrl)
-		.then(resResults => resResults.json())
-		.then(json => {
-			console.log('Search results: ', (json && json.torrent_results) ? json.torrent_results.length : json);
-			res.send(json.torrent_results)
-		})
-		.catch(err => {
-			console.log('Error searching in Rarbg: ', err);
-			res.send(err)
+		var searchQueryParams = '&search_string=' + encodeURIComponent(q) + '&token=' + json.token;
+		console.log("Search URL", {
+			host: process.env.TORRENT_API_HOST,
+			path: process.env.TORRENT_API_BASE_PATH + searchQueryParams,
+			headers: {
+			   'User-Agent': process.env.TORRENT_API_USER_AGENT
+		   	}
 		});
+		const req = https.get({
+			host: process.env.TORRENT_API_HOST,
+			path: process.env.TORRENT_API_BASE_PATH + searchQueryParams,
+			headers: {
+			   'User-Agent': process.env.TORRENT_API_USER_AGENT
+		   	}
+		}, (resSearch) => {
+			let body = '';
+			resSearch.setEncoding('utf8');
+			resSearch.on('data', (chunk) => body += chunk);
+			resSearch.on('end', () => {
+				if (resSearch.headers['content-type'] === 'application/json') {
+					body = JSON.parse(body);
+				}
+				res.send(body);
+			});
+		});
+		req.on('error', function(err){
+			console.log("Error searching torrent", err);
+			res.status(500).send(err);
+		});
+		req.end();
 	})
 	.catch(err => {
 		console.log('Error getting token: ', err);
