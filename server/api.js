@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 
 const fs = require('fs');
-const fetch = require('node-fetch');
 const proc = require('child_process');
+const https = require('https');
 const utils = require('./modules/utils.js');
 const transmission = require('./modules/transmission.js');
 const awsS3Handler = require('./modules/awsS3Handler.js');
