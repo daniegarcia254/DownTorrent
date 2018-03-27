@@ -12,6 +12,10 @@ const awsS3Handler = require('./modules/awsS3Handler.js');
 
 // Main search
 router.get('/search/rarbg', function (req, res) {
+
+	var query = req.query.q;
+	if (!query || query === '') return res.send({});
+
 	const reqToken = https.get({
 		host: process.env.TORRENTAPI_HOST,
 		path: process.env.TORRENTAPI_TOKEN_PATH,
@@ -28,7 +32,7 @@ router.get('/search/rarbg', function (req, res) {
 		   var token = JSON.parse(body).token;
 		   
 		   var url = process.env.TORRENTAPI_SEARCH_PATH;
-		   url += '&search_string=' + encodeURIComponent(req.query.q);
+		   url += '&search_string=' + encodeURIComponent(query);
 		   url += '&token=' + token;
 		   
 		   setTimeout(function(){
@@ -45,7 +49,7 @@ router.get('/search/rarbg', function (req, res) {
 					resSearch.on('data', (chunk) => body += chunk);
 					resSearch.on('end', () => {
 						console.log('Successfully search', body);
-						res.send(body);
+						res.send(body.torrent_results);
 				   	});
 			   	});
 				reqSearch.on('error', function(err){
