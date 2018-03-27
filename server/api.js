@@ -28,7 +28,7 @@ router.get('/search/rarbg', function (req, res) {
 		   var token = JSON.parse(body).token;
 		   
 		   var url = process.env.TORRENTAPI_SEARCH_PATH;
-		   url += '&search_string=' + req.query.q;
+		   url += '&search_string=' + encodeURIComponent(req.query.q);
 		   url += '&token=' + token;
 		   
 		   setTimeout(function(){
