@@ -49,7 +49,7 @@ router.get('/search/rarbg', function (req, res) {
 					resSearch.on('data', (chunk) => body += chunk);
 					resSearch.on('end', () => {
 						console.log('Successfully search', body);
-						res.send(body.torrent_results);
+						res.send(JSON.parse(body).torrent_results);
 				   	});
 			   	});
 				reqSearch.on('error', function(err){
